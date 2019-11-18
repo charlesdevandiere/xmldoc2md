@@ -1,0 +1,35 @@
+name: $(GitVersion.FullSemVer)
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  buildConfiguration: Release
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - docs/*
+    - README.md
+      
+
+steps:
+- checkout: self
+  clean: true
+  persistCredentials: true
+
+- script: GitVersion /output buildserver
+  displayName: GitVersion
+
+- script: dotnet pack -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)\out -p:Version=$(GitVersion.SemVer)
+  displayName: 'dotnet pack'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)\out
+    ArtifactName: out
