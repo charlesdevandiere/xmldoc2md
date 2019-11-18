@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <ToolCommandName>markdown-generator</ToolCommandName> 
+    <ToolCommandName>xmldoc2md</ToolCommandName> 
     <PackAsTool>true</PackAsTool>
     <IsPackable>true</IsPackable> 
   </PropertyGroup>
