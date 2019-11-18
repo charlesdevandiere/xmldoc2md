@@ -3,9 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <ToolCommandName>xmldoc2md</ToolCommandName> 
+    <ToolCommandName>xmldoc2md</ToolCommandName>
     <PackAsTool>true</PackAsTool>
-    <IsPackable>true</IsPackable> 
+    <IsPackable>true</IsPackable>
+    <Authors>Charles de Vandière</Authors>
+    <Description>Tool to generate markdown from C# XML documentation.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/charlesdevandiere/xmldoc2md</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
