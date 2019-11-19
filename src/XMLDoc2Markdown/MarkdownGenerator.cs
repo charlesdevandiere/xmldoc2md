@@ -155,7 +155,7 @@ namespace XMLDoc2Markdown
 
             mb.Header(1, Beautifier.BeautifyType(type, false).Replace("<", "&lt;").Replace(">", "&gt;"));
             mb.AppendLine();
-            mb.CodeQuote($"Manespace: {type.Namespace}");
+            mb.CodeQuote($"Namespace: {type.Namespace}");
             mb.AppendLine();
             mb.AppendLine();
 
