@@ -43,37 +43,37 @@ namespace XMLDoc2Markdown
                 string src = srcArg.Value;
                 string @out = outArg.Value;
                 string namespaceMatch = namespaceMatchOption.Value();
-                string homePageName = homePageNameOption.HasValue() ? homePageNameOption.Value() : "Home";
+                string homePageName = homePageNameOption.HasValue() ? homePageNameOption.Value() : "README";
 
-                var types = MarkdownGenerator.Load(src, namespaceMatch);
+                var xmlDocumentation = new XmlDocumentation(src, namespaceMatch);
 
                 if (!Directory.Exists(@out)) Directory.CreateDirectory(@out);
 
-                var homeBuilder = new MarkdownBuilder();
-                homeBuilder.Header(1, "References");
+                var indexBuilder = new MarkdownBuilder();
+                indexBuilder.Header(1, xmlDocumentation.AssemblyName);
 
-                foreach (var g in types.GroupBy(x => x.Namespace).OrderBy(x => x.Key))
+                foreach (var g in xmlDocumentation.Types.GroupBy(x => x.Namespace).OrderBy(x => x.Key))
                 {
                     string subDir = Path.Combine(@out, g.Key);
                     if (!Directory.Exists(subDir)) Directory.CreateDirectory(subDir);
 
-                    homeBuilder.AppendLine();
-                    homeBuilder.Header(2, g.Key);
-                    homeBuilder.AppendLine();
+                    indexBuilder.AppendLine();
+                    indexBuilder.HeaderWithCode(2, g.Key);
+                    indexBuilder.AppendLine();
                     foreach (var item in g.OrderBy(x => x.Name))
                     {
                         string typeName = item.BeautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
                         var sb = new StringBuilder();
 
-                        homeBuilder.ListLink(MarkdownBuilder.MarkdownCodeQuote(item.BeautifyName), g.Key + "/" + typeName);
+                        indexBuilder.ListLink(MarkdownBuilder.MarkdownCodeQuote(item.BeautifyName), g.Key + "/" + typeName);
 
                         sb.Append(item.ToString());
-                        
+
                         File.WriteAllText(Path.Combine(@out, g.Key, $"{typeName}.md"), sb.ToString());
                     }
                 }
 
-                File.WriteAllText(Path.Combine(@out, $"{homePageName}.md"), homeBuilder.ToString());
+                File.WriteAllText(Path.Combine(@out, $"{homePageName}.md"), indexBuilder.ToString());
 
                 return 0;
             });

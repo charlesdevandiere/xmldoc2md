@@ -2,6 +2,10 @@
 
 Tool to generate markdown from C# XML documentation, based on [MarkdownGenerator](https://github.com/neuecc/MarkdownGenerator) project.
 
+[![Build Status](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_apis/build/status/charlesdevandiere.xmldoc2md?branchName=master)](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_build/latest?definitionId=2&branchName=master)
+
+[![Nuget](https://img.shields.io/nuget/v/XMLDoc2Markdown.svg?color=blue&logo=nuget)](https://www.nuget.org/packages/XMLDoc2Markdown)
+
 ## How to use
 
 ### Install tool
