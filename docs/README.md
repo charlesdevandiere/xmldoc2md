@@ -2,7 +2,7 @@
 
 Tool to generate markdown from C# XML documentation, based on [MarkdownGenerator](https://github.com/neuecc/MarkdownGenerator) project.
 
-See generated sample documentation [here](sample).
+See sample generated documentation [here](sample).
 
 ## How to use
 
@@ -28,4 +28,17 @@ See generated sample documentation [here](sample).
 
 ```shell
 > xmldoc2md -h
+
+Usage: xmldoc2md [arguments] [options]
+
+Arguments:
+  src  DLL source path
+  out  Output directory
+
+Options:
+  -v|--version               Show version information
+  -?|-h|--help               Show help information
+  --namespace-match <regex>  Regex pattern to select namespaces
+  --index-page-name <regex>  Name of the index page (default: "index")
+
 ```

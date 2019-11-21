@@ -31,3 +31,5 @@ Tool to generate markdown from C# XML documentation, based on [MarkdownGenerator
 ```shell
 > xmldoc2md -h
 ```
+
+See complete documentation [here](https://charlesdevandiere.github.io/xmldoc2md/).
