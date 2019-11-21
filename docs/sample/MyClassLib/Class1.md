@@ -24,4 +24,4 @@ public class Class1
 
 ---
 
-[`< Back`](./)
+[`< Back`](../)
