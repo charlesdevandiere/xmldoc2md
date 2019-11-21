@@ -12,7 +12,7 @@ namespace XMLDoc2Markdown
         static void Main(string[] args)
         {
             var app = new CommandLineApplication();
-            app.Name = "MarkdownGenerator";
+            app.Name = "xmldoc2md";
 
             app.VersionOption("-v|--version", () =>
             {
@@ -33,9 +33,9 @@ namespace XMLDoc2Markdown
                 "Regex pattern to select namespaces",
                 CommandOptionType.SingleValue);
 
-            CommandOption homePageNameOption = app.Option(
-                "--home-page-name <regex>",
-                "Name of the home page",
+            CommandOption indexPageNameOption = app.Option(
+                "--index-page-name <regex>",
+                "Name of the index page (default: \"index\")",
                 CommandOptionType.SingleValue);
 
             app.OnExecute(() =>
@@ -43,7 +43,7 @@ namespace XMLDoc2Markdown
                 string src = srcArg.Value;
                 string @out = outArg.Value;
                 string namespaceMatch = namespaceMatchOption.Value();
-                string homePageName = homePageNameOption.HasValue() ? homePageNameOption.Value() : "README";
+                string indexPageName = indexPageNameOption.HasValue() ? indexPageNameOption.Value() : "index";
 
                 var xmlDocumentation = new XmlDocumentation(src, namespaceMatch);
 
@@ -73,7 +73,7 @@ namespace XMLDoc2Markdown
                     }
                 }
 
-                File.WriteAllText(Path.Combine(@out, $"{homePageName}.md"), indexBuilder.ToString());
+                File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexBuilder.ToString());
 
                 return 0;
             });

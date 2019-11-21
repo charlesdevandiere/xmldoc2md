@@ -17,4 +17,4 @@ public class SubClass
 
 ---
 
-[`< Back`](./)
+[`< Back`](../)
