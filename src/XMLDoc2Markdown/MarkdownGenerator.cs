@@ -206,7 +206,7 @@ namespace XMLDoc2Markdown
 
             mb.AppendLine("---");
             mb.AppendLine();
-            mb.Link(MarkdownBuilder.MarkdownCodeQuote("< Back"), "./");
+            mb.Link(MarkdownBuilder.MarkdownCodeQuote("< Back"), "../");
             mb.AppendLine();
 
             return mb.ToString();

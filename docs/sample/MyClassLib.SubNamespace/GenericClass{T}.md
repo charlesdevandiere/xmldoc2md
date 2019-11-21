@@ -16,4 +16,4 @@ public class GenericClass<T>
 
 ---
 
-[`< Back`](./)
+[`< Back`](../)
