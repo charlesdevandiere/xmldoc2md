@@ -1,19 +1,25 @@
-# GenericClass&lt;T&gt;
+# GenericClass`1
 
-`Namespace: MyClassLib.SubNamespace`
+## Constructors
 
-Generic class.
+### GenericClass`1()
+
+Initializes a new instance of the  class.
 
 ```csharp
-public class GenericClass<T>
+public GenericClass`1()
 ```
 
 ## Methods
 
-| Type | Name | Summary |
-| --- | --- | --- |
-| `T` | GetGenericInstance() | Gets a new instance of generic param. |
+### GetGenericInstance()
 
----
 
-[`< Back`](../)
+
+```csharp
+public T GetGenericInstance()
+```
+
+#### Returns
+
+T<br>

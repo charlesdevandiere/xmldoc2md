@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Markdown;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace XMLDoc2Markdown
@@ -45,35 +46,41 @@ namespace XMLDoc2Markdown
                 string namespaceMatch = namespaceMatchOption.Value();
                 string indexPageName = indexPageNameOption.HasValue() ? indexPageNameOption.Value() : "index";
 
-                var xmlDocumentation = new XmlDocumentation(src, namespaceMatch);
-
-                if (!Directory.Exists(@out)) Directory.CreateDirectory(@out);
-
-                var indexBuilder = new MarkdownBuilder();
-                indexBuilder.Header(1, xmlDocumentation.AssemblyName);
-
-                foreach (var g in xmlDocumentation.Types.GroupBy(x => x.Namespace).OrderBy(x => x.Key))
+                if (!Directory.Exists(@out))
                 {
-                    string subDir = Path.Combine(@out, g.Key);
-                    if (!Directory.Exists(subDir)) Directory.CreateDirectory(subDir);
-
-                    indexBuilder.AppendLine();
-                    indexBuilder.HeaderWithCode(2, g.Key);
-                    indexBuilder.AppendLine();
-                    foreach (var item in g.OrderBy(x => x.Name))
-                    {
-                        string typeName = item.BeautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
-                        var sb = new StringBuilder();
-
-                        indexBuilder.ListLink(MarkdownBuilder.MarkdownCodeQuote(item.BeautifyName), g.Key + "/" + typeName);
-
-                        sb.Append(item.ToString());
-
-                        File.WriteAllText(Path.Combine(@out, g.Key, $"{typeName}.md"), sb.ToString());
-                    }
+                    Directory.CreateDirectory(@out);
                 }
 
-                File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexBuilder.ToString());
+                var assembly = Assembly.LoadFrom(src);
+                var documentation = new XmlDocumentation(src);
+
+                IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assembly.GetName().Name, 1);
+
+                foreach (IGrouping<string, Type> g in assembly.GetTypes().GroupBy(x => x.Namespace).OrderBy(x => x.Key))
+                {
+                    string subDir = Path.Combine(@out, g.Key);
+                    if (!Directory.Exists(subDir))
+                    {
+                        Directory.CreateDirectory(subDir);
+                    }
+
+                    indexPage.AppendHeader(new MarkdownInlineCode(g.Key), 2);
+
+                    var list = new MarkdownList();
+                    foreach (Type type in g.OrderBy(x => x.Name))
+                    {
+                        string beautifyName = Beautifier.BeautifyType(type);
+                        string typeName = beautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
+
+                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), g.Key + "/" + typeName));
+
+                        File.WriteAllText(Path.Combine(@out, g.Key, $"{typeName}.md"), new TypeDocumentation(type, documentation).ToString());
+                    }
+
+                    indexPage.Append(list);
+                }
+
+                File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexPage.ToString());
 
                 return 0;
             });

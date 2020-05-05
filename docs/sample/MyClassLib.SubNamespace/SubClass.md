@@ -1,20 +1,25 @@
 # SubClass
 
-`Namespace: MyClassLib.SubNamespace`
+## Constructors
 
-Sub class from [MyClassLib.Class1](MyClassLib#class1)
+### SubClass()
+
+
 
 ```csharp
-public class SubClass
-    : Class1
+public SubClass()
 ```
 
 ## Methods
 
-| Type | Name | Summary |
-| --- | --- | --- |
-| `String` | ToString() | Convert instance to string. |
+### ToString()
 
----
+Convert instance to string.
 
-[`< Back`](../)
+```csharp
+public string ToString()
+```
+
+#### Returns
+
+String<br>A string.

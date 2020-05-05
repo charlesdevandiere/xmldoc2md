@@ -3,66 +3,56 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace XMLDoc2Markdown
 {
     public class XmlDocumentation
     {
-        public string AssemblyName { get; private set; }
-        public IEnumerable<MarkdownableType> Types { get; private set; }
+        public string AssemblyName { get; }
+        public IEnumerable<XElement> Members { get; }
 
-        public XmlDocumentation(string dllPath, string namespaceMatch)
+        public XmlDocumentation(string dllPath)
         {
-            Assembly assembly = Assembly.LoadFrom(dllPath);
+            string xmlPath = Path.Combine(Directory.GetParent(dllPath).FullName, Path.GetFileNameWithoutExtension(dllPath) + ".xml");
 
-            this.AssemblyName = assembly.GetName().Name;
-
-            var xmlPath = Path.Combine(Directory.GetParent(dllPath).FullName, Path.GetFileNameWithoutExtension(dllPath) + ".xml");
-
-            XmlDocumentComment[] comments = new XmlDocumentComment[0];
-            if (File.Exists(xmlPath))
+            if (!File.Exists(xmlPath))
             {
-                comments = VSDocParser.ParseXmlComment(XDocument.Parse(File.ReadAllText(xmlPath)), namespaceMatch);
+                throw new Exception($"Not XML documentation file founded for library {dllPath}.");
             }
-            var commentsLookup = comments.ToLookup(x => x.ClassName);
 
-            var namespaceRegex =
-                !string.IsNullOrEmpty(namespaceMatch) ? new Regex(namespaceMatch) : null;
+            try
+            {
+                var xDocument = XDocument.Parse(File.ReadAllText(xmlPath));
 
-            var markdownableTypes = new[] { assembly }
-                .SelectMany(x =>
-                {
-                    try
-                    {
-                        return x.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException ex)
-                    {
-                        return ex.Types.Where(t => t != null);
-                    }
-                    catch
-                    {
-                        return Type.EmptyTypes;
-                    }
-                })
-                .Where(x => x != null)
-                .Where(x => x.IsPublic && !typeof(Delegate).IsAssignableFrom(x) && !x.GetCustomAttributes<ObsoleteAttribute>().Any())
-                .Where(x => IsRequiredNamespace(x, namespaceRegex))
-                .Select(x => new MarkdownableType(x, commentsLookup))
-                .ToArray();
-
-            this.Types = markdownableTypes;
+                this.AssemblyName = xDocument.Descendants("assembly").First().Elements("name").First().Value;
+                this.Members = xDocument.Descendants("members").First().Elements("member");
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to parse XML documentation", e);
+            }
         }
 
-        static bool IsRequiredNamespace(Type type, Regex regex)
+        public XElement GetMember(MemberInfo memberInfo)
         {
-            if (regex == null)
+            string name = memberInfo.Name == ".ctor" ? "#ctor" : memberInfo.Name;
+            string fullName = $"{memberInfo.DeclaringType.Namespace}.{memberInfo.DeclaringType.Name}.{name}";
+            if (memberInfo is MethodBase methodBase)
             {
-                return true;
+                ParameterInfo[] parameterInfos = methodBase.GetParameters();
+                if (parameterInfos.Length > 0)
+                {
+                    fullName = string.Concat(fullName, $"({string.Join(',', parameterInfos.Select(p => p.ParameterType))})");
+                }
             }
-            return regex.IsMatch(type.Namespace != null ? type.Namespace : string.Empty);
+
+            return this.GetMember($"{memberInfo.MemberType.GetAlias()}:{fullName}");
+        }
+
+        public XElement GetMember(string name)
+        {
+            return this.Members.FirstOrDefault(member => member.Attribute("name").Value == name);
         }
     }
 }

@@ -2,7 +2,9 @@
 
 ## `MyClassLib`
 
-- [`Class1`](MyClassLib/Class1)
+- [`IMyInterface`](MyClassLib/IMyInterface)
+- [`MyClass`](MyClassLib/MyClass)
+- [`MyEnum`](MyClassLib/MyEnum)
 
 ## `MyClassLib.SubNamespace`
 

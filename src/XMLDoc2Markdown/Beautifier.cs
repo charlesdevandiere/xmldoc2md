@@ -11,19 +11,19 @@ namespace XMLDoc2Markdown
         {
             if (t == null) return "";
             if (t == typeof(void)) return "void";
-            if (!t.IsGenericType) return (isFull) ? t.FullName : t.Name;
+            if (!t.IsGenericType) return isFull ? t.FullName : t.Name;
 
-            var innerFormat = string.Join(", ", t.GetGenericArguments().Select(x => BeautifyType(x)));
+            string innerFormat = string.Join(", ", t.GetGenericArguments().Select(x => BeautifyType(x)));
             return Regex.Replace(isFull ? t.GetGenericTypeDefinition().FullName : t.GetGenericTypeDefinition().Name, @"`.+$", "") + "<" + innerFormat + ">";
         }
 
         public static string ToMarkdownMethodInfo(MethodInfo methodInfo)
         {
-            var isExtension = methodInfo.GetCustomAttributes<System.Runtime.CompilerServices.ExtensionAttribute>(false).Any();
+            bool isExtension = methodInfo.GetCustomAttributes<System.Runtime.CompilerServices.ExtensionAttribute>(false).Any();
 
-            var seq = methodInfo.GetParameters().Select(x =>
+            System.Collections.Generic.IEnumerable<string> seq = methodInfo.GetParameters().Select(x =>
             {
-                var suffix = x.HasDefaultValue ? (" = " + (x.DefaultValue ?? $"null")) : "";
+                string suffix = x.HasDefaultValue ? (" = " + (x.DefaultValue ?? $"null")) : "";
                 return "`" + BeautifyType(x.ParameterType) + "` " + x.Name + suffix;
             });
 
