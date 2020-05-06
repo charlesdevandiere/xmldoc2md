@@ -1,5 +1,11 @@
 # GenericClass`1
 
+Generic class.
+
+```csharp
+public class GenericClass`1
+```
+
 ## Constructors
 
 ### GenericClass`1()

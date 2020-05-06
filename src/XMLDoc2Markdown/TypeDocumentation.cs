@@ -22,11 +22,22 @@ namespace XMLDoc2Markdown
         public override string ToString()
         {
             this.document.AppendHeader(this.type.Name, 1);
+
+            XElement doc = this.documentation.GetMember(this.type);
+            string summary = doc?.Element("summary")?.Value;
+            this.document.AppendParagraph(summary ?? "");
+
+            this.document.AppendCode(
+                "csharp",
+                this.type.GetSignature(full: true));
+
             this.WriteMethodBasesDocumentation(this.type.GetConstructors());
             this.WriteMethodBasesDocumentation(
                 this.type
-                    .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                    .Where(m => !m.IsSpecialName));
+                    .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                    .Where(m => !m.IsSpecialName)
+                    .Where(m => !m.IsPrivate)
+                );
 
             return this.document.ToString();
         }

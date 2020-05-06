@@ -38,5 +38,12 @@
         /// <returns>An empty string.</returns>
         /// <exception cref="System.Exception">Thrown when...</exception>
         public string Get(string param) => string.Empty;
+
+        /// <summary>
+        /// A static method.
+        /// </summary>
+        public static void StaticMethod() { }
+
+        private void PrivateWork() { }
     }
 }

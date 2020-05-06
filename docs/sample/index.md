@@ -3,6 +3,7 @@
 ## `MyClassLib`
 
 - [`IMyInterface`](MyClassLib/IMyInterface)
+- [`MyAbstractClass`](MyClassLib/MyAbstractClass)
 - [`MyClass`](MyClassLib/MyClass)
 - [`MyEnum`](MyClassLib/MyEnum)
 

@@ -1,5 +1,11 @@
 # SubClass
 
+Sub class from
+
+```csharp
+public class SubClass
+```
+
 ## Constructors
 
 ### SubClass()

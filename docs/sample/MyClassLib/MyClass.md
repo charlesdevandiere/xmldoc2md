@@ -1,5 +1,11 @@
 # MyClass
 
+My class.
+
+```csharp
+public class MyClass
+```
+
 ## Constructors
 
 ### MyClass()
@@ -63,3 +69,11 @@ String<br>An empty string.
 #### Exceptions
 
 Exception<br>Thrown when...
+
+### StaticMethod()
+
+A static method.
+
+```csharp
+public static void StaticMethod()
+```

@@ -36,8 +36,16 @@ namespace XMLDoc2Markdown
 
         public XElement GetMember(MemberInfo memberInfo)
         {
-            string name = memberInfo.Name == ".ctor" ? "#ctor" : memberInfo.Name;
-            string fullName = $"{memberInfo.DeclaringType.Namespace}.{memberInfo.DeclaringType.Name}.{name}";
+            string fullName;
+            if (memberInfo is Type type)
+            {
+                fullName = $"{type.Namespace}.{type.Name}";
+            }
+            else
+            {
+                string name = memberInfo is ConstructorInfo ? "#ctor" : memberInfo.Name;
+                fullName = $"{memberInfo.DeclaringType.Namespace}.{memberInfo.DeclaringType.Name}.{name}";
+            }
             if (memberInfo is MethodBase methodBase)
             {
                 ParameterInfo[] parameterInfos = methodBase.GetParameters();

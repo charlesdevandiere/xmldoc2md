@@ -1,5 +1,11 @@
 # IMyInterface
 
+My interface.
+
+```csharp
+public interface IMyInterface
+```
+
 ## Methods
 
 ### Do(String, Int32)
@@ -7,7 +13,7 @@
 Do some thing.
 
 ```csharp
-public void Do(string firstParam, int secondParam)
+void Do(string firstParam, int secondParam)
 ```
 
 #### Parameters
@@ -21,7 +27,7 @@ public void Do(string firstParam, int secondParam)
 Gets some thing.
 
 ```csharp
-public string Get(string param)
+string Get(string param)
 ```
 
 #### Parameters

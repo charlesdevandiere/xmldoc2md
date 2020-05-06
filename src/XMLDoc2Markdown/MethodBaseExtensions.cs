@@ -40,12 +40,25 @@ namespace XMLDoc2Markdown
 
             if (full)
             {
-                signature.Add(methodBase.GetVisibility());
-            }
+                if (methodBase.DeclaringType.IsClass)
+                {
+                    signature.Add(methodBase.GetVisibility());
 
-            if (full && methodBase is MethodInfo methodInfo)
-            {
-                signature.Add(methodInfo.ReturnType.GetSimplifiedName());
+                    if (methodBase.IsStatic)
+                    {
+                        signature.Add("static");
+                    }
+
+                    if (methodBase.IsAbstract)
+                    {
+                        signature.Add("abstract");
+                    }
+                }
+
+                if (methodBase is MethodInfo methodInfo)
+                {
+                    signature.Add(methodInfo.ReturnType.GetSimplifiedName());
+                }
             }
 
             string displayName = methodBase.MemberType == MemberTypes.Constructor ? methodBase.DeclaringType.Name : methodBase.Name;
