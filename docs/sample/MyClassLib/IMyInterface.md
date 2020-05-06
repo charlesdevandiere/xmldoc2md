@@ -1,5 +1,7 @@
 # IMyInterface
 
+Namespace: MyClassLib
+
 My interface.
 
 ```csharp

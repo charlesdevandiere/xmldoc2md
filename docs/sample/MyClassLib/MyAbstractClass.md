@@ -1,10 +1,14 @@
 # MyAbstractClass
 
+Namespace: MyClassLib
+
 My abstract class.
 
 ```csharp
 public abstract class MyAbstractClass
 ```
+
+Inheritance Object → MyAbstractClass
 
 ## Methods
 

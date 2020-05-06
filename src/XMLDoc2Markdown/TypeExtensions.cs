@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace XMLDoc2Markdown
 {
@@ -88,7 +89,33 @@ namespace XMLDoc2Markdown
 
             signature.Add(type.Name);
 
+            if (type.IsClass || type.IsInterface)
+            {
+                var baseTypeAndInterfaces = new List<Type>();
+
+                if (type.IsClass && type.BaseType != null && type.BaseType != typeof(object))
+                {
+                    baseTypeAndInterfaces.Add(type.BaseType);
+                }
+
+                baseTypeAndInterfaces.AddRange(type.GetInterfaces());
+
+                if (baseTypeAndInterfaces.Count > 0)
+                {
+                    signature.Add($": {string.Join(", ", baseTypeAndInterfaces.Select(t => t.Namespace != type.Namespace ? t.FullName : t.Name))}");
+                }
+            }
+
             return string.Join(' ', signature);
         }
+
+        public static IEnumerable<Type> GetInheritanceHierarchy(this Type type)
+        {
+            for (Type current = type; current != null; current = current.BaseType)
+            {
+                yield return current;
+            }
+        }
+
     }
 }

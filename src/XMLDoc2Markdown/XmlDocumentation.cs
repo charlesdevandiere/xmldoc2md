@@ -39,7 +39,7 @@ namespace XMLDoc2Markdown
             string fullName;
             if (memberInfo is Type type)
             {
-                fullName = $"{type.Namespace}.{type.Name}";
+                fullName = type.FullName;
             }
             else
             {

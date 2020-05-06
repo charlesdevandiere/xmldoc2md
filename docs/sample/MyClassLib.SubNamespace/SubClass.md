@@ -1,10 +1,16 @@
 # SubClass
 
+Namespace: MyClassLib.SubNamespace
+
 Sub class from
 
 ```csharp
-public class SubClass
+public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
+
+Inheritance Object → MyClass → SubClass
+
+Implements IMyInterface
 
 ## Constructors
 

@@ -1,10 +1,16 @@
 # MyClass
 
+Namespace: MyClassLib
+
 My class.
 
 ```csharp
-public class MyClass
+public class MyClass : IMyInterface
 ```
+
+Inheritance Object → MyClass
+
+Implements IMyInterface
 
 ## Constructors
 

@@ -1,10 +1,14 @@
 # GenericClass`1
 
+Namespace: MyClassLib.SubNamespace
+
 Generic class.
 
 ```csharp
 public class GenericClass`1
 ```
+
+Inheritance Object → GenericClass`1
 
 ## Constructors
 

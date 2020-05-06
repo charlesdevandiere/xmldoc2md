@@ -23,13 +23,20 @@ namespace XMLDoc2Markdown
         {
             this.document.AppendHeader(this.type.Name, 1);
 
-            XElement doc = this.documentation.GetMember(this.type);
-            string summary = doc?.Element("summary")?.Value;
-            this.document.AppendParagraph(summary ?? "");
+            this.document.AppendParagraph($"Namespace: {this.type.Namespace}");
 
-            this.document.AppendCode(
-                "csharp",
-                this.type.GetSignature(full: true));
+            this.WriteMemberInfoDocumentation(this.type);
+
+            if (this.type.BaseType != null)
+            {
+                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.Name))}");
+            }
+
+            Type[] interfaces = this.type.GetInterfaces();
+            if (interfaces.Length>0)
+            {
+                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.Name))}");
+            }
 
             this.WriteMethodBasesDocumentation(this.type.GetConstructors());
             this.WriteMethodBasesDocumentation(
@@ -40,6 +47,18 @@ namespace XMLDoc2Markdown
                 );
 
             return this.document.ToString();
+        }
+
+        private void WriteMemberInfoDocumentation(MemberInfo memberInfo)
+        {
+            XElement doc = this.documentation.GetMember(memberInfo);
+            string summary = doc?.Element("summary")?.Value;
+            this.document.AppendParagraph(summary ?? "");
+
+            this.document.AppendCode(
+                "csharp",
+                memberInfo.GetSignature(full: true)
+            );
         }
 
         private void WriteMethodBasesDocumentation(IEnumerable<MethodBase> methodBases)
@@ -56,13 +75,9 @@ namespace XMLDoc2Markdown
             {
                 this.document.AppendHeader(methodBase.GetSignature(), 3);
 
-                XElement methodDoc = this.documentation.GetMember(methodBase);
-                string summary = methodDoc?.Element("summary")?.Value;
-                this.document.AppendParagraph(summary ?? "");
+                this.WriteMemberInfoDocumentation(methodBase);
 
-                this.document.AppendCode(
-                    "csharp",
-                    methodBase.GetSignature(full: true));
+                XElement methodDoc = this.documentation.GetMember(methodBase);
 
                 ParameterInfo[] @params = methodBase.GetParameters();
 

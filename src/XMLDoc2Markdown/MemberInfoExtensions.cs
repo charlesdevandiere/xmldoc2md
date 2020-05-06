@@ -1,0 +1,24 @@
+using System;
+using System.Reflection;
+
+namespace XMLDoc2Markdown
+{
+    public static class MemberInfoExtensions
+    {
+        public static string GetSignature(this MemberInfo memberInfo, bool full = false)
+        {
+            if (memberInfo is Type type)
+            {
+                return type.GetSignature(full);
+            }
+            else if (memberInfo is MethodBase methodBase)
+            {
+                return methodBase.GetSignature(full);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
+}
