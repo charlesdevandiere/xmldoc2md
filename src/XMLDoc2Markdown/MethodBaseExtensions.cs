@@ -6,31 +6,31 @@ namespace XMLDoc2Markdown
 {
     public static class MethodBaseExtensions
     {
-        public static string GetVisibility(this MethodBase methodBase)
+        public static Visibility GetVisibility(this MethodBase methodBase)
         {
             if (methodBase.IsPublic)
             {
-                return "public";
+                return Visibility.Public;
             }
             else if (methodBase.IsAssembly)
             {
-                return "internal";
+                return Visibility.Internal;
             }
             else if (methodBase.IsFamily)
             {
-                return "protected";
+                return Visibility.Protected;
             }
             else if (methodBase.IsFamilyOrAssembly)
             {
-                return "protected internal";
+                return Visibility.ProtectedInternal;
             }
             else if (methodBase.IsPrivate)
             {
-                return "private";
+                return Visibility.Private;
             }
             else
             {
-                return string.Empty;
+                return Visibility.None;
             }
         }
 
@@ -42,7 +42,7 @@ namespace XMLDoc2Markdown
             {
                 if (methodBase.DeclaringType.IsClass)
                 {
-                    signature.Add(methodBase.GetVisibility());
+                    signature.Add(methodBase.GetVisibility().Print());
 
                     if (methodBase.IsStatic)
                     {

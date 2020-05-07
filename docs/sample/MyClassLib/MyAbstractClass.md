@@ -10,6 +10,14 @@ public abstract class MyAbstractClass
 
 Inheritance Object → MyAbstractClass
 
+## Properties
+
+
+
+```csharp
+public abstract int MyProperty { get; set; }
+```
+
 ## Methods
 
 ### Do()

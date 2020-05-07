@@ -33,9 +33,15 @@ namespace XMLDoc2Markdown
             }
 
             Type[] interfaces = this.type.GetInterfaces();
-            if (interfaces.Length>0)
+            if (interfaces.Length > 0)
             {
                 this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.Name))}");
+            }
+
+            this.document.AppendHeader("Properties", 2);
+            foreach (PropertyInfo property in this.type.GetProperties())
+            {
+                this.WriteMemberInfoDocumentation(property);
             }
 
             this.WriteMethodBasesDocumentation(this.type.GetConstructors());

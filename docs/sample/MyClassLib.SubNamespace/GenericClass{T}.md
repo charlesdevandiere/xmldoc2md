@@ -10,6 +10,8 @@ public class GenericClass`1
 
 Inheritance Object → GenericClass`1
 
+## Properties
+
 ## Constructors
 
 ### GenericClass`1()

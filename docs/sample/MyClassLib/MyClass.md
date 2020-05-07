@@ -12,6 +12,14 @@ Inheritance Object → MyClass
 
 Implements IMyInterface
 
+## Properties
+
+My property.
+
+```csharp
+public string MyProperty { get; protected set; }
+```
+
 ## Constructors
 
 ### MyClass()

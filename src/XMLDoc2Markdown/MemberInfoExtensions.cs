@@ -15,10 +15,12 @@ namespace XMLDoc2Markdown
             {
                 return methodBase.GetSignature(full);
             }
-            else
+            else if (memberInfo is PropertyInfo propertyInfo)
             {
-                throw new NotImplementedException();
+                return propertyInfo.GetSignature(full);
             }
+            
+            throw new NotImplementedException();
         }
     }
 }

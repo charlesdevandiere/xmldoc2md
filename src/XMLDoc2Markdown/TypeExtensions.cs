@@ -36,15 +36,15 @@ namespace XMLDoc2Markdown
             return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.Name;
         }
 
-        public static string GetVisibility(this Type type)
+        public static Visibility GetVisibility(this Type type)
         {
             if (type.IsPublic)
             {
-                return "public";
+                return Visibility.Public;
             }
             else
             {
-                return string.Empty;
+                return Visibility.None;
             }
         }
 
@@ -54,7 +54,7 @@ namespace XMLDoc2Markdown
 
             if (full)
             {
-                signature.Add(type.GetVisibility());
+                signature.Add(type.GetVisibility().Print());
 
                 if (type.IsClass)
                 {

@@ -9,7 +9,7 @@
         /// My property.
         /// </summary>
         /// <value>The property value.</value>
-        public string MyProperty { get; set; }
+        public string MyProperty { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyClass" /> class.
