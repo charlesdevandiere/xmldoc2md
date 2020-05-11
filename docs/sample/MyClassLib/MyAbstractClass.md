@@ -12,6 +12,8 @@ Inheritance Object → MyAbstractClass
 
 ## Properties
 
+### MyProperty
+
 
 
 ```csharp

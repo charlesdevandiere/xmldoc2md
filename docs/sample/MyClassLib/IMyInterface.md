@@ -8,8 +8,6 @@ My interface.
 public interface IMyInterface
 ```
 
-## Properties
-
 ## Methods
 
 ### Do(String, Int32)

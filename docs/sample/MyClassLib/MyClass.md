@@ -14,6 +14,8 @@ Implements IMyInterface
 
 ## Properties
 
+### MyProperty
+
 My property.
 
 ```csharp
