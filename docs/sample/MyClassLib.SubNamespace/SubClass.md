@@ -38,7 +38,7 @@ public SubClass()
 
 ## Methods
 
-### ToString()
+### ToStrin&gt;()
 
 Convert instance to string.
 

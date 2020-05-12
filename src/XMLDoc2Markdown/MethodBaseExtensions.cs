@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -62,6 +63,19 @@ namespace XMLDoc2Markdown
             }
 
             string displayName = methodBase.MemberType == MemberTypes.Constructor ? methodBase.DeclaringType.Name : methodBase.Name;
+            int genericCharIndex = displayName.IndexOf('`');
+            if (genericCharIndex > -1)
+            {
+                displayName = displayName.Substring(0, genericCharIndex);
+            }
+            if (methodBase is MethodInfo methodInfo1)
+            {
+                Type[] genericArguments = methodInfo1.GetGenericArguments();
+                if  (genericArguments.Length > 0)
+                {
+                    displayName += $"<{string.Join(", ", genericArguments.Select(a => a.Name))}>";
+                }
+            }
             ParameterInfo[] @params = methodBase.GetParameters();
             IEnumerable<string> paramsNames = @params
                 .Select(p => $"{(full ? p.ParameterType.GetSimplifiedName() : p.ParameterType.Name)}{(full ? $" {p.Name}" : null)}");

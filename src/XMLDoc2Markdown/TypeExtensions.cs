@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace XMLDoc2Markdown
 {
@@ -87,7 +88,7 @@ namespace XMLDoc2Markdown
                 }
             }
 
-            signature.Add(type.Name);
+            signature.Add(type.GetDisplayName());
 
             if (type.IsClass || type.IsInterface)
             {
@@ -107,6 +108,20 @@ namespace XMLDoc2Markdown
             }
 
             return string.Join(' ', signature);
+        }
+
+        public static string GetDisplayName(this Type type)
+        {
+            TypeInfo typeInfo = type.GetTypeInfo();
+            if (typeInfo.GenericTypeParameters.Length > 0)
+            {
+                string @base = type.Name.Substring(0, type.Name.IndexOf('`'));
+                return $"{@base}<{string.Join(", ", typeInfo.GenericTypeParameters.Select(t => t.GetDisplayName()))}>";
+            }
+            else
+            {
+                return type.Name;
+            }
         }
 
         public static IEnumerable<Type> GetInheritanceHierarchy(this Type type)

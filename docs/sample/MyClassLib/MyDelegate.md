@@ -1,4 +1,4 @@
-# MyDelegate
+# MyDele&gt;ate
 
 Namespace: MyClassLib
 
@@ -8,13 +8,13 @@ Namespace: MyClassLib
  sealed class MyDelegate : System.MulticastDelegate, System.ICloneable, System.Runtime.Serialization.ISerializable
 ```
 
-Inheritance Object → Delegate → MulticastDelegate → MyDelegate
+Inheritance Object → Dele&gt;ate → MulticastDele&gt;ate → MyDele&gt;ate
 
 Implements ICloneable, ISerializable
 
 ## Properties
 
-### Target
+### Tar&gt;et
 
 
 
@@ -40,7 +40,7 @@ MethodInfo<br>
 
 ## Constructors
 
-### MyDelegate(Object, IntPtr)
+### MyDele&gt;ate(Object, IntPtr)
 
 
 
@@ -56,7 +56,7 @@ public MyDelegate(object object, IntPtr method)
 
 ## Methods
 
-### Invoke(String)
+### Invoke(Strin&gt;)
 
 
 
@@ -68,7 +68,7 @@ public void Invoke(string str)
 
 `str` String<br>
 
-### BeginInvoke(String, AsyncCallback, Object)
+### Be&gt;inInvoke(Strin&gt;, AsyncCallback, Object)
 
 
 

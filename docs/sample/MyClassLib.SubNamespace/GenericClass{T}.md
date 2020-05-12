@@ -1,33 +1,33 @@
-# GenericClass`1
+# GenericClass&lt;T>
 
 Namespace: MyClassLib.SubNamespace
 
 Generic class.
 
 ```csharp
-public class GenericClass`1
+public class GenericClass<T>
 ```
 
-Inheritance Object → GenericClass`1
+Inheritance Object → GenericClass&lt;T>
 
 ## Constructors
 
-### GenericClass`1()
+### GenericClass()
 
 Initializes a new instance of the  class.
 
 ```csharp
-public GenericClass`1()
+public GenericClass()
 ```
 
 ## Methods
 
-### GetGenericInstance()
+### GetGenericInstance&lt;TSource>()
 
 
 
 ```csharp
-public TSource GetGenericInstance()
+public TSource GetGenericInstance<TSource>()
 ```
 
 #### Returns
