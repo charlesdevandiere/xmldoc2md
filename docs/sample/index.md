@@ -5,6 +5,7 @@
 - [`IMyInterface`](MyClassLib/IMyInterface)
 - [`MyAbstractClass`](MyClassLib/MyAbstractClass)
 - [`MyClass`](MyClassLib/MyClass)
+- [`MyDelegate`](MyClassLib/MyDelegate)
 - [`MyEnum`](MyClassLib/MyEnum)
 
 ## `MyClassLib.SubNamespace`

@@ -19,6 +19,10 @@ namespace XMLDoc2Markdown
             {
                 return propertyInfo.GetSignature(full);
             }
+            else if (memberInfo is EventInfo eventInfo)
+            {
+                return eventInfo.GetSignature(full);
+            }
             
             throw new NotImplementedException();
         }

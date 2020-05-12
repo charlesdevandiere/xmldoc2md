@@ -22,6 +22,10 @@ My property.
 public string MyProperty { get; protected set; }
 ```
 
+#### Property Value
+
+String<br>The property value.
+
 ## Constructors
 
 ### MyClass()
@@ -92,4 +96,14 @@ A static method.
 
 ```csharp
 public static void StaticMethod()
+```
+
+## Events
+
+### MyEvent
+
+My event.
+
+```csharp
+public event EventHandler`1 MyEvent;
 ```

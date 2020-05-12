@@ -48,6 +48,7 @@ namespace XMLDoc2Markdown
                     .Where(m => !m.IsSpecialName)
                     .Where(m => !m.IsPrivate)
                 );
+            this.WriteMembersDocumentation(this.type.GetEvents());
 
             return this.document.ToString();
         }
@@ -83,6 +84,7 @@ namespace XMLDoc2Markdown
                 MemberTypes.Property => "Properties",
                 MemberTypes.Constructor => "Constructors",
                 MemberTypes.Method => "Methods",
+                MemberTypes.Event => "Events",
                 _ => throw new NotImplementedException()
             };
             this.document.AppendHeader(title, 2);
@@ -104,6 +106,15 @@ namespace XMLDoc2Markdown
                     {
                         this.WriteMethodReturnType(methodInfo, memberDocElement);
                     }
+                }
+
+                if (member is PropertyInfo propertyInfo)
+                {
+                    this.document.AppendHeader("Property Value", 4);
+
+                    string valueDoc = memberDocElement?.Element("value")?.Value;
+                    this.document.AppendParagraph(
+                        $"{propertyInfo.GetReturnType()?.Name}<br>{valueDoc}");
                 }
 
                 this.WriteExceptions(memberDocElement);

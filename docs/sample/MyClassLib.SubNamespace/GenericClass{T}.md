@@ -27,9 +27,9 @@ public GenericClass`1()
 
 
 ```csharp
-public T GetGenericInstance()
+public TSource GetGenericInstance()
 ```
 
 #### Returns
 
-T<br>
+TSource<br>

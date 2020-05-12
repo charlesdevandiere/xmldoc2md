@@ -1,4 +1,6 @@
-﻿namespace MyClassLib
+﻿using System;
+
+namespace MyClassLib
 {
     /// <summary>
     /// My class.
@@ -6,10 +8,26 @@
     public class MyClass : IMyInterface
     {
         /// <summary>
+        /// My field.
+        /// </summary>
+        public int MyField;
+
+        /// <summary>
         /// My property.
         /// </summary>
         /// <value>The property value.</value>
         public string MyProperty { get; protected set; }
+
+        /// <summary>
+        /// My delegate.
+        /// </summary>
+        /// <param name="str">The string param.</param>
+        public delegate void MyDelegate(string str);
+
+        /// <summary>
+        /// My event.
+        /// </summary>
+        public event EventHandler<EventArgs> MyEvent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyClass" /> class.

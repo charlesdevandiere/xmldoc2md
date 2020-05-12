@@ -14,11 +14,15 @@ Inheritance Object → MyAbstractClass
 
 ### MyProperty
 
-
+My abstract property.
 
 ```csharp
 public abstract int MyProperty { get; set; }
 ```
+
+#### Property Value
+
+Int32<br>The property value.
 
 ## Methods
 

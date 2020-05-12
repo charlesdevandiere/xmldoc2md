@@ -5,6 +5,10 @@ namespace MyClassLib
     /// </summary>
     public abstract class MyAbstractClass
     {
+        /// <summary>
+        /// My abstract property.
+        /// </summary>
+        /// <value>The property value.</value>
         public abstract int MyProperty { get; set; }
 
         /// <summary>

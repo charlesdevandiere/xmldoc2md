@@ -7,18 +7,18 @@ namespace MyClassLib.SubNamespace
     public class GenericClass<T> where T : new()
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericClass" /> class.
+        /// Initializes a new instance of the <see cref="GenericClass{T}" /> class.
         /// </summary>
         public GenericClass() { }
 
         /// <summary>
         /// Gets a new instance of generic param.
         /// </summary>
-        /// <typeparam name="T">The generic param.</typeparam>
+        /// <typeparam name="TSource">The generic param.</typeparam>
         /// <returns>The new instance.</returns>
-        public T GetGenericInstance<T>() where T : new()
+        public TSource GetGenericInstance<TSource>() where TSource : new()
         {
-            return new T();
+            return new TSource();
         }
     }
 }

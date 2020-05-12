@@ -22,6 +22,10 @@ My property.
 public string MyProperty { get; protected set; }
 ```
 
+#### Property Value
+
+String<br>The property value.
+
 ## Constructors
 
 ### SubClass()
@@ -45,3 +49,13 @@ public string ToString()
 #### Returns
 
 String<br>A string.
+
+## Events
+
+### MyEvent
+
+My event.
+
+```csharp
+public event EventHandler`1 MyEvent;
+```
