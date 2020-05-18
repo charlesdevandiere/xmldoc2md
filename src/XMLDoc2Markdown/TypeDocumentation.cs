@@ -22,22 +22,25 @@ namespace XMLDoc2Markdown
 
         public override string ToString()
         {
-            this.document.AppendHeader(this.type.GetDisplayName().Replace("<", "&lt;").Replace("g", "&gt;"), 1);
+            this.document.AppendHeader(this.type.GetDisplayName().Replace("<", "&lt;").Replace(">", "&gt;"), 1);
 
             this.document.AppendParagraph($"Namespace: {this.type.Namespace}");
 
-            this.WriteMemberInfoSummary(this.type);
+            XElement typeDocElement = this.documentation.GetMember(this.type);
+
+            this.WriteMemberInfoSummary(typeDocElement);
             this.WriteMemberInfoSignature(this.type);
+            this.WriteTypeParameters(this.type, typeDocElement);
 
             if (this.type.BaseType != null)
             {
-                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDisplayName().Replace("<", "&lt;").Replace("g", "&gt;")))}");
+                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDisplayName().Replace("<", "&lt;").Replace(">", "&gt;")))}");
             }
 
             Type[] interfaces = this.type.GetInterfaces();
             if (interfaces.Length > 0)
             {
-                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDisplayName().Replace("<", "&lt;").Replace("g", "&gt;")))}");
+                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDisplayName().Replace("<", "&lt;").Replace(">", "&gt;")))}");
             }
 
             this.WriteMembersDocumentation(this.type.GetProperties());
@@ -53,10 +56,9 @@ namespace XMLDoc2Markdown
             return this.document.ToString();
         }
 
-        private void WriteMemberInfoSummary(MemberInfo memberInfo)
+        private void WriteMemberInfoSummary(XElement memberDocElement)
         {
-            XElement doc = this.documentation.GetMember(memberInfo);
-            string summary = doc?.Element("summary")?.Value;
+            string summary = memberDocElement?.Element("summary")?.Value;
             this.document.AppendParagraph(summary ?? "");
         }
 
@@ -91,12 +93,12 @@ namespace XMLDoc2Markdown
 
             foreach (MemberInfo member in members)
             {
-                this.document.AppendHeader(member.GetSignature().Replace("<", "&lt;").Replace("g", "&gt;"), 3);
-
-                this.WriteMemberInfoSummary(member);
-                this.WriteMemberInfoSignature(member);
+                this.document.AppendHeader(member.GetSignature().Replace("<", "&lt;").Replace(">", "&gt;"), 3);
 
                 XElement memberDocElement = this.documentation.GetMember(member);
+
+                this.WriteMemberInfoSummary(memberDocElement);
+                this.WriteMemberInfoSignature(member);
 
                 if (member is MethodBase methodBase)
                 {
@@ -166,6 +168,25 @@ namespace XMLDoc2Markdown
             string returnsDoc = memberDocElement?.Element("returns")?.Value;
             this.document.AppendParagraph(
                 $"{methodInfo.ReturnType.Name}<br>{returnsDoc}");
+        }
+
+        private void WriteTypeParameters(Type type, XElement memberDocElement)
+        {
+            Guard.Argument(type, nameof(type)).NotNull();
+
+            Type[] typeParams = type.GetTypeInfo().GenericTypeParameters;
+
+            if (typeParams.Length > 0)
+            {
+                this.document.AppendHeader("Type Parameters", 4);
+
+                foreach (Type typeParam in typeParams)
+                {
+                    string typeParamDoc = memberDocElement?.Elements("typeparam").FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Value;
+                    this.document.AppendParagraph(
+                        $"{new MarkdownInlineCode(typeParam.Name)}<br>{typeParamDoc}");
+                }
+            }
         }
 
         private void WriteMethodParams(MethodBase methodBase, XElement memberDocElement)

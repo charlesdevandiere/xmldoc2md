@@ -48,10 +48,26 @@ namespace XMLDoc2Markdown
             }
             if (memberInfo is MethodBase methodBase)
             {
+                Type[] genericArguments = methodBase switch {
+                    ConstructorInfo _ => methodBase.DeclaringType.GetGenericArguments(),
+                    MethodInfo _ => methodBase.GetGenericArguments(),
+                    _ => new Type[0]
+                };
+
+                if (methodBase is MethodInfo && methodBase.IsGenericMethod)
+                {
+                    fullName += $"``{genericArguments.Length}";
+                }
+
                 ParameterInfo[] parameterInfos = methodBase.GetParameters();
                 if (parameterInfos.Length > 0)
                 {
-                    fullName = string.Concat(fullName, $"({string.Join(',', parameterInfos.Select(p => p.ParameterType))})");
+                    IEnumerable<string> @params = parameterInfos.Select(p =>
+                    {
+                        int index = Array.IndexOf(genericArguments, p.ParameterType);
+                        return index > -1 ? $"{(methodBase is MethodInfo ? "``" : "`")}{index}" : p.ParameterType.ToString();
+                    });
+                    fullName = string.Concat(fullName, $"({string.Join(',', @params)})");
                 }
             }
 

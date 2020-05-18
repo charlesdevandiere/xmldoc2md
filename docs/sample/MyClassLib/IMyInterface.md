@@ -10,7 +10,7 @@ public interface IMyInterface
 
 ## Methods
 
-### Do(Strin&gt;, Int32)
+### Do(String, Int32)
 
 Do some thing.
 
@@ -24,7 +24,7 @@ void Do(string firstParam, int secondParam)
 
 `secondParam` Int32<br>The second param.
 
-### Get(Strin&gt;)
+### Get(String)
 
 Gets some thing.
 

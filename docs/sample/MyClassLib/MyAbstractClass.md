@@ -34,7 +34,7 @@ Do something.
 public abstract void Do()
 ```
 
-### Get(Strin&gt;)
+### Get(String)
 
 Gets something.
 

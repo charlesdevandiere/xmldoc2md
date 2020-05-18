@@ -1,4 +1,4 @@
-# GenericClass&lt;T>
+# GenericClass&lt;T&gt;
 
 Namespace: MyClassLib.SubNamespace
 
@@ -8,7 +8,11 @@ Generic class.
 public class GenericClass<T>
 ```
 
-Inheritance Object → GenericClass&lt;T>
+#### Type Parameters
+
+`T`<br>The type param.
+
+Inheritance Object → GenericClass&lt;T&gt;
 
 ## Constructors
 
@@ -20,11 +24,23 @@ Initializes a new instance of the  class.
 public GenericClass()
 ```
 
+### GenericClass(T)
+
+Initializes a new instance of the  class.
+
+```csharp
+public GenericClass(T param)
+```
+
+#### Parameters
+
+`param` T<br>The generic parameter.
+
 ## Methods
 
-### GetGenericInstance&lt;TSource>()
+### GetGenericInstance&lt;TSource&gt;()
 
-
+Gets a new instance of generic param.
 
 ```csharp
 public TSource GetGenericInstance<TSource>()
@@ -32,4 +48,38 @@ public TSource GetGenericInstance<TSource>()
 
 #### Returns
 
-TSource<br>
+TSource<br>The new instance.
+
+### GetGenericInstance&lt;TSource&gt;(TSource)
+
+Gets a new instance of generic param.
+
+```csharp
+public TSource GetGenericInstance<TSource>(TSource source)
+```
+
+#### Parameters
+
+`source` TSource<br>The object source.
+
+#### Returns
+
+TSource<br>The new instance.
+
+### Map&lt;TSource, TTarget&gt;(TSource, TTarget)
+
+Map object.
+
+```csharp
+public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
+```
+
+#### Parameters
+
+`source` TSource<br>The object source.
+
+`target` TTarget<br>
+
+#### Returns
+
+TTarget<br>The mapped object.

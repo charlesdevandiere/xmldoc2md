@@ -36,7 +36,7 @@ Initializes a new instance of the  class.
 public MyClass()
 ```
 
-### MyClass(Strin&gt;, Int32)
+### MyClass(String, Int32)
 
 Initializes a new instance of the  class.
 
@@ -52,7 +52,7 @@ public MyClass(string firstParam, int secondParam)
 
 ## Methods
 
-### Do(Strin&gt;, Int32)
+### Do(String, Int32)
 
 Do some thing.
 
@@ -70,7 +70,7 @@ public void Do(string firstParam, int secondParam)
 
 Exception<br>Thrown when...
 
-### Get(Strin&gt;)
+### Get(String)
 
 Gets some thing.
 
