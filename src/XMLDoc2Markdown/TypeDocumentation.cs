@@ -102,6 +102,7 @@ namespace XMLDoc2Markdown
 
                 if (member is MethodBase methodBase)
                 {
+                    this.WriteTypeParameters(methodBase, memberDocElement);
                     this.WriteMethodParams(methodBase, memberDocElement);
 
                     if (methodBase is MethodInfo methodInfo && methodInfo.ReturnType != typeof(void))
@@ -170,11 +171,16 @@ namespace XMLDoc2Markdown
                 $"{methodInfo.ReturnType.Name}<br>{returnsDoc}");
         }
 
-        private void WriteTypeParameters(Type type, XElement memberDocElement)
+        private void WriteTypeParameters(MemberInfo memberInfo, XElement memberDocElement)
         {
-            Guard.Argument(type, nameof(type)).NotNull();
+            Guard.Argument(memberInfo, nameof(memberInfo)).NotNull();
 
-            Type[] typeParams = type.GetTypeInfo().GenericTypeParameters;
+            Type[] typeParams = memberInfo switch
+            {
+                TypeInfo typeInfo => typeInfo.GenericTypeParameters,
+                MethodInfo methodInfo => methodInfo.GetGenericArguments(),
+                _ => new Type[0]
+            };
 
             if (typeParams.Length > 0)
             {

@@ -46,6 +46,10 @@ Gets a new instance of generic param.
 public TSource GetGenericInstance<TSource>()
 ```
 
+#### Type Parameters
+
+`TSource`<br>The generic param.
+
 #### Returns
 
 TSource<br>The new instance.
@@ -57,6 +61,10 @@ Gets a new instance of generic param.
 ```csharp
 public TSource GetGenericInstance<TSource>(TSource source)
 ```
+
+#### Type Parameters
+
+`TSource`<br>The generic param.
 
 #### Parameters
 
@@ -73,6 +81,12 @@ Map object.
 ```csharp
 public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
 ```
+
+#### Type Parameters
+
+`TSource`<br>The source type.
+
+`TTarget`<br>The source target.
 
 #### Parameters
 
