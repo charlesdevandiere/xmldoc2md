@@ -22,7 +22,7 @@ namespace XMLDoc2Markdown
 
         public override string ToString()
         {
-            this.document.AppendHeader(this.type.GetDisplayName().Replace("<", "&lt;").Replace(">", "&gt;"), 1);
+            this.document.AppendHeader(this.type.GetDisplayName().FormatChevrons(), 1);
 
             this.document.AppendParagraph($"Namespace: {this.type.Namespace}");
 
@@ -34,13 +34,13 @@ namespace XMLDoc2Markdown
 
             if (this.type.BaseType != null)
             {
-                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDisplayName().Replace("<", "&lt;").Replace(">", "&gt;")))}");
+                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDisplayName().FormatChevrons()))}");
             }
 
             Type[] interfaces = this.type.GetInterfaces();
             if (interfaces.Length > 0)
             {
-                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDisplayName().Replace("<", "&lt;").Replace(">", "&gt;")))}");
+                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDisplayName().FormatChevrons()))}");
             }
 
             this.WriteMembersDocumentation(this.type.GetProperties());
@@ -93,7 +93,7 @@ namespace XMLDoc2Markdown
 
             foreach (MemberInfo member in members)
             {
-                this.document.AppendHeader(member.GetSignature().Replace("<", "&lt;").Replace(">", "&gt;"), 3);
+                this.document.AppendHeader(member.GetSignature().FormatChevrons(), 3);
 
                 XElement memberDocElement = this.documentation.GetMember(member);
 
