@@ -53,6 +53,11 @@ namespace XMLDoc2Markdown
                 );
             this.WriteMembersDocumentation(this.type.GetEvents());
 
+            if (this.type.IsEnum)
+            {
+                this.WriteEnumFields(this.type.GetFields().Where(m => !m.IsSpecialName));
+            }
+
             return this.document.ToString();
         }
 
@@ -211,6 +216,33 @@ namespace XMLDoc2Markdown
                     this.document.AppendParagraph(
                         $"{new MarkdownInlineCode(param.Name)} {param.ParameterType.Name}<br>{paramDoc}");
                 }
+            }
+        }
+
+        private void WriteEnumFields(IEnumerable<FieldInfo> fields)
+        {
+            Guard.Argument(fields, nameof(fields)).NotNull();
+
+            if (fields.Count() > 0)
+            {
+                this.document.AppendHeader("Fields", 4);
+
+                var header = new MarkdownTableHeader(
+                    new MarkdownTableHeaderCell("Name"),
+                    new MarkdownTableHeaderCell("Value", MarkdownTableTextAlignment.Right),
+                    new MarkdownTableHeaderCell("Description")
+                );
+
+                var table = new MarkdownTable(header, fields.Count());
+
+                foreach (FieldInfo field in fields)
+                {
+                    string paramDoc = this.documentation.GetMember(field)?.Element("summary")?.Value;
+                    table.AddRow(new MarkdownTableRow(field.Name, ((Enum)Enum.Parse(this.type, field.Name)).ToString("D"), paramDoc.Trim()));
+
+                }
+
+                this.document.Append(table);
             }
         }
     }
