@@ -12,7 +12,7 @@ Inheritance Object → ValueType → Enum → MyEnum
 
 Implements IComparable, IFormattable, IConvertible
 
-#### Fields
+## Fields
 
 | Name | Value | Description |
 | --- | --: | --- |

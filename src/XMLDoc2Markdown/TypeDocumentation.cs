@@ -86,12 +86,14 @@ namespace XMLDoc2Markdown
                 return;
             }
 
-            string title = members.First().MemberType switch
+            MemberTypes memberType = members.First().MemberType;
+            string title = memberType switch
             {
                 MemberTypes.Property => "Properties",
                 MemberTypes.Constructor => "Constructors",
                 MemberTypes.Method => "Methods",
                 MemberTypes.Event => "Events",
+                MemberTypes.Field => "Fields",
                 _ => throw new NotImplementedException()
             };
             this.document.AppendHeader(title, 2);
@@ -225,7 +227,7 @@ namespace XMLDoc2Markdown
 
             if (fields.Count() > 0)
             {
-                this.document.AppendHeader("Fields", 4);
+                this.document.AppendHeader("Fields", 2);
 
                 var header = new MarkdownTableHeader(
                     new MarkdownTableHeaderCell("Name"),
@@ -239,7 +241,6 @@ namespace XMLDoc2Markdown
                 {
                     string paramDoc = this.documentation.GetMember(field)?.Element("summary")?.Value;
                     table.AddRow(new MarkdownTableRow(field.Name, ((Enum)Enum.Parse(this.type, field.Name)).ToString("D"), paramDoc.Trim()));
-
                 }
 
                 this.document.Append(table);
