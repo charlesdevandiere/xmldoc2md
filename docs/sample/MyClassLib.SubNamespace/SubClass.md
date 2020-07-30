@@ -2,7 +2,7 @@
 
 Namespace: MyClassLib.SubNamespace
 
-Sub class from
+Sub class from `T:MyClassLib.MyClass`
 
 ```csharp
 public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface

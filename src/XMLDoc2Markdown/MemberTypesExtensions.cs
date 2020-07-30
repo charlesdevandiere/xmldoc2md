@@ -7,18 +7,12 @@ namespace XMLDoc2Markdown
     {
         public static char GetAlias(this MemberTypes memberType)
         {
-            return memberType switch
+            if (MemberTypesAliases.TryGetAlias(memberType, out char alias))
             {
-                MemberTypes.Constructor => 'M',
-                MemberTypes.Event => 'E',
-                MemberTypes.Field => 'F',
-                MemberTypes.Method => 'M',
-                MemberTypes.NestedType => 'T',
-                MemberTypes.Property => 'P',
-                MemberTypes.TypeInfo => 'T',
-                _ => throw new NotImplementedException(),
-            };
+                return alias;
+            }
+
+            throw new NotImplementedException();
         }
     }
 }
-

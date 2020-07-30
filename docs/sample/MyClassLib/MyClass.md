@@ -30,7 +30,7 @@ String<br>The property value.
 
 ### MyClass()
 
-Initializes a new instance of the  class.
+Initializes a new instance of the `T:MyClassLib.MyClass` class.
 
 ```csharp
 public MyClass()
@@ -38,7 +38,7 @@ public MyClass()
 
 ### MyClass(String, Int32)
 
-Initializes a new instance of the  class.
+Initializes a new instance of the `T:MyClassLib.MyClass` class ([System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)).
 
 ```csharp
 public MyClass(string firstParam, int secondParam)

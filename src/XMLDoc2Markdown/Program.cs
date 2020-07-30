@@ -12,8 +12,10 @@ namespace XMLDoc2Markdown
     {
         static void Main(string[] args)
         {
-            var app = new CommandLineApplication();
-            app.Name = "xmldoc2md";
+            var app = new CommandLineApplication
+            {
+                Name = "xmldoc2md"
+            };
 
             app.VersionOption("-v|--version", () =>
             {

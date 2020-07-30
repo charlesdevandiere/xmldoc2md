@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Linq;
 using Dawn;
 using Markdown;
@@ -63,8 +64,30 @@ namespace XMLDoc2Markdown
 
         private void WriteMemberInfoSummary(XElement memberDocElement)
         {
-            string summary = memberDocElement?.Element("summary")?.Value;
-            this.document.AppendParagraph(summary ?? "");
+            string summary = string.Empty;
+            IEnumerable<XNode> nodes = memberDocElement?.Element("summary")?.Nodes();
+            if (nodes != null)
+            {
+                foreach (XNode node in nodes)
+                {
+                    summary += node switch
+                    {
+                        XText text => text,
+                        XElement element => this.PrintSummaryXElement(element),
+                        _ => null
+                    };
+                }
+            }
+            this.document.AppendParagraph(summary);
+        }
+
+        private string PrintSummaryXElement(XElement element)
+        {
+            return element.Name.ToString() switch
+            {
+                "see" => this.GetLinkFromReference(element.Attribute("cref")?.Value).ToString(),
+                _ => element.Value
+            };
         }
 
         private void WriteMemberInfoSignature(MemberInfo memberInfo)
@@ -245,6 +268,30 @@ namespace XMLDoc2Markdown
 
                 this.document.Append(table);
             }
+        }
+
+        private MarkdownInlineElement GetLinkFromReference(string crefAttribute)
+        {
+            if (crefAttribute[1] == ':' &&
+                MemberTypesAliases.TryGetMemberType(crefAttribute[0], out MemberTypes memberType))
+            {
+                string memberFullName = crefAttribute.Substring(2);
+
+                // is a internal member
+                if (memberFullName.StartsWith(this.type.Namespace))
+                {
+                }
+
+                // is a System member
+                if (memberFullName.StartsWith("System.") && memberType == MemberTypes.TypeInfo)
+                {
+                    string url = $"https://docs.microsoft.com/en-us/dotnet/api/{memberFullName.ToLower().Replace('`', '-')}";
+
+                    return new MarkdownLink(memberFullName, url);
+                }
+            }
+
+            return new MarkdownInlineCode(crefAttribute);
         }
     }
 }
