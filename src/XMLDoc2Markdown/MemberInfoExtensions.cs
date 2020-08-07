@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace XMLDoc2Markdown
 {
-    public static class MemberInfoExtensions
+    internal static class MemberInfoExtensions
     {
-        public static string GetSignature(this MemberInfo memberInfo, bool full = false)
+        internal static string GetSignature(this MemberInfo memberInfo, bool full = false)
         {
             if (memberInfo is Type type)
             {

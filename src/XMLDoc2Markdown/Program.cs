@@ -58,25 +58,25 @@ namespace XMLDoc2Markdown
 
                 IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assembly.GetName().Name, 1);
 
-                foreach (IGrouping<string, Type> g in assembly.GetTypes().GroupBy(x => x.Namespace).OrderBy(x => x.Key))
+                foreach (IGrouping<string, Type> groupedType in assembly.GetTypes().GroupBy(type => type.Namespace).OrderBy(g => g.Key))
                 {
-                    string subDir = Path.Combine(@out, g.Key);
+                    string subDir = Path.Combine(@out, groupedType.Key);
                     if (!Directory.Exists(subDir))
                     {
                         Directory.CreateDirectory(subDir);
                     }
 
-                    indexPage.AppendHeader(new MarkdownInlineCode(g.Key), 2);
+                    indexPage.AppendHeader(new MarkdownInlineCode(groupedType.Key), 2);
 
                     var list = new MarkdownList();
-                    foreach (Type type in g.OrderBy(x => x.Name))
+                    foreach (Type type in groupedType.OrderBy(x => x.Name))
                     {
                         string beautifyName = Beautifier.BeautifyType(type);
                         string typeName = beautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
 
-                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), g.Key + "/" + typeName));
+                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), groupedType.Key + "/" + typeName));
 
-                        File.WriteAllText(Path.Combine(@out, g.Key, $"{typeName}.md"), new TypeDocumentation(type, documentation).ToString());
+                        File.WriteAllText(Path.Combine(@out, groupedType.Key, $"{typeName}.md"), new TypeDocumentation(assembly, type, documentation).ToString());
                     }
 
                     indexPage.Append(list);

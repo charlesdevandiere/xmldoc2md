@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace XMLDoc2Markdown
 {
-    public static class MethodBaseExtensions
+    internal static class MethodBaseExtensions
     {
-        public static Visibility GetVisibility(this MethodBase methodBase)
+        internal static Visibility GetVisibility(this MethodBase methodBase)
         {
             if (methodBase.IsPublic)
             {
@@ -35,7 +35,7 @@ namespace XMLDoc2Markdown
             }
         }
 
-        public static string GetSignature(this MethodBase methodBase, bool full = false)
+        internal static string GetSignature(this MethodBase methodBase, bool full = false)
         {
             var signature = new List<string>();
 

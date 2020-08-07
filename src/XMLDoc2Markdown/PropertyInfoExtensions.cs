@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace XMLDoc2Markdown
 {
-    public static class PropertyInfoExtensions
+    internal static class PropertyInfoExtensions
     {
-        public static Visibility GetVisibility(this PropertyInfo propertyInfo)
+        internal static Visibility GetVisibility(this PropertyInfo propertyInfo)
         {
             Visibility getMethodeVisibility = propertyInfo.GetMethod?.GetVisibility() ?? Visibility.None;
             Visibility setMethodeVisibility = propertyInfo.SetMethod?.GetVisibility() ?? Visibility.None;
@@ -15,12 +15,12 @@ namespace XMLDoc2Markdown
             return getMethodeVisibility.CompareTo(setMethodeVisibility) >= 0 ? getMethodeVisibility : setMethodeVisibility;
         }
 
-        public static Type GetReturnType(this PropertyInfo propertyInfo)
+        internal static Type GetReturnType(this PropertyInfo propertyInfo)
         {
             return propertyInfo.GetMethod?.ReturnType ?? propertyInfo.SetMethod?.GetParameters()?.FirstOrDefault()?.ParameterType;
         }
 
-        public static string GetSignature(this PropertyInfo propertyInfo, bool full = false)
+        internal static string GetSignature(this PropertyInfo propertyInfo, bool full = false)
         {
             var signature = new List<string>();
 

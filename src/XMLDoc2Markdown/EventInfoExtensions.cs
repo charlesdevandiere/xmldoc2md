@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace XMLDoc2Markdown
 {
-    public static class EventInfoExtensions
+    internal static class EventInfoExtensions
     {
-        public static Visibility GetVisibility(this EventInfo eventInfo)
+        internal static Visibility GetVisibility(this EventInfo eventInfo)
         {
             Visibility addMethodeVisibility = eventInfo.AddMethod?.GetVisibility() ?? Visibility.None;
             Visibility raiseMethodeVisibility = eventInfo.RaiseMethod?.GetVisibility() ?? Visibility.None;
@@ -17,7 +17,7 @@ namespace XMLDoc2Markdown
             return removeMethodeVisibility.CompareTo(addOrRaiseMethodVisibility) >= 0 ? removeMethodeVisibility : addOrRaiseMethodVisibility;
         }
 
-        public static string GetSignature(this EventInfo eventInfo, bool full = false)
+        internal static string GetSignature(this EventInfo eventInfo, bool full = false)
         {
             var signature = new List<string>();
 

@@ -1,6 +1,6 @@
 namespace XMLDoc2Markdown
 {
-    public enum Visibility
+    internal enum Visibility
     {
         None = 0,
         Private = 1,

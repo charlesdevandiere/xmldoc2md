@@ -1,8 +1,8 @@
 namespace XMLDoc2Markdown
 {
-    public static class VisibilityExtensions
+    internal static class VisibilityExtensions
     {
-        public static string Print(this Visibility visibility)
+        internal static string Print(this Visibility visibility)
         {
             return visibility switch
             {

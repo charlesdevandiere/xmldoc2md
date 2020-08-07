@@ -1,8 +1,8 @@
 namespace XMLDoc2Markdown
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
-        public static string FormatChevrons(this string value)
+        internal static string FormatChevrons(this string value)
         {
             return value.Replace("<", "&lt;").Replace(">", "&gt;");
         }

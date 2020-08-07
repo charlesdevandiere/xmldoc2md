@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace XMLDoc2Markdown
 {
-    public static class TypeExtensions
+    internal static class TypeExtensions
     {
-        private static readonly IReadOnlyDictionary<Type, string> simplifiedTypeNames = new Dictionary<Type, string>
+        internal static readonly IReadOnlyDictionary<Type, string> simplifiedTypeNames = new Dictionary<Type, string>
         {
             // void
             { typeof(void), "void" },
@@ -32,12 +32,12 @@ namespace XMLDoc2Markdown
             { typeof(string), "string" },
         };
 
-        public static string GetSimplifiedName(this Type type)
+        internal static string GetSimplifiedName(this Type type)
         {
             return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.Name;
         }
 
-        public static Visibility GetVisibility(this Type type)
+        internal static Visibility GetVisibility(this Type type)
         {
             if (type.IsPublic)
             {
@@ -49,7 +49,7 @@ namespace XMLDoc2Markdown
             }
         }
 
-        public static string GetSignature(this Type type, bool full = false)
+        internal static string GetSignature(this Type type, bool full = false)
         {
             var signature = new List<string>();
 
@@ -110,7 +110,7 @@ namespace XMLDoc2Markdown
             return string.Join(' ', signature);
         }
 
-        public static string GetDisplayName(this Type type)
+        internal static string GetDisplayName(this Type type)
         {
             TypeInfo typeInfo = type.GetTypeInfo();
             if (typeInfo.GenericTypeParameters.Length > 0)
@@ -124,7 +124,7 @@ namespace XMLDoc2Markdown
             }
         }
 
-        public static IEnumerable<Type> GetInheritanceHierarchy(this Type type)
+        internal static IEnumerable<Type> GetInheritanceHierarchy(this Type type)
         {
             for (Type current = type; current != null; current = current.BaseType)
             {

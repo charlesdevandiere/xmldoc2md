@@ -26,11 +26,23 @@ public string MyProperty { get; protected set; }
 
 String<br>The property value.
 
+### MyEnum
+
+My enum [MyClassLib.MyEnum](../myclasslib.myenum.md)
+
+```csharp
+public MyEnum MyEnum { get; set; }
+```
+
+#### Property Value
+
+MyEnum<br>The enum value
+
 ## Constructors
 
 ### MyClass()
 
-Initializes a new instance of the `T:MyClassLib.MyClass` class.
+Initializes a new instance of the `MyClass` class.
 
 ```csharp
 public MyClass()
@@ -38,7 +50,7 @@ public MyClass()
 
 ### MyClass(String, Int32)
 
-Initializes a new instance of the `T:MyClassLib.MyClass` class ([System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)).
+Initializes a new instance of the `MyClass` class.
 
 ```csharp
 public MyClass(string firstParam, int secondParam)

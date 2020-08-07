@@ -11,12 +11,14 @@ namespace XMLDoc2Markdown
 {
     public class TypeDocumentation
     {
+        private readonly Assembly assembly;
         private readonly Type type;
         private readonly XmlDocumentation documentation;
         private readonly IMarkdownDocument document = new MarkdownDocument();
 
-        public TypeDocumentation(Type type, XmlDocumentation documentation)
+        public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation)
         {
+            this.assembly = assembly;
             this.type = type;
             this.documentation = documentation;
         }
@@ -277,18 +279,31 @@ namespace XMLDoc2Markdown
             {
                 string memberFullName = crefAttribute.Substring(2);
 
-                // is a internal member
-                if (memberFullName.StartsWith(this.type.Namespace))
+                if (memberType == MemberTypes.TypeInfo)
                 {
+                    // is this type
+                    if (memberFullName == this.type.FullName)
+                    {
+                        return new MarkdownInlineCode(this.type.Name);
+                    }
+
+                    // is a internal member
+                    if (this.assembly.GetDeclaredNamespaces().Any(@namespace => memberFullName.StartsWith(@namespace)))
+                    {
+                        string url = $"../{memberFullName.ToLower().Replace('`', '-')}.md";
+                        
+                        return new MarkdownLink(memberFullName, url);
+                    }
+
+                    // is a System member
+                    if (memberFullName.StartsWith("System."))
+                    {
+                        string url = $"https://docs.microsoft.com/en-us/dotnet/api/{memberFullName.ToLower().Replace('`', '-')}";
+
+                        return new MarkdownLink(memberFullName, url);
+                    }
                 }
 
-                // is a System member
-                if (memberFullName.StartsWith("System.") && memberType == MemberTypes.TypeInfo)
-                {
-                    string url = $"https://docs.microsoft.com/en-us/dotnet/api/{memberFullName.ToLower().Replace('`', '-')}";
-
-                    return new MarkdownLink(memberFullName, url);
-                }
             }
 
             return new MarkdownInlineCode(crefAttribute);

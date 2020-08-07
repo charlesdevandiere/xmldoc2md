@@ -19,6 +19,12 @@ namespace MyClassLib
         public string MyProperty { get; protected set; }
 
         /// <summary>
+        /// My enum <see cref="MyClassLib.MyEnum" />
+        /// </summary>
+        /// <value>The enum value</value>
+        public MyEnum MyEnum { get; set; }
+
+        /// <summary>
         /// My delegate.
         /// </summary>
         /// <param name="str">The string param.</param>

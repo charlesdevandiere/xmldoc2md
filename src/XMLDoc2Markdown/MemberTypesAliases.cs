@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace XMLDoc2Markdown
 {
-    public static class MemberTypesAliases
+    internal static class MemberTypesAliases
     {
-        private static readonly (MemberTypes memberType, char alias)[] ALIASES = {
+        internal static readonly (MemberTypes memberType, char alias)[] ALIASES = {
             (MemberTypes.Constructor, 'M'),
             (MemberTypes.Event, 'E'),
             (MemberTypes.Field, 'F'),
@@ -24,7 +24,7 @@ namespace XMLDoc2Markdown
         /// otherwise, the default char. This parameter is passed uninitialized
         /// </param>
         /// <returns>true if the member type is found; otherwise, false</returns>
-        public static bool TryGetAlias(MemberTypes memberType, out char alias)
+        internal static bool TryGetAlias(MemberTypes memberType, out char alias)
         {
             int index = Array.FindIndex(ALIASES, element => element.memberType == memberType);
             if (index > -1)
@@ -46,7 +46,7 @@ namespace XMLDoc2Markdown
         /// otherwise, the default member type. This parameter is passed uninitialized
         /// </param>
         /// <returns>true if the alias is found; otherwise, false</returns>
-        public static bool TryGetMemberType(char alias, out MemberTypes memberType)
+        internal static bool TryGetMemberType(char alias, out MemberTypes memberType)
         {
             int index = Array.FindIndex(ALIASES, element => element.alias == alias);
             if (index > -1)

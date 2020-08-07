@@ -18,7 +18,7 @@ Inheritance Object → GenericClass&lt;T&gt;
 
 ### GenericClass()
 
-Initializes a new instance of the `T:MyClassLib.SubNamespace.GenericClass`1` class.
+Initializes a new instance of the `GenericClass`1` class.
 
 ```csharp
 public GenericClass()
@@ -26,7 +26,7 @@ public GenericClass()
 
 ### GenericClass(T)
 
-Initializes a new instance of the `T:MyClassLib.SubNamespace.GenericClass`1` class.
+Initializes a new instance of the `GenericClass`1` class.
 
 ```csharp
 public GenericClass(T param)
