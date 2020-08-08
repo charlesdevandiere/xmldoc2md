@@ -28,7 +28,7 @@ String<br>The property value.
 
 ### MyEnum
 
-My enum [MyClassLib.MyEnum](../myclasslib.myenum.md)
+My enum [MyClassLib.MyEnum](../MyClassLib/MyEnum.md)
 
 ```csharp
 public MyEnum MyEnum { get; set; }

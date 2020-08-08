@@ -132,5 +132,15 @@ namespace XMLDoc2Markdown
             }
         }
 
+        internal static string GetMSDocsUrl(this Type type)
+        {
+            if (type.Assembly != typeof(string).Assembly)
+            {
+                throw new InvalidOperationException($"{type.FullName} is not a mscorlib type.");
+            }
+
+            // TODO
+            throw new NotImplementedException();
+        }
     }
 }

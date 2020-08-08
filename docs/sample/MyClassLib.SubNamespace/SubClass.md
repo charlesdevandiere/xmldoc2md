@@ -2,7 +2,7 @@
 
 Namespace: MyClassLib.SubNamespace
 
-Sub class from [MyClassLib.MyClass](../myclasslib.myclass.md)
+Sub class from [MyClassLib.MyClass](../MyClassLib/MyClass.md)
 
 ```csharp
 public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
@@ -28,7 +28,7 @@ String<br>The property value.
 
 ### MyEnum
 
-My enum [MyClassLib.MyEnum](../myclasslib.myenum.md)
+My enum [MyClassLib.MyEnum](../MyClassLib/MyEnum.md)
 
 ```csharp
 public MyEnum MyEnum { get; set; }

@@ -76,7 +76,7 @@ namespace XMLDoc2Markdown
 
                         list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), groupedType.Key + "/" + typeName));
 
-                        File.WriteAllText(Path.Combine(@out, groupedType.Key, $"{typeName}.md"), new TypeDocumentation(assembly, type, documentation).ToString());
+                        File.WriteAllText(Path.Combine(@out, groupedType.Key, $"{type.Name.Replace('`', '-')}.md"), new TypeDocumentation(assembly, type, documentation).ToString());
                     }
 
                     indexPage.Append(list);

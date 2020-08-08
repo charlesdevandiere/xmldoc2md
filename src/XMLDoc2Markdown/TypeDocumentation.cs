@@ -290,7 +290,11 @@ namespace XMLDoc2Markdown
                     // is a internal member
                     if (this.assembly.GetDeclaredNamespaces().Any(@namespace => memberFullName.StartsWith(@namespace)))
                     {
-                        string url = $"../{memberFullName.ToLower().Replace('`', '-')}.md";
+                        int index = memberFullName.LastIndexOf('.');
+                        string @namespace = memberFullName.Substring(0, index);
+                        string name = memberFullName.Substring(index + 1, memberFullName.Length - index - 1).Replace('`', '-');
+
+                        string url = $"../{@namespace}/{name}.md";
                         
                         return new MarkdownLink(memberFullName, url);
                     }
@@ -298,7 +302,8 @@ namespace XMLDoc2Markdown
                     // is a System member
                     if (memberFullName.StartsWith("System."))
                     {
-                        string url = $"https://docs.microsoft.com/en-us/dotnet/api/{memberFullName.ToLower().Replace('`', '-')}";
+                        string msdocsBaseUrl = "https://docs.microsoft.com/en-us/dotnet/api";
+                        string url = $"{msdocsBaseUrl}/{memberFullName.ToLower().Replace('`', '-')}";
 
                         return new MarkdownLink(memberFullName, url);
                     }
