@@ -13,7 +13,7 @@ namespace MyClassLib
         public int MyField;
 
         /// <summary>
-        /// My property.
+        /// My property (<see cref="System.String" />).
         /// </summary>
         /// <value>The property value.</value>
         public string MyProperty { get; protected set; }

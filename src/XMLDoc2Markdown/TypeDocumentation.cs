@@ -281,34 +281,18 @@ namespace XMLDoc2Markdown
 
                 if (memberType == MemberTypes.TypeInfo)
                 {
-                    // is this type
-                    if (memberFullName == this.type.FullName)
+                    Type type = Type.GetType(memberFullName) ?? this.assembly.GetType(memberFullName);
+                    if (type != null)
                     {
-                        return new MarkdownInlineCode(this.type.Name);
-                    }
+                        string url = type.Assembly == typeof(string).Assembly
+                            ? type.GetMSDocsUrl()
+                            : type.GetInternalDocsUrl();
 
-                    // is a internal member
-                    if (this.assembly.GetDeclaredNamespaces().Any(@namespace => memberFullName.StartsWith(@namespace)))
-                    {
-                        int index = memberFullName.LastIndexOf('.');
-                        string @namespace = memberFullName.Substring(0, index);
-                        string name = memberFullName.Substring(index + 1, memberFullName.Length - index - 1).Replace('`', '-');
-
-                        string url = $"../{@namespace}/{name}.md";
-                        
-                        return new MarkdownLink(memberFullName, url);
-                    }
-
-                    // is a System member
-                    if (memberFullName.StartsWith("System."))
-                    {
-                        string msdocsBaseUrl = "https://docs.microsoft.com/en-us/dotnet/api";
-                        string url = $"{msdocsBaseUrl}/{memberFullName.ToLower().Replace('`', '-')}";
-
-                        return new MarkdownLink(memberFullName, url);
+                        return new MarkdownLink(type.GetDisplayName(), url);
                     }
                 }
 
+                return new MarkdownInlineCode(memberFullName);
             }
 
             return new MarkdownInlineCode(crefAttribute);

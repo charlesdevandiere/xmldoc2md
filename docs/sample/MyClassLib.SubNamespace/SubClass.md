@@ -2,7 +2,7 @@
 
 Namespace: MyClassLib.SubNamespace
 
-Sub class from [MyClassLib.MyClass](../MyClassLib/MyClass.md)
+Sub class from [MyClass](../MyClassLib/MyClass.md)
 
 ```csharp
 public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
@@ -16,7 +16,7 @@ Implements IMyInterface
 
 ### MyProperty
 
-My property.
+My property ([String](https://docs.microsoft.com/en-us/dotnet/api/system.string)).
 
 ```csharp
 public string MyProperty { get; protected set; }
@@ -28,7 +28,7 @@ String<br>The property value.
 
 ### MyEnum
 
-My enum [MyClassLib.MyEnum](../MyClassLib/MyEnum.md)
+My enum [MyEnum](../MyClassLib/MyEnum.md)
 
 ```csharp
 public MyEnum MyEnum { get; set; }

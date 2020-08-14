@@ -16,7 +16,7 @@ Implements IMyInterface
 
 ### MyProperty
 
-My property.
+My property ([String](https://docs.microsoft.com/en-us/dotnet/api/system.string)).
 
 ```csharp
 public string MyProperty { get; protected set; }
@@ -28,7 +28,7 @@ String<br>The property value.
 
 ### MyEnum
 
-My enum [MyClassLib.MyEnum](../MyClassLib/MyEnum.md)
+My enum [MyEnum](../MyClassLib/MyEnum.md)
 
 ```csharp
 public MyEnum MyEnum { get; set; }
@@ -42,7 +42,7 @@ MyEnum<br>The enum value
 
 ### MyClass()
 
-Initializes a new instance of the `MyClass` class.
+Initializes a new instance of the [MyClass](../MyClassLib/MyClass.md) class.
 
 ```csharp
 public MyClass()
@@ -50,7 +50,7 @@ public MyClass()
 
 ### MyClass(String, Int32)
 
-Initializes a new instance of the `MyClass` class.
+Initializes a new instance of the [MyClass](../MyClassLib/MyClass.md) class.
 
 ```csharp
 public MyClass(string firstParam, int secondParam)

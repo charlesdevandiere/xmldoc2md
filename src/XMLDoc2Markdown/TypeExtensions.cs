@@ -132,15 +132,28 @@ namespace XMLDoc2Markdown
             }
         }
 
-        internal static string GetMSDocsUrl(this Type type)
+        internal static string GetMSDocsUrl(this Type type, string msdocsBaseUrl = "https://docs.microsoft.com/en-us/dotnet/api")
         {
+            if (type == null)
+            {
+                throw new ArgumentNullException("Type cannot be null.");
+            }
             if (type.Assembly != typeof(string).Assembly)
             {
                 throw new InvalidOperationException($"{type.FullName} is not a mscorlib type.");
             }
 
-            // TODO
-            throw new NotImplementedException();
+            return $"{msdocsBaseUrl}/{type.FullName.ToLower().Replace('`', '-')}";
+        }
+
+        internal static string GetInternalDocsUrl(this Type type, string rootUrl = "..")
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException("Type cannot be null.");
+            }
+
+            return $"{rootUrl}/{type.Namespace}/{type.Name.Replace('`', '-')}.md";
         }
     }
 }
