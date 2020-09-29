@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Markdown;
 
 namespace XMLDoc2Markdown
 {
@@ -154,6 +155,15 @@ namespace XMLDoc2Markdown
             }
 
             return $"{rootUrl}/{type.Namespace}/{type.Name.Replace('`', '-')}.md";
+        }
+
+        internal static MarkdownLink GetDocsLink(this Type type)
+        {
+            string url = type.Assembly == typeof(string).Assembly
+                            ? type.GetMSDocsUrl()
+                            : type.GetInternalDocsUrl();
+
+            return new MarkdownLink(type.GetDisplayName().FormatChevrons(), url);
         }
     }
 }

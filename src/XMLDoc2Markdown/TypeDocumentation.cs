@@ -37,13 +37,13 @@ namespace XMLDoc2Markdown
 
             if (this.type.BaseType != null)
             {
-                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDisplayName().FormatChevrons()))}");
+                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDocsLink()))}");
             }
 
             Type[] interfaces = this.type.GetInterfaces();
             if (interfaces.Length > 0)
             {
-                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDisplayName().FormatChevrons()))}");
+                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDocsLink()))}");
             }
 
             this.WriteMembersDocumentation(this.type.GetProperties());
@@ -284,11 +284,7 @@ namespace XMLDoc2Markdown
                     Type type = Type.GetType(memberFullName) ?? this.assembly.GetType(memberFullName);
                     if (type != null)
                     {
-                        string url = type.Assembly == typeof(string).Assembly
-                            ? type.GetMSDocsUrl()
-                            : type.GetInternalDocsUrl();
-
-                        return new MarkdownLink(type.GetDisplayName(), url);
+                        return type.GetDocsLink();
                     }
                 }
 

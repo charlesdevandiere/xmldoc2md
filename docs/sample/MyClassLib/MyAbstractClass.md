@@ -8,7 +8,7 @@ My abstract class.
 public abstract class MyAbstractClass
 ```
 
-Inheritance Object → MyAbstractClass
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyAbstractClass](../MyClassLib/MyAbstractClass.md)
 
 ## Properties
 

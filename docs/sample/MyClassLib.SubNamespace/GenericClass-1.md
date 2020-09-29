@@ -12,13 +12,13 @@ public class GenericClass<T>
 
 `T`<br>The type param.
 
-Inheritance Object → GenericClass&lt;T&gt;
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [GenericClass&lt;T&gt;](../MyClassLib.SubNamespace/GenericClass-1.md)
 
 ## Constructors
 
 ### GenericClass()
 
-Initializes a new instance of the [GenericClass<T>](../MyClassLib.SubNamespace/GenericClass-1.md) class.
+Initializes a new instance of the [GenericClass&lt;T&gt;](../MyClassLib.SubNamespace/GenericClass-1.md) class.
 
 ```csharp
 public GenericClass()
@@ -26,7 +26,7 @@ public GenericClass()
 
 ### GenericClass(T)
 
-Initializes a new instance of the [GenericClass<T>](../MyClassLib.SubNamespace/GenericClass-1.md) class.
+Initializes a new instance of the [GenericClass&lt;T&gt;](../MyClassLib.SubNamespace/GenericClass-1.md) class.
 
 ```csharp
 public GenericClass(T param)

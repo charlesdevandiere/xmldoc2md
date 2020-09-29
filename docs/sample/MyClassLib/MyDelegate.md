@@ -8,9 +8,9 @@ Namespace: MyClassLib
  sealed class MyDelegate : System.MulticastDelegate, System.ICloneable, System.Runtime.Serialization.ISerializable
 ```
 
-Inheritance Object → Delegate → MulticastDelegate → MyDelegate
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/system.delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/system.multicastdelegate) → [MyDelegate](../MyClassLib/MyDelegate.md)
 
-Implements ICloneable, ISerializable
+Implements [ICloneable](https://docs.microsoft.com/en-us/dotnet/api/system.icloneable), [ISerializable](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.iserializable)
 
 ## Properties
 

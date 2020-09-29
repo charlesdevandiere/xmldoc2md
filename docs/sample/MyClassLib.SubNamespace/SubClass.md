@@ -8,9 +8,9 @@ Sub class from [MyClass](../MyClassLib/MyClass.md)
 public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
 
-Inheritance Object → MyClass → SubClass
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](../MyClassLib/MyClass.md) → [SubClass](../MyClassLib.SubNamespace/SubClass.md)
 
-Implements IMyInterface
+Implements [IMyInterface](../MyClassLib/IMyInterface.md)
 
 ## Properties
 

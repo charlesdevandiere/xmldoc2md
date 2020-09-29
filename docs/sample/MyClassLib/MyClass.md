@@ -8,9 +8,9 @@ My class.
 public class MyClass : IMyInterface
 ```
 
-Inheritance Object → MyClass
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](../MyClassLib/MyClass.md)
 
-Implements IMyInterface
+Implements [IMyInterface](../MyClassLib/IMyInterface.md)
 
 ## Properties
 
