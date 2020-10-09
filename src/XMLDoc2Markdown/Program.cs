@@ -71,7 +71,7 @@ namespace XMLDoc2Markdown
                     var list = new MarkdownList();
                     foreach (Type type in groupedType.OrderBy(x => x.Name))
                     {
-                        string beautifyName = Beautifier.BeautifyType(type);
+                        string beautifyName = type.GetDisplayName();
                         string typeName = beautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
 
                         list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), groupedType.Key + "/" + typeName));
