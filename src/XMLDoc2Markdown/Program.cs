@@ -85,11 +85,10 @@ namespace XMLDoc2Markdown
                     foreach (Type type in groupedType.OrderBy(x => x.Name))
                     {
                         string beautifyName = type.GetDisplayName();
-                        string typeName = beautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
+                        string fileName = $"{StringExtensions.MakeTypeNameFileNameSafe(beautifyName)}.md";
+                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), groupedType.Key + "/" + fileName));
 
-                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), groupedType.Key + "/" + typeName));
-
-                        File.WriteAllText(Path.Combine(@out, groupedType.Key, $"{type.Name.Replace('`', '-')}.md"), new TypeDocumentation(assembly, type, documentation).ToString());
+                        File.WriteAllText(Path.Combine(@out, groupedType.Key, fileName), new TypeDocumentation(assembly, type, documentation).ToString());
                     }
 
                     indexPage.Append(list);
@@ -110,7 +109,7 @@ namespace XMLDoc2Markdown
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to execute application: {0}", ex.Message);
+                Console.WriteLine("Unable to execute application. Message: {0}\r\nSource: {1}\r\nTarget site: {2}\r\nStack trace:{3}", ex.Message, ex.Source, ex.TargetSite, ex.StackTrace);
             }
         }
     }
