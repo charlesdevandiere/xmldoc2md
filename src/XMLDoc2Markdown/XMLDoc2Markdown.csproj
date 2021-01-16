@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet publish ..\..\sample\MyClassLib\MyClassLib.csproj -c Release -o ..\..\publish" />
+    <Exec Command="dotnet publish &quot;../../sample/MyClassLib/MyClassLib.csproj&quot; -c Release -o &quot;../../publish&quot;" />
   </Target>
 
 </Project>
