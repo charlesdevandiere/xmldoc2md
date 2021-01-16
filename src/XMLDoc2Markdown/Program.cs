@@ -12,6 +12,19 @@ namespace XMLDoc2Markdown
     {
         static void Main(string[] args)
         {
+#if DEBUG
+            System.Diagnostics.Debugger.Launch();
+            string solutionRoot = Environment.CurrentDirectory;
+            DirectoryInfo parent = null;
+            while (!(solutionRoot is null) && !String.Equals(parent?.Name, "xmldoc2md", StringComparison.InvariantCultureIgnoreCase))
+            {
+                parent = new DirectoryInfo(solutionRoot).Parent;
+                solutionRoot = parent?.FullName;
+            }
+            if (solutionRoot is null)
+                throw new Exception();
+            args = new[] { Path.Combine(solutionRoot, @"publish\MyClassLib.dll"), Path.Combine(solutionRoot, @"docs\sample") };
+#endif
             var app = new CommandLineApplication
             {
                 Name = "xmldoc2md"
