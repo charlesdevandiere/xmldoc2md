@@ -50,4 +50,43 @@ namespace MyClassLib.SubNamespace
             return target;
         }
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenericClass{T}" /> class.
+    /// </summary>
+    /// <typeparam name="T1">A generic type parameter.</typeparam>
+    /// <typeparam name="T2">A generic type parameter.</typeparam>
+    public class GenericClass<T1, T2> 
+        : IMyInterface
+        where T1 : new()
+        where T2 : new()
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericClass{T1,T2}" /> class.
+        /// </summary>
+        public GenericClass() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericClass{T1,T2}" /> class.
+        /// </summary>
+        /// <param name="param">The first generic parameter.</param>
+        /// <param name="param2">The second generic parameter.</param>
+        public GenericClass(T1 param, T2 param2) { }
+
+        /// <summary>
+        /// Returns a new instance of <see cref="GenericClass{T1}"/>.
+        /// </summary>
+        private GenericClass<T1> GenericClassWithFirstParameter => new GenericClass<T1>();
+        
+        /// <summary>
+        /// Returns a new instance of <see cref="GenericClass{T2}"/>.
+        /// </summary>
+        private GenericClass<T2> GenericClassWithSecondParameter => new GenericClass<T2>();
+
+        /// <inheritdoc />
+        public void Do(string firstParam, int secondParam) => throw new System.NotImplementedException();
+
+        /// <inheritdoc />
+        public string Get(string param) => throw new System.NotImplementedException();
+    }
 }
