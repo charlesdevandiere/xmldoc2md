@@ -8,9 +8,9 @@ My class.
 public class MyClass : IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](../MyClassLib/MyClass.md)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass.md)
 
-Implements [IMyInterface](../MyClassLib/IMyInterface.md)
+Implements [IMyInterface](./myclasslib.imyinterface.md)
 
 ## Properties
 
@@ -26,9 +26,17 @@ public string MyProperty { get; protected set; }
 
 String<br>The property value.
 
+#### Example
+
+This example assign `"foo"` to MyProperty.
+
+```csharp
+foo.MyProperty = "foo";
+```
+
 ### MyEnum
 
-My enum [MyEnum](../MyClassLib/MyEnum.md)
+My enum [MyEnum](./myclasslib.myenum.md)
 
 ```csharp
 public MyEnum MyEnum { get; set; }
@@ -42,7 +50,7 @@ MyEnum<br>The enum value
 
 ### MyClass()
 
-Initializes a new instance of the [MyClass](../MyClassLib/MyClass.md) class.
+Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
 
 ```csharp
 public MyClass()
@@ -50,7 +58,7 @@ public MyClass()
 
 ### MyClass(String, Int32)
 
-Initializes a new instance of the [MyClass](../MyClassLib/MyClass.md) class.
+Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
 
 ```csharp
 public MyClass(string firstParam, int secondParam)
@@ -102,6 +110,14 @@ String<br>An empty string.
 
 Exception<br>Thrown when...
 
+#### Example
+
+This example call the `Get` methode.
+
+```csharp
+var bar = foo.Get("bar");
+```
+
 ### StaticMethod()
 
 A static method.
@@ -117,7 +133,7 @@ public static void StaticMethod()
 My event.
 
 ```csharp
-public event EventHandler`1 MyEvent;
+public event EventHandler<EventArgs> MyEvent;
 ```
 
 ## Example

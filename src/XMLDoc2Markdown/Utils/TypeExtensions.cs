@@ -35,7 +35,7 @@ namespace XMLDoc2Markdown.Utils
 
         internal static string GetSimplifiedName(this Type type)
         {
-            return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.Name;
+            return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.GetDisplayName();
         }
 
         internal static Visibility GetVisibility(this Type type)
@@ -114,10 +114,12 @@ namespace XMLDoc2Markdown.Utils
         internal static string GetDisplayName(this Type type)
         {
             TypeInfo typeInfo = type.GetTypeInfo();
-            if (typeInfo.GenericTypeParameters.Length > 0)
+            Type[] genericParams = typeInfo.GenericTypeArguments.Length > 0 ? typeInfo.GenericTypeArguments : typeInfo.GenericTypeParameters;
+
+            if (genericParams.Length > 0)
             {
                 string @base = type.Name.Substring(0, type.Name.IndexOf('`'));
-                return $"{@base}<{string.Join(", ", typeInfo.GenericTypeParameters.Select(t => t.GetDisplayName()))}>";
+                return $"{@base}<{string.Join(", ", genericParams.Select(t => t.GetDisplayName()))}>";
             }
             else
             {
@@ -147,14 +149,14 @@ namespace XMLDoc2Markdown.Utils
             return $"{msdocsBaseUrl}/{type.FullName.ToLower().Replace('`', '-')}";
         }
 
-        internal static string GetInternalDocsUrl(this Type type, string rootUrl = "..")
+        internal static string GetInternalDocsUrl(this Type type)
         {
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return $"{rootUrl}/{type.Namespace}/{type.Name.Replace('`', '-')}.md";
+            return $"./{type.GetIdentifier().Replace('`', '-').ToLower()}.md";
         }
 
         internal static MarkdownLink GetDocsLink(this Type type)

@@ -19,7 +19,7 @@ namespace XMLDoc2Markdown
 
             if (!File.Exists(xmlPath))
             {
-                throw new Exception($"Not XML documentation file founded for library {dllPath}.");
+                throw new FileNotFoundException($"Could not load XML documentation file '{Path.GetFullPath(xmlPath)}'. File not found.", xmlPath);
             }
 
             try
@@ -37,42 +37,7 @@ namespace XMLDoc2Markdown
 
         public XElement GetMember(MemberInfo memberInfo)
         {
-            string fullName;
-            if (memberInfo is Type type)
-            {
-                fullName = type.FullName;
-            }
-            else
-            {
-                string name = memberInfo is ConstructorInfo ? "#ctor" : memberInfo.Name;
-                fullName = $"{memberInfo.DeclaringType.Namespace}.{memberInfo.DeclaringType.Name}.{name}";
-            }
-            if (memberInfo is MethodBase methodBase)
-            {
-                Type[] genericArguments = methodBase switch {
-                    ConstructorInfo _ => methodBase.DeclaringType.GetGenericArguments(),
-                    MethodInfo _ => methodBase.GetGenericArguments(),
-                    _ => Array.Empty<Type>()
-                };
-
-                if (methodBase is MethodInfo && methodBase.IsGenericMethod)
-                {
-                    fullName += $"``{genericArguments.Length}";
-                }
-
-                ParameterInfo[] parameterInfos = methodBase.GetParameters();
-                if (parameterInfos.Length > 0)
-                {
-                    IEnumerable<string> @params = parameterInfos.Select(p =>
-                    {
-                        int index = Array.IndexOf(genericArguments, p.ParameterType);
-                        return index > -1 ? $"{(methodBase is MethodInfo ? "``" : "`")}{index}" : p.ParameterType.ToString();
-                    });
-                    fullName = string.Concat(fullName, $"({string.Join(',', @params)})");
-                }
-            }
-
-            return this.GetMember($"{memberInfo.MemberType.GetAlias()}:{fullName}");
+            return this.GetMember($"{memberInfo.MemberType.GetAlias()}:{memberInfo.GetIdentifier()}");
         }
 
         public XElement GetMember(string name)

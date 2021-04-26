@@ -20,6 +20,10 @@ namespace XMLDoc2Markdown
 
         public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, string examplesDirectory)
         {
+            Guard.Argument(assembly, nameof(assembly)).NotNull();
+            Guard.Argument(type, nameof(type)).NotNull();
+            Guard.Argument(documentation, nameof(documentation)).NotNull();
+
             this.assembly = assembly;
             this.type = type;
             this.documentation = documentation;
@@ -158,6 +162,8 @@ namespace XMLDoc2Markdown
                 }
 
                 this.WriteExceptions(memberDocElement);
+
+                this.WriteExample(member);
             }
         }
 

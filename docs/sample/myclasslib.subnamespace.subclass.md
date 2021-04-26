@@ -2,15 +2,15 @@
 
 Namespace: MyClassLib.SubNamespace
 
-Sub class from [MyClass](../MyClassLib/MyClass.md)
+Sub class from [MyClass](./myclasslib.myclass.md)
 
 ```csharp
 public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](../MyClassLib/MyClass.md) → [SubClass](../MyClassLib.SubNamespace/SubClass.md)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass.md) → [SubClass](./myclasslib.subnamespace.subclass.md)
 
-Implements [IMyInterface](../MyClassLib/IMyInterface.md)
+Implements [IMyInterface](./myclasslib.imyinterface.md)
 
 ## Properties
 
@@ -26,9 +26,17 @@ public string MyProperty { get; protected set; }
 
 String<br>The property value.
 
+#### Example
+
+This example assign `"foo"` to MyProperty.
+
+```csharp
+foo.MyProperty = "foo";
+```
+
 ### MyEnum
 
-My enum [MyEnum](../MyClassLib/MyEnum.md)
+My enum [MyEnum](./myclasslib.myenum.md)
 
 ```csharp
 public MyEnum MyEnum { get; set; }
@@ -69,5 +77,5 @@ String<br>A string.
 My event.
 
 ```csharp
-public event EventHandler`1 MyEvent;
+public event EventHandler<EventArgs> MyEvent;
 ```
