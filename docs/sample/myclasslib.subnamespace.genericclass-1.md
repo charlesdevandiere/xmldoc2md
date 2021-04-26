@@ -92,7 +92,7 @@ public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
 
 `source` TSource<br>The object source.
 
-`target` TTarget<br>
+`target` TTarget<br>The target
 
 #### Returns
 

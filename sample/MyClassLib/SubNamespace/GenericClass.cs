@@ -42,6 +42,7 @@ namespace MyClassLib.SubNamespace
         /// Map object.
         /// </summary>
         /// <param name="source">The object source.</param>
+        /// <param name="target">The target</param>
         /// <typeparam name="TSource">The source type.</typeparam>
         /// <typeparam name="TTarget">The source target.</typeparam>
         /// <returns>The mapped object.</returns>

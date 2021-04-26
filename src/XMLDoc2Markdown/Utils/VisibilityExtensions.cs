@@ -1,4 +1,4 @@
-namespace XMLDoc2Markdown
+namespace XMLDoc2Markdown.Utils
 {
     internal static class VisibilityExtensions
     {

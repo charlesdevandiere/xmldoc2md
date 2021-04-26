@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Xml;
 using System.Xml.Linq;
 using Dawn;
 using Markdown;
+using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown
 {
@@ -14,13 +15,15 @@ namespace XMLDoc2Markdown
         private readonly Assembly assembly;
         private readonly Type type;
         private readonly XmlDocumentation documentation;
+        private readonly string examplesDirectory;
         private readonly IMarkdownDocument document = new MarkdownDocument();
 
-        public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation)
+        public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, string examplesDirectory)
         {
             this.assembly = assembly;
             this.type = type;
             this.documentation = documentation;
+            this.examplesDirectory = examplesDirectory;
         }
 
         public override string ToString()
@@ -60,6 +63,8 @@ namespace XMLDoc2Markdown
             {
                 this.WriteEnumFields(this.type.GetFields().Where(m => !m.IsSpecialName));
             }
+
+            this.WriteExample(this.type);
 
             return this.document.ToString();
         }
@@ -106,7 +111,7 @@ namespace XMLDoc2Markdown
 
             members = members.Where(member => member != null);
 
-            if (members.Count() <= 0)
+            if (!members.Any())
             {
                 return;
             }
@@ -172,7 +177,7 @@ namespace XMLDoc2Markdown
                     if (cref != null && cref.Length > 2)
                     {
                         int index = cref.LastIndexOf('.');
-                        string exception = cref.Substring(index + 1);
+                        string exception = cref[(index + 1)..];
                         if (!string.IsNullOrEmpty(exception))
                         {
                             text.Add(exception);
@@ -184,7 +189,7 @@ namespace XMLDoc2Markdown
                         text.Add(exceptionDoc.Value);
                     }
 
-                    if (text.Count() > 0)
+                    if (text.Count > 0)
                     {
                         this.document.AppendParagraph(string.Join("<br>", text));
                     }
@@ -211,7 +216,7 @@ namespace XMLDoc2Markdown
             {
                 TypeInfo typeInfo => typeInfo.GenericTypeParameters,
                 MethodInfo methodInfo => methodInfo.GetGenericArguments(),
-                _ => new Type[0]
+                _ => Array.Empty<Type>()
             };
 
             if (typeParams.Length > 0)
@@ -250,7 +255,7 @@ namespace XMLDoc2Markdown
         {
             Guard.Argument(fields, nameof(fields)).NotNull();
 
-            if (fields.Count() > 0)
+            if (fields.Any())
             {
                 this.document.AppendHeader("Fields", 2);
 
@@ -272,12 +277,36 @@ namespace XMLDoc2Markdown
             }
         }
 
+        private void WriteExample(MemberInfo memberInfo)
+        {
+            if (this.examplesDirectory == null)
+            {
+                return;
+            }
+
+            string fileName = $"{memberInfo.GetIdentifier()}.md";
+            string file = Path.Combine(this.examplesDirectory, fileName);
+
+            if (File.Exists(file))
+            {
+                try
+                {
+                    using var sr = new StreamReader(file);
+                    this.document.Append(new MarkdownParagraph(sr.ReadToEnd()));
+                }
+                catch (IOException e)
+                {
+                    Logger.Warning(e.Message);
+                }
+            }
+        }
+
         private MarkdownInlineElement GetLinkFromReference(string crefAttribute)
         {
             if (crefAttribute[1] == ':' &&
                 MemberTypesAliases.TryGetMemberType(crefAttribute[0], out MemberTypes memberType))
             {
-                string memberFullName = crefAttribute.Substring(2);
+                string memberFullName = crefAttribute[2..];
 
                 if (memberType == MemberTypes.TypeInfo)
                 {

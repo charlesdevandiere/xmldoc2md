@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
-using System.Text;
 using Markdown;
 using Microsoft.Extensions.CommandLineUtils;
+using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown
 {
@@ -31,22 +32,22 @@ namespace XMLDoc2Markdown
             CommandArgument srcArg = app.Argument("src", "DLL source path");
             CommandArgument outArg = app.Argument("out", "Output directory");
 
-            CommandOption namespaceMatchOption = app.Option(
-                "--namespace-match <regex>",
-                "Regex pattern to select namespaces",
+            CommandOption indexPageNameOption = app.Option(
+                "--index-page-name",
+                "Name of the index page (default: \"index\")",
                 CommandOptionType.SingleValue);
 
-            CommandOption indexPageNameOption = app.Option(
-                "--index-page-name <regex>",
-                "Name of the index page (default: \"index\")",
+            CommandOption examplesPathOption = app.Option(
+                "--examples-path",
+                "Path to the code examples to insert in the documentation",
                 CommandOptionType.SingleValue);
 
             app.OnExecute(() =>
             {
                 string src = srcArg.Value;
                 string @out = outArg.Value;
-                string namespaceMatch = namespaceMatchOption.Value();
-                string indexPageName = indexPageNameOption.HasValue() ? indexPageNameOption.Value() : "index";
+                string indexPageName = indexPageNameOption.Value() ?? "index";
+                string examplesPath = examplesPathOption.Value();
 
                 if (!Directory.Exists(@out))
                 {
@@ -54,9 +55,12 @@ namespace XMLDoc2Markdown
                 }
 
                 var assembly = Assembly.LoadFrom(src);
+                string assemblyName = assembly.GetName().Name;
                 var documentation = new XmlDocumentation(src);
 
-                IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assembly.GetName().Name, 1);
+                Logger.Info($"Generating documentation for {assemblyName} Assemmbly...");
+
+                IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assemblyName, 1);
 
                 foreach (IGrouping<string, Type> groupedType in assembly.GetTypes().GroupBy(type => type.Namespace).OrderBy(g => g.Key))
                 {
@@ -71,18 +75,29 @@ namespace XMLDoc2Markdown
                     var list = new MarkdownList();
                     foreach (Type type in groupedType.OrderBy(x => x.Name))
                     {
-                        string beautifyName = type.GetDisplayName();
-                        string typeName = beautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
+                        if (typeof(Delegate).IsAssignableFrom(type))
+                        {
+                            continue;
+                        }
 
-                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(beautifyName), groupedType.Key + "/" + typeName));
+                        string fileName = type.GetIdentifier().Replace('`', '-').ToLower();
+                        Logger.Info($"  {fileName}");
 
-                        File.WriteAllText(Path.Combine(@out, groupedType.Key, $"{type.Name.Replace('`', '-')}.md"), new TypeDocumentation(assembly, type, documentation).ToString());
+                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(type.GetDisplayName()), WebUtility.UrlEncode(fileName)));
+
+                        File.WriteAllText(
+                            Path.Combine(@out, $"{fileName}.md"),
+                            new TypeDocumentation(assembly, type, documentation, examplesPath).ToString()
+                        );
+
                     }
 
                     indexPage.Append(list);
                 }
 
                 File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexPage.ToString());
+
+                Logger.Info("Generated successfully.");
 
                 return 0;
             });
@@ -93,11 +108,11 @@ namespace XMLDoc2Markdown
             }
             catch (CommandParsingException ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to execute application: {0}", ex.Message);
+                Logger.Error($"Unable to execute application: {ex.Message}");
             }
         }
     }

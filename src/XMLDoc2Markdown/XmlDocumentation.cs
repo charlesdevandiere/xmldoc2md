@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
+using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown
 {
@@ -51,7 +52,7 @@ namespace XMLDoc2Markdown
                 Type[] genericArguments = methodBase switch {
                     ConstructorInfo _ => methodBase.DeclaringType.GetGenericArguments(),
                     MethodInfo _ => methodBase.GetGenericArguments(),
-                    _ => new Type[0]
+                    _ => Array.Empty<Type>()
                 };
 
                 if (methodBase is MethodInfo && methodBase.IsGenericMethod)

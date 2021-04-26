@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace XMLDoc2Markdown
+namespace XMLDoc2Markdown.Utils
 {
     internal static class MemberInfoExtensions
     {
@@ -23,8 +23,24 @@ namespace XMLDoc2Markdown
             {
                 return eventInfo.GetSignature(full);
             }
-            
+
             throw new NotImplementedException();
+        }
+
+        internal static string GetIdentifier(this MemberInfo memberInfo)
+        {
+            string identifier;
+            if (memberInfo is Type type)
+            {
+                identifier = type.FullName;
+            }
+            else
+            {
+                string name = memberInfo is ConstructorInfo ? "#ctor" : memberInfo.Name;
+                identifier = $"{memberInfo.DeclaringType.Namespace}.{memberInfo.DeclaringType.Name}.{name}";
+            }
+
+            return identifier;
         }
     }
 }

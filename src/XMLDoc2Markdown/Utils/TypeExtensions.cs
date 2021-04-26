@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Markdown;
 
-namespace XMLDoc2Markdown
+namespace XMLDoc2Markdown.Utils
 {
     internal static class TypeExtensions
     {
@@ -137,7 +137,7 @@ namespace XMLDoc2Markdown
         {
             if (type == null)
             {
-                throw new ArgumentNullException("Type cannot be null.");
+                throw new ArgumentNullException(nameof(type));
             }
             if (type.Assembly != typeof(string).Assembly)
             {
@@ -151,7 +151,7 @@ namespace XMLDoc2Markdown
         {
             if (type == null)
             {
-                throw new ArgumentNullException("Type cannot be null.");
+                throw new ArgumentNullException(nameof(type));
             }
 
             return $"{rootUrl}/{type.Namespace}/{type.Name.Replace('`', '-')}.md";

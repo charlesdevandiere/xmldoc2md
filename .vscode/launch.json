@@ -10,22 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/XMLDoc2Markdown/bin/Debug/netcoreapp3.1/XMLDoc2Markdown.dll",
-            "args": ["${workspaceFolder}/publish/MyClassLib.dll", "${workspaceFolder}/docs/sample"],
+            "program": "${workspaceFolder}/src/XMLDoc2Markdown/bin/Debug/net5/XMLDoc2Markdown.dll",
+            "args": ["${workspaceFolder}/publish/MyClassLib.dll", "${workspaceFolder}/docs/sample", "--examples-path", "${workspaceFolder}/sample/docs/examples"],
             "cwd": "${workspaceFolder}/src/XMLDoc2Markdown",
-            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-            "console": "internalConsole",
-            "stopAtEntry": false
-        },
-        {
-            "name": "Test",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Test/bin/Debug/netcoreapp3.1/Test.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/Test",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
