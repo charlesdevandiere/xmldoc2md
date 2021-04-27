@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyClassLib
 {
@@ -61,7 +62,7 @@ namespace MyClassLib
         /// <param name="param">The param.</param>
         /// <returns>An empty string.</returns>
         /// <exception cref="System.Exception">Thrown when...</exception>
-        public string Get(string param) => string.Empty;
+        public string Get(List<string> param) => string.Empty;
 
         /// <summary>
         /// A static method.

@@ -58,7 +58,7 @@ namespace XMLDoc2Markdown.Utils
 
                 if (methodBase is MethodInfo methodInfo)
                 {
-                    signature.Add(methodInfo.ReturnType.GetSimplifiedName());
+                    signature.Add(methodInfo.ReturnType.GetDisplayName(simplifyName: true));
                 }
             }
 
@@ -71,14 +71,14 @@ namespace XMLDoc2Markdown.Utils
             if (methodBase is MethodInfo methodInfo1)
             {
                 Type[] genericArguments = methodInfo1.GetGenericArguments();
-                if  (genericArguments.Length > 0)
+                if (genericArguments.Length > 0)
                 {
                     displayName += $"<{string.Join(", ", genericArguments.Select(a => a.Name))}>";
                 }
             }
             ParameterInfo[] @params = methodBase.GetParameters();
             IEnumerable<string> paramsNames = @params
-                .Select(p => $"{(full ? p.ParameterType.GetSimplifiedName() : p.ParameterType.Name)}{(full ? $" {p.Name}" : null)}");
+                .Select(p => $"{p.ParameterType.GetDisplayName(simplifyName: full)}{(full ? $" {p.Name}" : null)}");
             displayName += $"({string.Join(", ", paramsNames)})";
             signature.Add(displayName);
 

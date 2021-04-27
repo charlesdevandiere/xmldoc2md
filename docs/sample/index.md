@@ -2,7 +2,7 @@
 
 ## `MyClassLib`
 
-- [`IMyInterface`](myclasslib.imyinterface)
+- [`IMyInterface`](myclasslib.imyinterface.md)
 - [`MyAbstractClass`](myclasslib.myabstractclass)
 - [`MyClass`](myclasslib.myclass)
 - [`MyEnum`](myclasslib.myenum)

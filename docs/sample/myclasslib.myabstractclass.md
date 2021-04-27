@@ -34,17 +34,17 @@ Do something.
 public abstract void Do()
 ```
 
-### Get(String)
+### Get(List&lt;String&gt;)
 
 Gets something.
 
 ```csharp
-protected string Get(string param)
+protected string Get(List<string> param)
 ```
 
 #### Parameters
 
-`param` String<br>The param.
+`param` List&lt;String&gt;<br>The param.
 
 #### Returns
 

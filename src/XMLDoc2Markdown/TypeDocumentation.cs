@@ -38,6 +38,11 @@ namespace XMLDoc2Markdown
 
             XElement typeDocElement = this.documentation.GetMember(this.type);
 
+            if (typeDocElement != null)
+            {
+                Logger.Info("    (documented)");
+            }
+
             this.WriteMemberInfoSummary(typeDocElement);
             this.WriteMemberInfoSignature(this.type);
             this.WriteTypeParameters(this.type, typeDocElement);
@@ -68,7 +73,11 @@ namespace XMLDoc2Markdown
                 this.WriteEnumFields(this.type.GetFields().Where(m => !m.IsSpecialName));
             }
 
-            this.WriteExample(this.type);
+            bool example = this.WriteExample(this.type);
+            if (example)
+            {
+                Logger.Info("    (example)");
+            }
 
             return this.document.ToString();
         }
@@ -131,6 +140,7 @@ namespace XMLDoc2Markdown
                 _ => throw new NotImplementedException()
             };
             this.document.AppendHeader(title, 2);
+            Logger.Info($"    {title}");
 
             foreach (MemberInfo member in members)
             {
@@ -163,7 +173,19 @@ namespace XMLDoc2Markdown
 
                 this.WriteExceptions(memberDocElement);
 
-                this.WriteExample(member);
+                bool example = this.WriteExample(member);
+
+                string log = $"      {member.GetIdentifier()}";
+                if (memberDocElement != null)
+                {
+                    log += " (documented)";
+                }
+                if (example)
+                {
+                    log += " (example)";
+                }
+
+                Logger.Info(log);
             }
         }
 
@@ -211,7 +233,7 @@ namespace XMLDoc2Markdown
 
             string returnsDoc = memberDocElement?.Element("returns")?.Value;
             this.document.AppendParagraph(
-                $"{methodInfo.ReturnType.Name}<br>{returnsDoc}");
+                $"{methodInfo.ReturnType.GetDisplayName().FormatChevrons()}<br>{returnsDoc}");
         }
 
         private void WriteTypeParameters(MemberInfo memberInfo, XElement memberDocElement)
@@ -233,7 +255,7 @@ namespace XMLDoc2Markdown
                 {
                     string typeParamDoc = memberDocElement?.Elements("typeparam").FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Value;
                     this.document.AppendParagraph(
-                        $"{new MarkdownInlineCode(typeParam.Name)}<br>{typeParamDoc}");
+                        $"{new MarkdownInlineCode(typeParam.GetDisplayName().FormatChevrons())}<br>{typeParamDoc}");
                 }
             }
         }
@@ -252,7 +274,7 @@ namespace XMLDoc2Markdown
                 {
                     string paramDoc = memberDocElement?.Elements("param").FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Value;
                     this.document.AppendParagraph(
-                        $"{new MarkdownInlineCode(param.Name)} {param.ParameterType.Name}<br>{paramDoc}");
+                        $"{new MarkdownInlineCode(param.Name)} {param.ParameterType.GetDisplayName().FormatChevrons()}<br>{paramDoc}");
                 }
             }
         }
@@ -283,11 +305,11 @@ namespace XMLDoc2Markdown
             }
         }
 
-        private void WriteExample(MemberInfo memberInfo)
+        private bool WriteExample(MemberInfo memberInfo)
         {
             if (this.examplesDirectory == null)
             {
-                return;
+                return false;
             }
 
             string fileName = $"{memberInfo.GetIdentifier()}.md";
@@ -299,12 +321,16 @@ namespace XMLDoc2Markdown
                 {
                     using var sr = new StreamReader(file);
                     this.document.Append(new MarkdownParagraph(sr.ReadToEnd()));
+
+                    return true;
                 }
                 catch (IOException e)
                 {
                     Logger.Warning(e.Message);
                 }
             }
+
+            return false;
         }
 
         private MarkdownInlineElement GetLinkFromReference(string crefAttribute)

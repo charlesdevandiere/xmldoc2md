@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace MyClassLib
 {
     /// <summary>
@@ -21,6 +23,6 @@ namespace MyClassLib
         /// </summary>
         /// <param name="param">The param.</param>
         /// <returns>A string.</returns>
-        protected string Get(string param) => string.Empty;
+        protected string Get(List<string> param) => string.Empty;
     }
 }

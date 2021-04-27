@@ -24,17 +24,17 @@ void Do(string firstParam, int secondParam)
 
 `secondParam` Int32<br>The second param.
 
-### Get(String)
+### Get(List&lt;String&gt;)
 
 Gets some thing.
 
 ```csharp
-string Get(string param)
+string Get(List<string> param)
 ```
 
 #### Parameters
 
-`param` String<br>The param.
+`param` List&lt;String&gt;<br>The param.
 
 #### Returns
 

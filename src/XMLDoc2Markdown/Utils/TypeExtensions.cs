@@ -35,7 +35,7 @@ namespace XMLDoc2Markdown.Utils
 
         internal static string GetSimplifiedName(this Type type)
         {
-            return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.GetDisplayName();
+            return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.Name;
         }
 
         internal static Visibility GetVisibility(this Type type)
@@ -111,20 +111,20 @@ namespace XMLDoc2Markdown.Utils
             return string.Join(' ', signature);
         }
 
-        internal static string GetDisplayName(this Type type)
+        internal static string GetDisplayName(this Type type, bool simplifyName = false)
         {
+            string name = simplifyName ? type.GetSimplifiedName() : type.Name;
+
             TypeInfo typeInfo = type.GetTypeInfo();
             Type[] genericParams = typeInfo.GenericTypeArguments.Length > 0 ? typeInfo.GenericTypeArguments : typeInfo.GenericTypeParameters;
 
             if (genericParams.Length > 0)
             {
-                string @base = type.Name.Substring(0, type.Name.IndexOf('`'));
-                return $"{@base}<{string.Join(", ", genericParams.Select(t => t.GetDisplayName()))}>";
+                name = name.Substring(0, name.IndexOf('`'));
+                name += $"<{string.Join(", ", genericParams.Select(t => t.GetDisplayName(simplifyName)))}>";
             }
-            else
-            {
-                return type.Name;
-            }
+
+            return name;
         }
 
         internal static IEnumerable<Type> GetInheritanceHierarchy(this Type type)

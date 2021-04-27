@@ -90,17 +90,17 @@ public void Do(string firstParam, int secondParam)
 
 Exception<br>Thrown when...
 
-### Get(String)
+### Get(List&lt;String&gt;)
 
 Gets some thing.
 
 ```csharp
-public string Get(string param)
+public string Get(List<string> param)
 ```
 
 #### Parameters
 
-`param` String<br>The param.
+`param` List&lt;String&gt;<br>The param.
 
 #### Returns
 
@@ -109,14 +109,6 @@ String<br>An empty string.
 #### Exceptions
 
 Exception<br>Thrown when...
-
-#### Example
-
-This example call the `Get` methode.
-
-```csharp
-var bar = foo.Get("bar");
-```
 
 ### StaticMethod()
 
