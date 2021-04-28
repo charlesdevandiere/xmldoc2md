@@ -44,7 +44,7 @@ namespace XMLDoc2Markdown
 
             CommandOption gitHubPagesOption = app.Option(
                 "--github-pages",
-                "Removes '.md' extension from links for GitHub Pages",
+                "Remove '.md' extension from links for GitHub Pages",
                 CommandOptionType.NoValue);
 
             app.OnExecute(() =>

@@ -98,4 +98,5 @@ Options:
   -?|-h|--help       Show help information
   --index-page-name  Name of the index page (default: "index")
   --examples-path    Path to the code examples to insert in the documentation
+  --github-pages     Remove '.md' extension from links for GitHub Pages
 ```
