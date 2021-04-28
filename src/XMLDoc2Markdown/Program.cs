@@ -73,12 +73,6 @@ namespace XMLDoc2Markdown
 
                 foreach (IGrouping<string, Type> groupedType in assembly.GetTypes().GroupBy(type => type.Namespace).OrderBy(g => g.Key))
                 {
-                    string subDir = Path.Combine(@out, groupedType.Key);
-                    if (!Directory.Exists(subDir))
-                    {
-                        Directory.CreateDirectory(subDir);
-                    }
-
                     indexPage.AppendHeader(new MarkdownInlineCode(groupedType.Key), 2);
 
                     var list = new MarkdownList();
