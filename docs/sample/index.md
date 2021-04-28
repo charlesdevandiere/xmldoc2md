@@ -2,12 +2,12 @@
 
 ## `MyClassLib`
 
-- [`IMyInterface`](myclasslib.imyinterface.md)
-- [`MyAbstractClass`](myclasslib.myabstractclass)
-- [`MyClass`](myclasslib.myclass)
-- [`MyEnum`](myclasslib.myenum)
+- [`IMyInterface`](./myclasslib.imyinterface)
+- [`MyAbstractClass`](./myclasslib.myabstractclass)
+- [`MyClass`](./myclasslib.myclass)
+- [`MyEnum`](./myclasslib.myenum)
 
 ## `MyClassLib.SubNamespace`
 
-- [`GenericClass<T>`](myclasslib.subnamespace.genericclass-1)
-- [`SubClass`](myclasslib.subnamespace.subclass)
+- [`GenericClass<T>`](./myclasslib.subnamespace.genericclass-1)
+- [`SubClass`](./myclasslib.subnamespace.subclass)

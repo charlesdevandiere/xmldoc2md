@@ -16,9 +16,10 @@ namespace XMLDoc2Markdown
         private readonly Type type;
         private readonly XmlDocumentation documentation;
         private readonly string examplesDirectory;
+        private readonly bool githubPages;
         private readonly IMarkdownDocument document = new MarkdownDocument();
 
-        public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, string examplesDirectory)
+        public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, string examplesDirectory = default, bool githubPages = false)
         {
             Guard.Argument(assembly, nameof(assembly)).NotNull();
             Guard.Argument(type, nameof(type)).NotNull();
@@ -28,6 +29,7 @@ namespace XMLDoc2Markdown
             this.type = type;
             this.documentation = documentation;
             this.examplesDirectory = examplesDirectory;
+            this.githubPages = githubPages;
         }
 
         public override string ToString()
@@ -49,13 +51,13 @@ namespace XMLDoc2Markdown
 
             if (this.type.BaseType != null)
             {
-                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDocsLink()))}");
+                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDocsLink(noExtension: this.githubPages)))}");
             }
 
             Type[] interfaces = this.type.GetInterfaces();
             if (interfaces.Length > 0)
             {
-                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDocsLink()))}");
+                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDocsLink(noExtension: this.githubPages)))}");
             }
 
             this.WriteMembersDocumentation(this.type.GetProperties());
@@ -345,7 +347,7 @@ namespace XMLDoc2Markdown
                     Type type = Type.GetType(memberFullName) ?? this.assembly.GetType(memberFullName);
                     if (type != null)
                     {
-                        return type.GetDocsLink();
+                        return type.GetDocsLink(noExtension: this.githubPages);
                     }
                 }
 

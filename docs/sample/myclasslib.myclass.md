@@ -8,9 +8,9 @@ My class.
 public class MyClass : IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass.md)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)
 
-Implements [IMyInterface](./myclasslib.imyinterface.md)
+Implements [IMyInterface](./myclasslib.imyinterface)
 
 ## Properties
 
@@ -36,7 +36,7 @@ foo.MyProperty = "foo";
 
 ### MyEnum
 
-My enum [MyEnum](./myclasslib.myenum.md)
+My enum [MyEnum](./myclasslib.myenum)
 
 ```csharp
 public MyEnum MyEnum { get; set; }
@@ -50,7 +50,7 @@ MyEnum<br>The enum value
 
 ### MyClass()
 
-Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
+Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
 
 ```csharp
 public MyClass()
@@ -58,7 +58,7 @@ public MyClass()
 
 ### MyClass(String, Int32)
 
-Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
+Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
 
 ```csharp
 public MyClass(string firstParam, int secondParam)

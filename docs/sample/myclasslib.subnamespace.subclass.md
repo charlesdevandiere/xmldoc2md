@@ -2,15 +2,15 @@
 
 Namespace: MyClassLib.SubNamespace
 
-Sub class from [MyClass](./myclasslib.myclass.md)
+Sub class from [MyClass](./myclasslib.myclass)
 
 ```csharp
 public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass.md) → [SubClass](./myclasslib.subnamespace.subclass.md)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)
 
-Implements [IMyInterface](./myclasslib.imyinterface.md)
+Implements [IMyInterface](./myclasslib.imyinterface)
 
 ## Properties
 
@@ -36,7 +36,7 @@ foo.MyProperty = "foo";
 
 ### MyEnum
 
-My enum [MyEnum](./myclasslib.myenum.md)
+My enum [MyEnum](./myclasslib.myenum)
 
 ```csharp
 public MyEnum MyEnum { get; set; }

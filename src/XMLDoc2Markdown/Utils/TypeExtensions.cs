@@ -149,21 +149,28 @@ namespace XMLDoc2Markdown.Utils
             return $"{msdocsBaseUrl}/{type.FullName.ToLower().Replace('`', '-')}";
         }
 
-        internal static string GetInternalDocsUrl(this Type type)
+        internal static string GetInternalDocsUrl(this Type type, bool noExtension = false)
         {
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return $"./{type.GetIdentifier().Replace('`', '-').ToLower()}.md";
+            string url = $"./{type.GetIdentifier().Replace('`', '-').ToLower()}";
+
+            if (!noExtension)
+            {
+                url += ".md";
+            }
+
+            return url;
         }
 
-        internal static MarkdownLink GetDocsLink(this Type type)
+        internal static MarkdownLink GetDocsLink(this Type type, bool noExtension = false)
         {
             string url = type.Assembly == typeof(string).Assembly
                             ? type.GetMSDocsUrl()
-                            : type.GetInternalDocsUrl();
+                            : type.GetInternalDocsUrl(noExtension);
 
             return new MarkdownLink(type.GetDisplayName().FormatChevrons(), url);
         }

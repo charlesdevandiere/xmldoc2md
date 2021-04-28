@@ -14,7 +14,8 @@
                 "${workspaceFolder}/publish/MyClassLib.dll",
                 "${workspaceFolder}/docs/sample",
                 "--examples-path",
-                "${workspaceFolder}/sample/docs/examples"
+                "${workspaceFolder}/sample/docs/examples",
+                "--github-pages"
             ],
             "cwd": "${workspaceFolder}/src/XMLDoc2Markdown",
             "console": "internalConsole",

@@ -42,12 +42,18 @@ namespace XMLDoc2Markdown
                 "Path to the code examples to insert in the documentation",
                 CommandOptionType.SingleValue);
 
+            CommandOption gitHubPagesOption = app.Option(
+                "--github-pages",
+                "Removes '.md' extension from links for GitHub Pages",
+                CommandOptionType.NoValue);
+
             app.OnExecute(() =>
             {
                 string src = srcArg.Value;
                 string @out = outArg.Value;
                 string indexPageName = indexPageNameOption.Value() ?? "index";
                 string examplesPath = examplesPathOption.Value();
+                bool githubPages = gitHubPagesOption.HasValue();
 
                 int succeeded = 0;
                 int failed = 0;
@@ -86,13 +92,16 @@ namespace XMLDoc2Markdown
                         string fileName = type.GetIdentifier().Replace('`', '-').ToLower();
                         Logger.Info($"  {fileName}.md");
 
-                        list.AddItem(new MarkdownLink(new MarkdownInlineCode(type.GetDisplayName()), WebUtility.UrlEncode(fileName)));
+                        list.AddItem(
+                            new MarkdownLink(
+                                new MarkdownInlineCode(type.GetDisplayName()),
+                                "./" + WebUtility.UrlEncode(fileName) + (githubPages ? string.Empty : ".md")));
 
                         try
                         {
                             File.WriteAllText(
                                 Path.Combine(@out, $"{fileName}.md"),
-                                new TypeDocumentation(assembly, type, documentation, examplesPath).ToString()
+                                new TypeDocumentation(assembly, type, documentation, examplesPath, githubPages).ToString()
                             );
                             succeeded++;
                         }
