@@ -20,6 +20,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyClassLib", "sample\MyClas
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{EFB2BF10-9D7D-43EC-A6D3-4CC3F927D5AE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7883FFE9-1096-40A2-AA20-3D3A44ED8D0B}"
+	ProjectSection(SolutionItems) = preProject
+		docs\_config.yml = docs\_config.yml
+		docs\README.md = docs\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{9667AF75-DBF9-46BB-B8FA-E7FDEBE02B7B}"
+	ProjectSection(SolutionItems) = preProject
+		docs\sample\_config.yml = docs\sample\_config.yml
+		docs\sample\index.md = docs\sample\index.md
+		docs\sample\myclasslib.imyinterface.md = docs\sample\myclasslib.imyinterface.md
+		docs\sample\myclasslib.myabstractclass.md = docs\sample\myclasslib.myabstractclass.md
+		docs\sample\myclasslib.myclass.md = docs\sample\myclasslib.myclass.md
+		docs\sample\myclasslib.myenum.md = docs\sample\myclasslib.myenum.md
+		docs\sample\myclasslib.subnamespace.genericclass-1.md = docs\sample\myclasslib.subnamespace.genericclass-1.md
+		docs\sample\myclasslib.subnamespace.subclass.md = docs\sample\myclasslib.subnamespace.subclass.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +78,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{43173D49-864C-4BF5-BDBC-702B4A2D7ACC} = {EFB2BF10-9D7D-43EC-A6D3-4CC3F927D5AE}
+		{9667AF75-DBF9-46BB-B8FA-E7FDEBE02B7B} = {7883FFE9-1096-40A2-AA20-3D3A44ED8D0B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4E6AFAFB-3393-4E2A-96A0-5EDD91169AC8}
