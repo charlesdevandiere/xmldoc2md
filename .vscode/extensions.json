@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csharp",
+    "editorconfig.editorconfig",
+    "k--kato.docomment",
+    "formulahendry.dotnet-test-explorer",
+    "redhat.vscode-yaml"
+  ]
+}

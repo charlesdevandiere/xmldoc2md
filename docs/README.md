@@ -24,6 +24,64 @@ See sample generated documentation [here](sample).
 > xmldoc2md Sample.dll docs
 ```
 
+### Insert code example
+
+You can insert custom code example into the documentation.
+
+Create one file for each examples. Give them the full name of corresponding type, property, method,...
+
+Add the CLI option: `--examples-path` with the path to examples files.
+
+#### Examples
+
+##### `MyClassLib.MyClass.md`
+
+~~~markdown
+## Example
+
+Lorem ipsum...
+
+```csharp
+new MyClass();
+```
+~~~
+
+##### `MyClassLib.MyClass.MyProperty.md`
+
+~~~markdown
+#### Example
+
+Lorem ipsum...
+
+```csharp
+foo.MyProperty = "foo";
+```
+~~~
+
+##### `MyClassLib.MyClass.MyMethod(System.String).md`
+
+~~~markdown
+#### Example
+
+Lorem ipsum...
+
+```csharp
+foo.MyMethod("foo");
+```
+~~~
+
+##### `MyClassLib.MyClass.#ctor.md`
+
+~~~markdown
+#### Example
+
+Lorem ipsum...
+
+```csharp
+new MyClass();
+```
+~~~
+
 ### Display command line help
 
 ```shell
@@ -36,9 +94,9 @@ Arguments:
   out  Output directory
 
 Options:
-  -v|--version               Show version information
-  -?|-h|--help               Show help information
-  --namespace-match <regex>  Regex pattern to select namespaces
-  --index-page-name <regex>  Name of the index page (default: "index")
-
+  -v|--version       Show version information
+  -?|-h|--help       Show help information
+  --index-page-name  Name of the index page (default: "index")
+  --examples-path    Path to the code examples to insert in the documentation
+  --github-pages     Remove '.md' extension from links for GitHub Pages
 ```

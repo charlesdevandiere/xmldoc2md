@@ -1,9 +1,9 @@
 namespace MyClassLib.SubNamespace
 {
     /// <summary>
-    /// Sub class from <see cref="Class1" />
+    /// Sub class from <see cref="MyClass" />
     /// </summary>
-    public class SubClass : Class1
+    public class SubClass : MyClass
     {
         /// <summary>
         /// Convert instance to string.

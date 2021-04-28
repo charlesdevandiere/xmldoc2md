@@ -1,18 +1,22 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
-using System.Text;
+using Markdown;
 using Microsoft.Extensions.CommandLineUtils;
+using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            var app = new CommandLineApplication();
-            app.Name = "xmldoc2md";
+            var app = new CommandLineApplication
+            {
+                Name = "xmldoc2md"
+            };
 
             app.VersionOption("-v|--version", () =>
             {
@@ -28,68 +32,111 @@ namespace XMLDoc2Markdown
             CommandArgument srcArg = app.Argument("src", "DLL source path");
             CommandArgument outArg = app.Argument("out", "Output directory");
 
-            CommandOption namespaceMatchOption = app.Option(
-                "--namespace-match <regex>",
-                "Regex pattern to select namespaces",
-                CommandOptionType.SingleValue);
-
             CommandOption indexPageNameOption = app.Option(
-                "--index-page-name <regex>",
+                "--index-page-name",
                 "Name of the index page (default: \"index\")",
                 CommandOptionType.SingleValue);
+
+            CommandOption examplesPathOption = app.Option(
+                "--examples-path",
+                "Path to the code examples to insert in the documentation",
+                CommandOptionType.SingleValue);
+
+            CommandOption gitHubPagesOption = app.Option(
+                "--github-pages",
+                "Remove '.md' extension from links for GitHub Pages",
+                CommandOptionType.NoValue);
 
             app.OnExecute(() =>
             {
                 string src = srcArg.Value;
                 string @out = outArg.Value;
-                string namespaceMatch = namespaceMatchOption.Value();
-                string indexPageName = indexPageNameOption.HasValue() ? indexPageNameOption.Value() : "index";
+                string indexPageName = indexPageNameOption.Value() ?? "index";
+                string examplesPath = examplesPathOption.Value();
+                bool githubPages = gitHubPagesOption.HasValue();
 
-                var xmlDocumentation = new XmlDocumentation(src, namespaceMatch);
+                int succeeded = 0;
+                int failed = 0;
 
-                if (!Directory.Exists(@out)) Directory.CreateDirectory(@out);
-
-                var indexBuilder = new MarkdownBuilder();
-                indexBuilder.Header(1, xmlDocumentation.AssemblyName);
-
-                foreach (var g in xmlDocumentation.Types.GroupBy(x => x.Namespace).OrderBy(x => x.Key))
+                if (!Directory.Exists(@out))
                 {
-                    string subDir = Path.Combine(@out, g.Key);
-                    if (!Directory.Exists(subDir)) Directory.CreateDirectory(subDir);
-
-                    indexBuilder.AppendLine();
-                    indexBuilder.HeaderWithCode(2, g.Key);
-                    indexBuilder.AppendLine();
-                    foreach (var item in g.OrderBy(x => x.Name))
-                    {
-                        string typeName = item.BeautifyName.Replace("<", "{").Replace(">", "}").Replace(",", "").Replace(" ", "-");
-                        var sb = new StringBuilder();
-
-                        indexBuilder.ListLink(MarkdownBuilder.MarkdownCodeQuote(item.BeautifyName), g.Key + "/" + typeName);
-
-                        sb.Append(item.ToString());
-
-                        File.WriteAllText(Path.Combine(@out, g.Key, $"{typeName}.md"), sb.ToString());
-                    }
+                    Directory.CreateDirectory(@out);
                 }
 
-                File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexBuilder.ToString());
+                var assembly = Assembly.LoadFrom(src);
+                string assemblyName = assembly.GetName().Name;
+                var documentation = new XmlDocumentation(src);
+
+                Logger.Info($"Generation started: Assembly: {assemblyName}");
+
+                IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assemblyName, 1);
+
+                foreach (IGrouping<string, Type> groupedType in assembly.GetTypes().GroupBy(type => type.Namespace).OrderBy(g => g.Key))
+                {
+                    string subDir = Path.Combine(@out, groupedType.Key);
+                    if (!Directory.Exists(subDir))
+                    {
+                        Directory.CreateDirectory(subDir);
+                    }
+
+                    indexPage.AppendHeader(new MarkdownInlineCode(groupedType.Key), 2);
+
+                    var list = new MarkdownList();
+                    foreach (Type type in groupedType.OrderBy(x => x.Name))
+                    {
+                        if (typeof(Delegate).IsAssignableFrom(type))
+                        {
+                            continue;
+                        }
+
+                        string fileName = type.GetIdentifier().Replace('`', '-').ToLower();
+                        Logger.Info($"  {fileName}.md");
+
+                        list.AddItem(
+                            new MarkdownLink(
+                                new MarkdownInlineCode(type.GetDisplayName()),
+                                "./" + WebUtility.UrlEncode(fileName) + (githubPages ? string.Empty : ".md")));
+
+                        try
+                        {
+                            File.WriteAllText(
+                                Path.Combine(@out, $"{fileName}.md"),
+                                new TypeDocumentation(assembly, type, documentation, examplesPath, githubPages).ToString()
+                            );
+                            succeeded++;
+                        }
+                        catch (Exception exception)
+                        {
+                            Logger.Error(exception.Message);
+                            failed++;
+                        }
+                    }
+
+                    indexPage.Append(list);
+                }
+
+                File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexPage.ToString());
+
+                Logger.Info($"Generation: {succeeded} succeeded, {failed} failed");
 
                 return 0;
             });
 
             try
             {
-                app.Execute(args);
+                return app.Execute(args);
             }
             catch (CommandParsingException ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to execute application: {0}", ex.Message);
+                Logger.Error("Unable to generate documentation:");
+                Logger.Error(ex.Message);
             }
+
+            return 1;
         }
     }
 }

@@ -1,6 +1,6 @@
 name: $(GitVersion.FullSemVer)
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: Release
@@ -9,34 +9,28 @@ trigger:
   batch: true
   branches:
     include:
-    - master
+      - master
   paths:
     exclude:
-    - docs/*
-    - README.md
-      
+      - docs/*
+      - README.md
 
 steps:
-- checkout: self
-  clean: true
-  persistCredentials: true
+  - checkout: self
+    clean: true
+    persistCredentials: true
 
-- script: GitVersion /output buildserver
-  displayName: GitVersion
+  - task: UseGitVersion@5
+    displayName: GitVersion
+    inputs:
+      versionSpec: '5.x'
 
-- task: UseDotNet@2
-  displayName: 'Use .NET Core sdk 3.1'
-  inputs:
-    packageType: sdk
-    version: 3.1.100
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+  - script: dotnet pack ./src/XMLDoc2Markdown/XMLDoc2Markdown.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/out -p:Version=$(GitVersion.SemVer)
+    displayName: 'dotnet pack'
 
-- script: dotnet pack -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)\out -p:Version=$(GitVersion.SemVer)
-  displayName: 'dotnet pack'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-  inputs:
-    PathtoPublish: $(Build.ArtifactStagingDirectory)\out
-    ArtifactName: out
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)/out
+      ArtifactName: out
