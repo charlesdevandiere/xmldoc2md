@@ -8,15 +8,24 @@ Sub class from [MyClass](./myclasslib.myclass)
 public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)
-
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)
+
+## Fields
+
+### **myField**
+
+My field.
+
+```csharp
+public int myField;
+```
 
 ## Properties
 
-### MyProperty
+### **MyProperty**
 
-My property ([String](https://docs.microsoft.com/en-us/dotnet/api/system.string)).
+My property.
 
 ```csharp
 public string MyProperty { get; protected set; }
@@ -24,7 +33,8 @@ public string MyProperty { get; protected set; }
 
 #### Property Value
 
-String<br>The property value.
+String<br>
+The property value.
 
 #### Example
 
@@ -34,9 +44,9 @@ This example assign `"foo"` to MyProperty.
 foo.MyProperty = "foo";
 ```
 
-### MyEnum
+### **MyEnum**
 
-My enum [MyEnum](./myclasslib.myenum)
+My enum
 
 ```csharp
 public MyEnum MyEnum { get; set; }
@@ -44,11 +54,12 @@ public MyEnum MyEnum { get; set; }
 
 #### Property Value
 
-MyEnum<br>The enum value
+MyEnum<br>
+The enum value
 
 ## Constructors
 
-### SubClass()
+### **SubClass()**
 
 
 
@@ -58,7 +69,7 @@ public SubClass()
 
 ## Methods
 
-### ToString()
+### **ToString()**
 
 Convert instance to string.
 
@@ -68,11 +79,12 @@ public string ToString()
 
 #### Returns
 
-String<br>A string.
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+A string.
 
 ## Events
 
-### MyEvent
+### **MyEvent**
 
 My event.
 

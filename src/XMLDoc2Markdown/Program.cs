@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using Markdown;
 using Microsoft.Extensions.CommandLineUtils;
@@ -71,25 +71,24 @@ namespace XMLDoc2Markdown
 
                 IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assemblyName, 1);
 
-                foreach (IGrouping<string, Type> groupedType in assembly.GetTypes().GroupBy(type => type.Namespace).OrderBy(g => g.Key))
+                IEnumerable<Type> types = assembly.GetTypes().Where(type => type.IsPublic);
+                IEnumerable<IGrouping<string, Type>> typesByNamespace = types.GroupBy(type => type.Namespace).OrderBy(g => g.Key);
+                foreach (IGrouping<string, Type> namespaceTypes in typesByNamespace)
                 {
-                    indexPage.AppendHeader(new MarkdownInlineCode(groupedType.Key), 2);
+                    indexPage.AppendHeader(namespaceTypes.Key, 2);
 
-                    var list = new MarkdownList();
-                    foreach (Type type in groupedType.OrderBy(x => x.Name))
+                    foreach (Type type in namespaceTypes.OrderBy(x => x.Name))
                     {
+                        // exclude delegates
                         if (typeof(Delegate).IsAssignableFrom(type))
                         {
                             continue;
                         }
 
-                        string fileName = type.GetIdentifier().Replace('`', '-').ToLower();
+                        string fileName = type.GetDocsFileName();
                         Logger.Info($"  {fileName}.md");
 
-                        list.AddItem(
-                            new MarkdownLink(
-                                new MarkdownInlineCode(type.GetDisplayName()),
-                                "./" + WebUtility.UrlEncode(fileName) + (githubPages ? string.Empty : ".md")));
+                        indexPage.AppendParagraph(type.GetDocsLink(assembly, noExtension: githubPages));
 
                         try
                         {
@@ -105,8 +104,6 @@ namespace XMLDoc2Markdown
                             failed++;
                         }
                     }
-
-                    indexPage.Append(list);
                 }
 
                 File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexPage.ToString());

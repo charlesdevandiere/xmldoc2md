@@ -10,7 +10,7 @@ public interface IMyInterface
 
 ## Methods
 
-### Do(String, Int32)
+### **Do(String, Int32)**
 
 Do some thing.
 
@@ -20,11 +20,13 @@ void Do(string firstParam, int secondParam)
 
 #### Parameters
 
-`firstParam` String<br>The first param.
+`firstParam` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The first param.
 
-`secondParam` Int32<br>The second param.
+`secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+The second param.
 
-### Get(List&lt;String&gt;)
+### **Get(List&lt;String&gt;)**
 
 Gets some thing.
 
@@ -34,8 +36,10 @@ string Get(List<string> param)
 
 #### Parameters
 
-`param` List&lt;String&gt;<br>The param.
+`param` [List&lt;String&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
+The param.
 
 #### Returns
 
-String<br>An empty string.
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+An empty string.

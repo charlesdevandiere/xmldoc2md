@@ -16,7 +16,7 @@ Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) 
 
 ## Constructors
 
-### GenericClass()
+### **GenericClass()**
 
 Initializes a new instance of the [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1) class.
 
@@ -24,7 +24,7 @@ Initializes a new instance of the [GenericClass&lt;T&gt;](./myclasslib.subnamesp
 public GenericClass()
 ```
 
-### GenericClass(T)
+### **GenericClass(T)**
 
 Initializes a new instance of the [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1) class.
 
@@ -38,7 +38,7 @@ public GenericClass(T param)
 
 ## Methods
 
-### GetGenericInstance&lt;TSource&gt;()
+### **GetGenericInstance&lt;TSource&gt;()**
 
 Gets a new instance of generic param.
 
@@ -54,7 +54,7 @@ public TSource GetGenericInstance<TSource>()
 
 TSource<br>The new instance.
 
-### GetGenericInstance&lt;TSource&gt;(TSource)
+### **GetGenericInstance&lt;TSource&gt;(TSource)**
 
 Gets a new instance of generic param.
 
@@ -74,7 +74,7 @@ public TSource GetGenericInstance<TSource>(TSource source)
 
 TSource<br>The new instance.
 
-### Map&lt;TSource, TTarget&gt;(TSource, TTarget)
+### **Map&lt;TSource, TTarget&gt;(TSource, TTarget)**
 
 Map object.
 
