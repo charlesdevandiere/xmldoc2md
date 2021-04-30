@@ -26,6 +26,10 @@ namespace XMLDoc2Markdown.Utils
             {
                 return eventInfo.GetSignature(full);
             }
+            else if (memberInfo is FieldInfo fieldInfo)
+            {
+                return fieldInfo.GetSignature(full);
+            }
 
             throw new NotImplementedException();
         }

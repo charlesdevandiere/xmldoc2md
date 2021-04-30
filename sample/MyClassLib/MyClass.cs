@@ -11,16 +11,16 @@ namespace MyClassLib
         /// <summary>
         /// My field.
         /// </summary>
-        public int MyField;
+        public int myField;
 
         /// <summary>
-        /// My property (<see cref="System.String" />).
+        /// My property.
         /// </summary>
         /// <value>The property value.</value>
         public string MyProperty { get; protected set; }
 
         /// <summary>
-        /// My enum <see cref="MyClassLib.MyEnum" />
+        /// My enum
         /// </summary>
         /// <value>The enum value</value>
         public MyEnum MyEnum { get; set; }
@@ -35,6 +35,18 @@ namespace MyClassLib
         /// My event.
         /// </summary>
         public event EventHandler<EventArgs> MyEvent;
+
+        /// <summary>
+        /// Protected property.
+        /// </summary>
+        /// <value>The property value.</value>
+        protected string ProtectedProperty { get; set; }
+
+        /// <summary>
+        /// Private property.
+        /// </summary>
+        /// <value>The property value.</value>
+        private string PrivateProperty { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyClass" /> class.

@@ -146,7 +146,7 @@ namespace XMLDoc2Markdown.Utils
                 throw new InvalidOperationException($"{type.FullName} is not a mscorlib type.");
             }
 
-            return $"{msdocsBaseUrl}/{type.FullName.ToLower().Replace('`', '-')}";
+            return $"{msdocsBaseUrl}/{type.GetDocsFileName()}";
         }
 
         internal static string GetInternalDocsUrl(this Type type, bool noExtension = false)
@@ -156,7 +156,7 @@ namespace XMLDoc2Markdown.Utils
                 throw new ArgumentNullException(nameof(type));
             }
 
-            string url = $"./{type.GetIdentifier().Replace('`', '-').ToLower()}";
+            string url = $"./{type.GetDocsFileName()}";
 
             if (!noExtension)
             {
@@ -166,13 +166,28 @@ namespace XMLDoc2Markdown.Utils
             return url;
         }
 
-        internal static MarkdownLink GetDocsLink(this Type type, bool noExtension = false)
+        internal static string GetDocsFileName(this Type type)
         {
-            string url = type.Assembly == typeof(string).Assembly
-                            ? type.GetMSDocsUrl()
-                            : type.GetInternalDocsUrl(noExtension);
+            return type.GetIdentifier().ToLower().Replace('`', '-');
+        }
 
-            return new MarkdownLink(type.GetDisplayName().FormatChevrons(), url);
+        internal static MarkdownInlineElement GetDocsLink(this Type type, Assembly assembly, bool noExtension = false)
+        {
+            string typeName = type.GetDisplayName().FormatChevrons();
+
+            if (!string.IsNullOrEmpty(type.FullName))
+            {
+                if (type.Assembly == typeof(string).Assembly)
+                {
+                    return new MarkdownLink(typeName, type.GetMSDocsUrl());
+                }
+                else if (type.Assembly == assembly)
+                {
+                    return new MarkdownLink(typeName, type.GetInternalDocsUrl(noExtension));
+                }
+            }
+
+            return new MarkdownText(typeName);
         }
     }
 }

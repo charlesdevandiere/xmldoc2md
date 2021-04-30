@@ -1,3 +1,7 @@
+[`< Back`](./)
+
+---
+
 # MyClass
 
 Namespace: MyClassLib
@@ -8,15 +12,24 @@ My class.
 public class MyClass : IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)
-
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)
+
+## Fields
+
+### **myField**
+
+My field.
+
+```csharp
+public int myField;
+```
 
 ## Properties
 
-### MyProperty
+### **MyProperty**
 
-My property ([String](https://docs.microsoft.com/en-us/dotnet/api/system.string)).
+My property.
 
 ```csharp
 public string MyProperty { get; protected set; }
@@ -24,7 +37,8 @@ public string MyProperty { get; protected set; }
 
 #### Property Value
 
-String<br>The property value.
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The property value.
 
 #### Example
 
@@ -34,9 +48,9 @@ This example assign `"foo"` to MyProperty.
 foo.MyProperty = "foo";
 ```
 
-### MyEnum
+### **MyEnum**
 
-My enum [MyEnum](./myclasslib.myenum)
+My enum
 
 ```csharp
 public MyEnum MyEnum { get; set; }
@@ -44,11 +58,12 @@ public MyEnum MyEnum { get; set; }
 
 #### Property Value
 
-MyEnum<br>The enum value
+[MyEnum](./myclasslib.myenum)<br>
+The enum value
 
 ## Constructors
 
-### MyClass()
+### **MyClass()**
 
 Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
 
@@ -56,7 +71,7 @@ Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
 public MyClass()
 ```
 
-### MyClass(String, Int32)
+### **MyClass(String, Int32)**
 
 Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
 
@@ -66,13 +81,15 @@ public MyClass(string firstParam, int secondParam)
 
 #### Parameters
 
-`firstParam` String<br>The first param.
+`firstParam` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The first param.
 
-`secondParam` Int32<br>The second param.
+`secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+The second param.
 
 ## Methods
 
-### Do(String, Int32)
+### **Do(String, Int32)**
 
 Do some thing.
 
@@ -82,15 +99,18 @@ public void Do(string firstParam, int secondParam)
 
 #### Parameters
 
-`firstParam` String<br>The first param.
+`firstParam` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The first param.
 
-`secondParam` Int32<br>The second param.
+`secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+The second param.
 
 #### Exceptions
 
-Exception<br>Thrown when...
+[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
+Thrown when...
 
-### Get(List&lt;String&gt;)
+### **Get(List&lt;String&gt;)**
 
 Gets some thing.
 
@@ -100,17 +120,20 @@ public string Get(List<string> param)
 
 #### Parameters
 
-`param` List&lt;String&gt;<br>The param.
+`param` [List&lt;String&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
+The param.
 
 #### Returns
 
-String<br>An empty string.
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+An empty string.
 
 #### Exceptions
 
-Exception<br>Thrown when...
+[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
+Thrown when...
 
-### StaticMethod()
+### **StaticMethod()**
 
 A static method.
 
@@ -120,7 +143,7 @@ public static void StaticMethod()
 
 ## Events
 
-### MyEvent
+### **MyEvent**
 
 My event.
 
@@ -135,3 +158,7 @@ var foo = new MyClass("one", 2);
 
 foo.Do("one", 2);
 ```
+
+---
+
+[`< Back`](./)

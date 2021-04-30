@@ -1,3 +1,7 @@
+[`< Back`](./)
+
+---
+
 # MyAbstractClass
 
 Namespace: MyClassLib
@@ -12,7 +16,7 @@ Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) 
 
 ## Properties
 
-### MyProperty
+### **MyProperty**
 
 My abstract property.
 
@@ -22,11 +26,12 @@ public abstract int MyProperty { get; set; }
 
 #### Property Value
 
-Int32<br>The property value.
+[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+The property value.
 
 ## Methods
 
-### Do()
+### **Do()**
 
 Do something.
 
@@ -34,7 +39,7 @@ Do something.
 public abstract void Do()
 ```
 
-### Get(List&lt;String&gt;)
+### **Get(List&lt;String&gt;)**
 
 Gets something.
 
@@ -44,8 +49,14 @@ protected string Get(List<string> param)
 
 #### Parameters
 
-`param` List&lt;String&gt;<br>The param.
+`param` [List&lt;String&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
+The param.
 
 #### Returns
 
-String<br>A string.
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+A string.
+
+---
+
+[`< Back`](./)

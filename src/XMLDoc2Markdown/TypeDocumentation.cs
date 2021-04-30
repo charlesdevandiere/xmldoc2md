@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Dawn;
 using Markdown;
@@ -15,11 +16,10 @@ namespace XMLDoc2Markdown
         private readonly Assembly assembly;
         private readonly Type type;
         private readonly XmlDocumentation documentation;
-        private readonly string examplesDirectory;
-        private readonly bool githubPages;
+        private readonly TypeDocumentationOptions options;
         private readonly IMarkdownDocument document = new MarkdownDocument();
 
-        public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, string examplesDirectory = default, bool githubPages = false)
+        public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, TypeDocumentationOptions options = null)
         {
             Guard.Argument(assembly, nameof(assembly)).NotNull();
             Guard.Argument(type, nameof(type)).NotNull();
@@ -28,12 +28,16 @@ namespace XMLDoc2Markdown
             this.assembly = assembly;
             this.type = type;
             this.documentation = documentation;
-            this.examplesDirectory = examplesDirectory;
-            this.githubPages = githubPages;
+            this.options = options ?? new TypeDocumentationOptions();
         }
 
         public override string ToString()
         {
+            if (this.options.BackButton)
+            {
+                this.WriteBackButton(top: true);
+            }
+
             this.document.AppendHeader(this.type.GetDisplayName().FormatChevrons(), 1);
 
             this.document.AppendParagraph($"Namespace: {this.type.Namespace}");
@@ -48,16 +52,15 @@ namespace XMLDoc2Markdown
             this.WriteMemberInfoSummary(typeDocElement);
             this.WriteMemberInfoSignature(this.type);
             this.WriteTypeParameters(this.type, typeDocElement);
+            this.WriteInheritanceAndImplements();
 
-            if (this.type.BaseType != null)
+            if (this.type.IsEnum)
             {
-                this.document.AppendParagraph($"Inheritance {string.Join(" → ", this.type.GetInheritanceHierarchy().Reverse().Select(t => t.GetDocsLink(noExtension: this.githubPages)))}");
+                this.WriteEnumFields(this.type.GetFields().Where(m => !m.IsSpecialName));
             }
-
-            Type[] interfaces = this.type.GetInterfaces();
-            if (interfaces.Length > 0)
+            else
             {
-                this.document.AppendParagraph($"Implements {string.Join(", ", interfaces.Select(i => i.GetDocsLink(noExtension: this.githubPages)))}");
+                this.WriteMembersDocumentation(this.type.GetFields());
             }
 
             this.WriteMembersDocumentation(this.type.GetProperties());
@@ -70,18 +73,64 @@ namespace XMLDoc2Markdown
                 );
             this.WriteMembersDocumentation(this.type.GetEvents());
 
-            if (this.type.IsEnum)
-            {
-                this.WriteEnumFields(this.type.GetFields().Where(m => !m.IsSpecialName));
-            }
-
             bool example = this.WriteExample(this.type);
             if (example)
             {
                 Logger.Info("    (example)");
             }
 
+            if (this.options.BackButton)
+            {
+                this.WriteBackButton(bottom: true);
+            }
+
             return this.document.ToString();
+        }
+
+        private void WriteBackButton(bool top = false, bool bottom = false)
+        {
+            if (top && bottom)
+            {
+                throw new ArgumentException("Back button cannot not be set to 'top' and 'bottom' at the same time.");
+            }
+
+            if (bottom)
+            {
+                this.document.AppendHorizontalRule();
+            }
+
+            this.document.AppendParagraph(new MarkdownLink(new MarkdownInlineCode("< Back"), "./"));
+
+            if (top)
+            {
+                this.document.AppendHorizontalRule();
+            }
+        }
+
+        private void WriteInheritanceAndImplements()
+        {
+            var lignes = new List<string>();
+
+            if (this.type.BaseType != null)
+            {
+                IEnumerable<MarkdownInlineElement> inheritanceHierarchy = this.type.GetInheritanceHierarchy()
+                    .Reverse()
+                    .Select(t => t.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages));
+                lignes.Add($"Inheritance {string.Join(" → ", inheritanceHierarchy)}");
+            }
+
+            Type[] interfaces = this.type.GetInterfaces();
+            if (interfaces.Length > 0)
+            {
+                IEnumerable<MarkdownInlineElement> implements = interfaces
+                    .Select(i => i.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages));
+                lignes.Add($"Implements {string.Join(", ", implements)}");
+            }
+
+            if (lignes.Any())
+            {
+                this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", lignes));
+            }
         }
 
         private void WriteMemberInfoSummary(XElement memberDocElement)
@@ -94,7 +143,7 @@ namespace XMLDoc2Markdown
                 {
                     summary += node switch
                     {
-                        XText text => text,
+                        XText text => Regex.Replace(text.ToString(), "[ ]{2,}", " "),
                         XElement element => this.PrintSummaryXElement(element),
                         _ => null
                     };
@@ -146,7 +195,7 @@ namespace XMLDoc2Markdown
 
             foreach (MemberInfo member in members)
             {
-                this.document.AppendHeader(member.GetSignature().FormatChevrons(), 3);
+                this.document.AppendHeader(new MarkdownStrongEmphasis(member.GetSignature().FormatChevrons()), 3);
 
                 XElement memberDocElement = this.documentation.GetMember(member);
 
@@ -169,8 +218,9 @@ namespace XMLDoc2Markdown
                     this.document.AppendHeader("Property Value", 4);
 
                     string valueDoc = memberDocElement?.Element("value")?.Value;
-                    this.document.AppendParagraph(
-                        $"{propertyInfo.GetReturnType()?.Name}<br>{valueDoc}");
+                    MarkdownInlineElement typeName = propertyInfo.GetReturnType()?
+                        .GetDocsLink(this.assembly, noExtension: this.options.GitHubPages);
+                    this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{valueDoc}");
                 }
 
                 this.WriteExceptions(memberDocElement);
@@ -201,28 +251,9 @@ namespace XMLDoc2Markdown
 
                 foreach (XElement exceptionDoc in exceptionDocs)
                 {
-                    var text = new List<string>(2);
-
                     string cref = exceptionDoc.Attribute("cref")?.Value;
-                    if (cref != null && cref.Length > 2)
-                    {
-                        int index = cref.LastIndexOf('.');
-                        string exception = cref[(index + 1)..];
-                        if (!string.IsNullOrEmpty(exception))
-                        {
-                            text.Add(exception);
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(exceptionDoc.Value))
-                    {
-                        text.Add(exceptionDoc.Value);
-                    }
-
-                    if (text.Count > 0)
-                    {
-                        this.document.AppendParagraph(string.Join("<br>", text));
-                    }
+                    MarkdownInlineElement exceptionTypeName = this.GetLinkFromReference(cref);
+                    this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", exceptionTypeName, exceptionDoc.Value));
                 }
             }
         }
@@ -234,8 +265,8 @@ namespace XMLDoc2Markdown
             this.document.AppendHeader("Returns", 4);
 
             string returnsDoc = memberDocElement?.Element("returns")?.Value;
-            this.document.AppendParagraph(
-                $"{methodInfo.ReturnType.GetDisplayName().FormatChevrons()}<br>{returnsDoc}");
+            MarkdownInlineElement typeName = methodInfo.ReturnType.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages);
+            this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", typeName, returnsDoc));
         }
 
         private void WriteTypeParameters(MemberInfo memberInfo, XElement memberDocElement)
@@ -256,8 +287,8 @@ namespace XMLDoc2Markdown
                 foreach (Type typeParam in typeParams)
                 {
                     string typeParamDoc = memberDocElement?.Elements("typeparam").FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Value;
-                    this.document.AppendParagraph(
-                        $"{new MarkdownInlineCode(typeParam.GetDisplayName().FormatChevrons())}<br>{typeParamDoc}");
+                    MarkdownInlineElement typeName = typeParam.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages);
+                    this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", new MarkdownInlineCode(typeName), typeParamDoc));
                 }
             }
         }
@@ -275,8 +306,8 @@ namespace XMLDoc2Markdown
                 foreach (ParameterInfo param in @params)
                 {
                     string paramDoc = memberDocElement?.Elements("param").FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Value;
-                    this.document.AppendParagraph(
-                        $"{new MarkdownInlineCode(param.Name)} {param.ParameterType.GetDisplayName().FormatChevrons()}<br>{paramDoc}");
+                    MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages);
+                    this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>{Environment.NewLine}{paramDoc}");
                 }
             }
         }
@@ -309,13 +340,13 @@ namespace XMLDoc2Markdown
 
         private bool WriteExample(MemberInfo memberInfo)
         {
-            if (this.examplesDirectory == null)
+            if (this.options.ExamplesDirectory == null)
             {
                 return false;
             }
 
             string fileName = $"{memberInfo.GetIdentifier()}.md";
-            string file = Path.Combine(this.examplesDirectory, fileName);
+            string file = Path.Combine(this.options.ExamplesDirectory, fileName);
 
             if (File.Exists(file))
             {
@@ -337,7 +368,9 @@ namespace XMLDoc2Markdown
 
         private MarkdownInlineElement GetLinkFromReference(string crefAttribute)
         {
-            if (crefAttribute[1] == ':' &&
+            if (crefAttribute != null &&
+                crefAttribute.Length > 2 &&
+                crefAttribute[1] == ':' &&
                 MemberTypesAliases.TryGetMemberType(crefAttribute[0], out MemberTypes memberType))
             {
                 string memberFullName = crefAttribute[2..];
@@ -347,14 +380,14 @@ namespace XMLDoc2Markdown
                     Type type = Type.GetType(memberFullName) ?? this.assembly.GetType(memberFullName);
                     if (type != null)
                     {
-                        return type.GetDocsLink(noExtension: this.githubPages);
+                        return type.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages);
                     }
                 }
 
-                return new MarkdownInlineCode(memberFullName);
+                return new MarkdownText(memberFullName);
             }
 
-            return new MarkdownInlineCode(crefAttribute);
+            return new MarkdownText(crefAttribute);
         }
     }
 }
