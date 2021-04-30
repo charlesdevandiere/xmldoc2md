@@ -37,7 +37,7 @@ public string MyProperty { get; protected set; }
 
 #### Property Value
 
-String<br>
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 The property value.
 
 #### Example
@@ -58,7 +58,7 @@ public MyEnum MyEnum { get; set; }
 
 #### Property Value
 
-MyEnum<br>
+[MyEnum](./myclasslib.myenum)<br>
 The enum value
 
 ## Constructors
@@ -107,7 +107,7 @@ The second param.
 
 #### Exceptions
 
-Exception<br>
+[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
 ### **Get(List&lt;String&gt;)**
@@ -130,7 +130,7 @@ An empty string.
 
 #### Exceptions
 
-Exception<br>
+[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
 ### **StaticMethod()**

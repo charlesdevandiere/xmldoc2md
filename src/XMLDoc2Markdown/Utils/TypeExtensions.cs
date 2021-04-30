@@ -175,18 +175,19 @@ namespace XMLDoc2Markdown.Utils
         {
             string typeName = type.GetDisplayName().FormatChevrons();
 
-            if (type.Assembly == typeof(string).Assembly)
+            if (!string.IsNullOrEmpty(type.FullName))
             {
-                return new MarkdownLink(typeName, type.GetMSDocsUrl());
+                if (type.Assembly == typeof(string).Assembly)
+                {
+                    return new MarkdownLink(typeName, type.GetMSDocsUrl());
+                }
+                else if (type.Assembly == assembly)
+                {
+                    return new MarkdownLink(typeName, type.GetInternalDocsUrl(noExtension));
+                }
             }
-            else if (type.Assembly == assembly && !type.IsGenericParameter)
-            {
-                return new MarkdownLink(typeName, type.GetInternalDocsUrl(noExtension));
-            }
-            else
-            {
-                return new MarkdownText(typeName);
-            }
+
+            return new MarkdownText(typeName);
         }
     }
 }

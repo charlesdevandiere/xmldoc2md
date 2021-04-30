@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Dawn;
 using Markdown;
@@ -142,7 +143,7 @@ namespace XMLDoc2Markdown
                 {
                     summary += node switch
                     {
-                        XText text => text,
+                        XText text => Regex.Replace(text.ToString(), "[ ]{2,}", " "),
                         XElement element => this.PrintSummaryXElement(element),
                         _ => null
                     };
@@ -217,8 +218,9 @@ namespace XMLDoc2Markdown
                     this.document.AppendHeader("Property Value", 4);
 
                     string valueDoc = memberDocElement?.Element("value")?.Value;
-                    this.document.AppendParagraph(
-                        $"{propertyInfo.GetReturnType()?.Name}<br>{Environment.NewLine}{valueDoc}");
+                    MarkdownInlineElement typeName = propertyInfo.GetReturnType()?
+                        .GetDocsLink(this.assembly, noExtension: this.options.GitHubPages);
+                    this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{valueDoc}");
                 }
 
                 this.WriteExceptions(memberDocElement);
@@ -249,28 +251,9 @@ namespace XMLDoc2Markdown
 
                 foreach (XElement exceptionDoc in exceptionDocs)
                 {
-                    var text = new List<string>(2);
-
                     string cref = exceptionDoc.Attribute("cref")?.Value;
-                    if (cref != null && cref.Length > 2)
-                    {
-                        int index = cref.LastIndexOf('.');
-                        string exception = cref[(index + 1)..];
-                        if (!string.IsNullOrEmpty(exception))
-                        {
-                            text.Add(exception);
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(exceptionDoc.Value))
-                    {
-                        text.Add(exceptionDoc.Value);
-                    }
-
-                    if (text.Count > 0)
-                    {
-                        this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", text));
-                    }
+                    MarkdownInlineElement exceptionTypeName = this.GetLinkFromReference(cref);
+                    this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", exceptionTypeName, exceptionDoc.Value));
                 }
             }
         }
@@ -385,7 +368,9 @@ namespace XMLDoc2Markdown
 
         private MarkdownInlineElement GetLinkFromReference(string crefAttribute)
         {
-            if (crefAttribute[1] == ':' &&
+            if (crefAttribute != null &&
+                crefAttribute.Length > 2 &&
+                crefAttribute[1] == ':' &&
                 MemberTypesAliases.TryGetMemberType(crefAttribute[0], out MemberTypes memberType))
             {
                 string memberFullName = crefAttribute[2..];

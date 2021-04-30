@@ -26,7 +26,7 @@ public abstract int MyProperty { get; set; }
 
 #### Property Value
 
-Int32<br>
+[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The property value.
 
 ## Methods
