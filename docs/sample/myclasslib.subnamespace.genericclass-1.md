@@ -1,3 +1,7 @@
+[`< Back`](./)
+
+---
+
 # GenericClass&lt;T&gt;
 
 Namespace: MyClassLib.SubNamespace
@@ -109,3 +113,7 @@ The target
 
 TTarget<br>
 The mapped object.
+
+---
+
+[`< Back`](./)

@@ -1,3 +1,7 @@
+[`< Back`](./)
+
+---
+
 # MyClass
 
 Namespace: MyClassLib
@@ -154,3 +158,7 @@ var foo = new MyClass("one", 2);
 
 foo.Do("one", 2);
 ```
+
+---
+
+[`< Back`](./)

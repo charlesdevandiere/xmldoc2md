@@ -47,13 +47,22 @@ namespace XMLDoc2Markdown
                 "Remove '.md' extension from links for GitHub Pages",
                 CommandOptionType.NoValue);
 
+            CommandOption backButtonOption = app.Option(
+                "--back-button",
+                "Add a back button on each page",
+                CommandOptionType.NoValue);
+
             app.OnExecute(() =>
             {
                 string src = srcArg.Value;
                 string @out = outArg.Value;
                 string indexPageName = indexPageNameOption.Value() ?? "index";
-                string examplesPath = examplesPathOption.Value();
-                bool githubPages = gitHubPagesOption.HasValue();
+                var options = new TypeDocumentationOptions()
+                {
+                    ExamplesDirectory = examplesPathOption.Value(),
+                    GitHubPages = gitHubPagesOption.HasValue(),
+                    BackButton = backButtonOption.HasValue()
+                };
 
                 int succeeded = 0;
                 int failed = 0;
@@ -88,13 +97,13 @@ namespace XMLDoc2Markdown
                         string fileName = type.GetDocsFileName();
                         Logger.Info($"  {fileName}.md");
 
-                        indexPage.AppendParagraph(type.GetDocsLink(assembly, noExtension: githubPages));
+                        indexPage.AppendParagraph(type.GetDocsLink(assembly, noExtension: options.GitHubPages));
 
                         try
                         {
                             File.WriteAllText(
                                 Path.Combine(@out, $"{fileName}.md"),
-                                new TypeDocumentation(assembly, type, documentation, examplesPath, githubPages).ToString()
+                                new TypeDocumentation(assembly, type, documentation, options).ToString()
                             );
                             succeeded++;
                         }

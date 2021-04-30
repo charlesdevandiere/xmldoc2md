@@ -1,3 +1,7 @@
+[`< Back`](./)
+
+---
+
 # MyEnum
 
 Namespace: MyClassLib
@@ -18,3 +22,7 @@ Implements [IComparable](https://docs.microsoft.com/en-us/dotnet/api/system.icom
 | Default | 0 | The default. |
 | First | 1 | The first. |
 | Second | 2 | The second. |
+
+---
+
+[`< Back`](./)

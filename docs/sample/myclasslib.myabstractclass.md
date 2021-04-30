@@ -1,3 +1,7 @@
+[`< Back`](./)
+
+---
+
 # MyAbstractClass
 
 Namespace: MyClassLib
@@ -52,3 +56,7 @@ The param.
 
 [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 A string.
+
+---
+
+[`< Back`](./)

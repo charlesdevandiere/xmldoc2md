@@ -1,3 +1,7 @@
+[`< Back`](./)
+
+---
+
 # SubClass
 
 Namespace: MyClassLib.SubNamespace
@@ -91,3 +95,7 @@ My event.
 ```csharp
 public event EventHandler<EventArgs> MyEvent;
 ```
+
+---
+
+[`< Back`](./)

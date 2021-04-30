@@ -15,7 +15,8 @@
                 "${workspaceFolder}/docs/sample",
                 "--examples-path",
                 "${workspaceFolder}/sample/docs/examples",
-                "--github-pages"
+                "--github-pages",
+                "--back-button"
             ],
             "cwd": "${workspaceFolder}/src/XMLDoc2Markdown",
             "console": "internalConsole",
