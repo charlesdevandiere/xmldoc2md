@@ -10,7 +10,8 @@ public class GenericClass<T>
 
 #### Type Parameters
 
-`T`<br>The type param.
+`T`<br>
+The type param.
 
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1)
 
@@ -34,7 +35,8 @@ public GenericClass(T param)
 
 #### Parameters
 
-`param` T<br>The generic parameter.
+`param` T<br>
+The generic parameter.
 
 ## Methods
 
@@ -48,11 +50,13 @@ public TSource GetGenericInstance<TSource>()
 
 #### Type Parameters
 
-`TSource`<br>The generic param.
+`TSource`<br>
+The generic param.
 
 #### Returns
 
-TSource<br>The new instance.
+TSource<br>
+The new instance.
 
 ### **GetGenericInstance&lt;TSource&gt;(TSource)**
 
@@ -64,15 +68,18 @@ public TSource GetGenericInstance<TSource>(TSource source)
 
 #### Type Parameters
 
-`TSource`<br>The generic param.
+`TSource`<br>
+The generic param.
 
 #### Parameters
 
-`source` TSource<br>The object source.
+`source` TSource<br>
+The object source.
 
 #### Returns
 
-TSource<br>The new instance.
+TSource<br>
+The new instance.
 
 ### **Map&lt;TSource, TTarget&gt;(TSource, TTarget)**
 
@@ -84,16 +91,21 @@ public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
 
 #### Type Parameters
 
-`TSource`<br>The source type.
+`TSource`<br>
+The source type.
 
-`TTarget`<br>The source target.
+`TTarget`<br>
+The source target.
 
 #### Parameters
 
-`source` TSource<br>The object source.
+`source` TSource<br>
+The object source.
 
-`target` TTarget<br>The target
+`target` TTarget<br>
+The target
 
 #### Returns
 
-TTarget<br>The mapped object.
+TTarget<br>
+The mapped object.

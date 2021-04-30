@@ -11,7 +11,7 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/XMLDoc2Markdown/bin/Debug/net5.0/XMLDoc2Markdown.dll",
             "args": [
-                "${workspaceFolder}/publish/MyClassLib.dll",
+                "${workspaceFolder}/sample/MyClassLib/bin/Release/netstandard2.0/MyClassLib.dll",
                 "${workspaceFolder}/docs/sample",
                 "--examples-path",
                 "${workspaceFolder}/sample/docs/examples",

@@ -179,7 +179,7 @@ namespace XMLDoc2Markdown.Utils
             {
                 return new MarkdownLink(typeName, type.GetMSDocsUrl());
             }
-            else if (type.Assembly == assembly)
+            else if (type.Assembly == assembly && !type.IsGenericParameter)
             {
                 return new MarkdownLink(typeName, type.GetInternalDocsUrl(noExtension));
             }
