@@ -1,8 +1,8 @@
-{
+﻿{
   "profiles": {
     "XMLDoc2Markdown": {
-      "commandName": "Project",
-      "commandLineArgs": "../../../../../publish/MyClassLib.dll ../../../../../docs/sample --examples-path ../../../../../sample/docs/examples --github-pages"
+        "commandName": "Project",
+        "commandLineArgs": "../../../../../sample/MyClassLib/bin/Debug/netstandard2.0/MyClassLib.dll ../../../../../docs/sample --examples-path ../../../../../sample/docs/examples --github-pages --back-button"
     }
   }
 }

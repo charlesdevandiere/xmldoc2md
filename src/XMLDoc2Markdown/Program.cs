@@ -72,7 +72,9 @@ namespace XMLDoc2Markdown
                     Directory.CreateDirectory(@out);
                 }
 
-                var assembly = Assembly.LoadFrom(src);
+                Assembly assembly = new AssemblyLoadContext(src)
+                    .LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(src)));
+
                 string assemblyName = assembly.GetName().Name;
                 var documentation = new XmlDocumentation(src);
 
