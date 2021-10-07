@@ -330,7 +330,7 @@ namespace XMLDoc2Markdown
 
                 foreach (FieldInfo field in fields)
                 {
-                    string paramDoc = this.documentation.GetMember(field)?.Element("summary")?.Value;
+                    string paramDoc = this.documentation.GetMember(field)?.Element("summary")?.Value ?? String.Empty;
                     table.AddRow(new MarkdownTableRow(field.Name, ((Enum)Enum.Parse(this.type, field.Name)).ToString("D"), paramDoc.Trim()));
                 }
 
