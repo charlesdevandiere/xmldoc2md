@@ -12,6 +12,7 @@
     <Description>Tool to generate markdown from C# XML documentation.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/charlesdevandiere/xmldoc2md</RepositoryUrl>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
