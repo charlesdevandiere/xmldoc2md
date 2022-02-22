@@ -1,0 +1,22 @@
+name: Docker Image Build
+
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Log in to Gihub
+      env:
+        DOCKER_USER: balloman
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: docker login ghcr.io -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag ghcr.io/balloman/xml2md:latest
+    - name: Push the Docker image
+      run: | 
+        docker push ghcr.io/balloman/xml2md:latest 
