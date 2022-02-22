@@ -16,7 +16,7 @@ jobs:
       run: docker login ghcr.io -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile --tag ghcr.io/balloman/xml2md:latest
+        docker build src/XMLDoc2Markdown/ --file Dockerfile --tag ghcr.io/balloman/xml2md:latest
     - name: Push the Docker image
       run: | 
         docker push ghcr.io/balloman/xml2md:latest 
