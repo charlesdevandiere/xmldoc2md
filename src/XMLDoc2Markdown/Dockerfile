@@ -8,3 +8,4 @@ RUN dotnet publish -c Release -o /app/publish
 FROM publish AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "XMLDoc2Markdown.dll"]
