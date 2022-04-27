@@ -5,5 +5,6 @@ namespace XMLDoc2Markdown
         public string ExamplesDirectory { get; set; }
         public bool GitHubPages { get; set; }
         public bool BackButton { get; set; }
+        public bool GitlabWiki { get; set; }
     }
 }

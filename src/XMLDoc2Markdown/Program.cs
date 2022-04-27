@@ -47,6 +47,11 @@ namespace XMLDoc2Markdown
                 "Remove '.md' extension from links for GitHub Pages",
                 CommandOptionType.NoValue);
 
+            CommandOption gitlabWikiOption = app.Option(
+                "--gitlab-wiki",
+                "Remove '.md' extension and './' prefix from links for gitlab wikis",
+                CommandOptionType.NoValue);
+
             CommandOption backButtonOption = app.Option(
                 "--back-button",
                 "Add a back button on each page",
@@ -61,9 +66,13 @@ namespace XMLDoc2Markdown
                 {
                     ExamplesDirectory = examplesPathOption.Value(),
                     GitHubPages = gitHubPagesOption.HasValue(),
+                    GitlabWiki = gitlabWikiOption.HasValue(),
                     BackButton = backButtonOption.HasValue()
                 };
-
+                if (options.GitlabWiki)
+                {
+                    options.GitHubPages = true;
+                }
                 int succeeded = 0;
                 int failed = 0;
 

@@ -149,20 +149,24 @@ namespace XMLDoc2Markdown.Utils
             return $"{msdocsBaseUrl}/{type.GetDocsFileName()}";
         }
 
-        internal static string GetInternalDocsUrl(this Type type, bool noExtension = false)
+        internal static string GetInternalDocsUrl(this Type type, bool noExtension = false, bool noPrefix = false)
         {
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            string url = $"./{type.GetDocsFileName()}";
+            string url = $"{type.GetDocsFileName()}";
 
             if (!noExtension)
             {
                 url += ".md";
+                
             }
-
+            if (!noPrefix)
+            {
+                url = url.Insert(0, "./");
+            }
             return url;
         }
 
@@ -171,7 +175,8 @@ namespace XMLDoc2Markdown.Utils
             return type.GetIdentifier().ToLower().Replace('`', '-');
         }
 
-        internal static MarkdownInlineElement GetDocsLink(this Type type, Assembly assembly, bool noExtension = false)
+        internal static MarkdownInlineElement GetDocsLink(this Type type, Assembly assembly, 
+            bool noExtension = false, bool noPrefix = false)
         {
             string typeName = type.GetDisplayName().FormatChevrons();
 
@@ -183,7 +188,7 @@ namespace XMLDoc2Markdown.Utils
                 }
                 else if (type.Assembly == assembly)
                 {
-                    return new MarkdownLink(typeName, type.GetInternalDocsUrl(noExtension));
+                    return new MarkdownLink(typeName, type.GetInternalDocsUrl(noExtension, noPrefix));
                 }
             }
 
