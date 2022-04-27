@@ -26,7 +26,7 @@ namespace MyClassLib.SubNamespace
         {
             return new TSource();
         }
-        
+
         /// <summary>
         /// Gets a new instance of generic param.
         /// </summary>

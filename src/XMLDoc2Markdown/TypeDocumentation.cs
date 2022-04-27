@@ -112,13 +112,16 @@ namespace XMLDoc2Markdown
 
         private void WriteInheritanceAndImplements()
         {
-            var lignes = new List<string>();
+            List<string> lignes = new();
 
             if (this.type.BaseType != null)
             {
                 IEnumerable<MarkdownInlineElement> inheritanceHierarchy = this.type.GetInheritanceHierarchy()
                     .Reverse()
-                    .Select(t => t.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages, this.options.GitlabWiki));
+                    .Select(t => t.GetDocsLink(
+                        this.assembly,
+                        noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                        noPrefix: this.options.GitlabWiki));
                 lignes.Add($"Inheritance {string.Join(" → ", inheritanceHierarchy)}");
             }
 
@@ -126,7 +129,10 @@ namespace XMLDoc2Markdown
             if (interfaces.Length > 0)
             {
                 IEnumerable<MarkdownInlineElement> implements = interfaces
-                    .Select(i => i.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages, this.options.GitlabWiki));
+                    .Select(i => i.GetDocsLink(
+                        this.assembly,
+                        noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                        noPrefix: this.options.GitlabWiki));
                 lignes.Add($"Implements {string.Join(", ", implements)}");
             }
 
@@ -175,11 +181,11 @@ namespace XMLDoc2Markdown
         private string PrintSummaryXElement(IEnumerable<XNode> nodes)
         {
             return nodes.Aggregate(string.Empty, (current, node) => current + node switch
-                {
-                    XText text => Regex.Replace(text.ToString(), "[ ]{2,}", " "),
-                    XElement element => this.PrintSummaryXElement(element),
-                    _ => null
-                });
+            {
+                XText text => Regex.Replace(text.ToString(), "[ ]{2,}", " "),
+                XElement element => this.PrintSummaryXElement(element),
+                _ => null
+            });
         }
 
         private void WriteMemberInfoSignature(MemberInfo memberInfo)
@@ -241,7 +247,10 @@ namespace XMLDoc2Markdown
 
                     string valueDoc = memberDocElement?.Element("value")?.Value;
                     MarkdownInlineElement typeName = propertyInfo.GetReturnType()?
-                        .GetDocsLink(this.assembly, noExtension: this.options.GitHubPages, this.options.GitlabWiki);
+                        .GetDocsLink(
+                            this.assembly,
+                            noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                            noPrefix: this.options.GitlabWiki);
                     this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{valueDoc}");
                 }
 
@@ -287,7 +296,10 @@ namespace XMLDoc2Markdown
             this.document.AppendHeader("Returns", 4);
 
             string returnsDoc = memberDocElement?.Element("returns")?.Value;
-            MarkdownInlineElement typeName = methodInfo.ReturnType.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages, this.options.GitlabWiki);
+            MarkdownInlineElement typeName = methodInfo.ReturnType.GetDocsLink(
+                this.assembly,
+                noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                noPrefix: this.options.GitlabWiki);
             this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", typeName, returnsDoc));
         }
 
@@ -309,7 +321,10 @@ namespace XMLDoc2Markdown
                 foreach (Type typeParam in typeParams)
                 {
                     string typeParamDoc = memberDocElement?.Elements("typeparam").FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Value;
-                    MarkdownInlineElement typeName = typeParam.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages, this.options.GitlabWiki);
+                    MarkdownInlineElement typeName = typeParam.GetDocsLink(
+                        this.assembly,
+                        noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                        noPrefix: this.options.GitlabWiki);
                     this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", new MarkdownInlineCode(typeName), typeParamDoc));
                 }
             }
@@ -328,7 +343,10 @@ namespace XMLDoc2Markdown
                 foreach (ParameterInfo param in @params)
                 {
                     string paramDoc = memberDocElement?.Elements("param").FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Value;
-                    MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages, this.options.GitlabWiki);
+                    MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(
+                        this.assembly,
+                        noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                        noPrefix: this.options.GitlabWiki);
                     this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>{Environment.NewLine}{paramDoc}");
                 }
             }
@@ -342,13 +360,13 @@ namespace XMLDoc2Markdown
             {
                 this.document.AppendHeader("Fields", 2);
 
-                var header = new MarkdownTableHeader(
+                MarkdownTableHeader header = new(
                     new MarkdownTableHeaderCell("Name"),
                     new MarkdownTableHeaderCell("Value", MarkdownTableTextAlignment.Right),
                     new MarkdownTableHeaderCell("Description")
                 );
 
-                var table = new MarkdownTable(header, fields.Count());
+                MarkdownTable table = new(header, fields.Count());
 
                 foreach (FieldInfo field in fields)
                 {
@@ -374,8 +392,8 @@ namespace XMLDoc2Markdown
             {
                 try
                 {
-                    using var sr = new StreamReader(file);
-                    this.document.Append(new MarkdownParagraph(sr.ReadToEnd()));
+                    using StreamReader reader = new(file);
+                    this.document.Append(new MarkdownParagraph(reader.ReadToEnd()));
 
                     return true;
                 }
@@ -398,36 +416,30 @@ namespace XMLDoc2Markdown
                 string memberFullName = crefAttribute[2..];
                 Type highestLevelType;
                 MemberInfo memberInfo = null;
-                var methodArgs = new List<string>();
+                List<string> methodArgs = new();
 
                 if (memberFullName.Contains("("))
                 {
                     string subbedName = memberFullName[..memberFullName.IndexOf("(")];
                     int idx = subbedName.LastIndexOf(".");
                     highestLevelType = this.assembly.GetType(subbedName[..idx]);
-                    if (highestLevelType != null)
+                    if (highestLevelType is not null)
                     {
                         string methodSignature = memberFullName[(idx + 1)..memberFullName.IndexOf("(")];
-                        methodArgs.AddRange(memberFullName[(memberFullName.IndexOf("(")+1)..].Split(","));
+                        methodArgs.AddRange(memberFullName[(memberFullName.IndexOf("(") + 1)..].Split(","));
                         string lastArg = methodArgs[^1];
                         methodArgs[^1] = lastArg[..^1];
                         MemberInfo[] members = highestLevelType.GetMember($"{methodSignature}*");
-                        memberInfo = members.FirstOrDefault(info =>
-                        {
-                            var methodInfo = (MethodInfo) info;
-                            return methodInfo.GetParameters().Length == methodArgs.Count;
-                        });
-                        if (memberInfo == null) //Run again but return first value if we couldn't find a close enough signature
-                        {
-                            memberInfo = members.FirstOrDefault();
-                        }
+                        memberInfo =
+                            members.FirstOrDefault(info => ((MethodInfo)info).GetParameters().Length == methodArgs.Count) ??
+                            members.FirstOrDefault();
                     }
                 }
                 else
                 {
                     int idx = memberFullName.LastIndexOf(".");
                     highestLevelType = this.assembly.GetType(memberFullName[..idx]);
-                    if (highestLevelType != null)
+                    if (highestLevelType is not null)
                     {
                         memberInfo = highestLevelType.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
                     }
@@ -437,80 +449,35 @@ namespace XMLDoc2Markdown
                 {
                     return new MarkdownText(memberFullName);
                 }
-                if (memberType == MemberTypes.TypeInfo)
+                else if (memberType == MemberTypes.TypeInfo)
                 {
                     Type type = Type.GetType(memberFullName) ?? this.assembly.GetType(memberFullName);
                     if (type != null)
                     {
-                        return type.GetDocsLink(this.assembly, noExtension: this.options.GitHubPages, this.options.GitlabWiki);
+                        return type.GetDocsLink(
+                            this.assembly,
+                            noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                            noPrefix: this.options.GitlabWiki);
                     }
                 }
                 else if (memberType is MemberTypes.Constructor)
                 {
-                    var methodInfo = (MethodInfo) memberInfo;
-                    return new MarkdownLink(methodInfo.GetSignature(), 
-                        this.GetMethodLink(methodInfo, methodInfo.DeclaringType));
+                    MethodInfo methodInfo = (MethodInfo)memberInfo;
+                    return methodInfo.GetMethodLink();
                 }
-                else if (memberType is MemberTypes.Property)
+                else if (memberType is MemberTypes.Property && memberInfo is PropertyInfo propertyInfo)
                 {
-                    if (memberInfo is PropertyInfo propertyInfo)
-                    {
-                        return new MarkdownLink(propertyInfo.Name, 
-                            $"{highestLevelType.FullName}{(this.options.GitHubPages || this.options.GitlabWiki ? string.Empty : ".md")}#{propertyInfo.Name}".ToLower());
-                    }
+                    return new MarkdownLink(
+                        propertyInfo.Name,
+                        $"{highestLevelType.FullName}{(this.options.GitHubPages || this.options.GitlabWiki ? string.Empty : ".md")}#{propertyInfo.Name}".ToLower());
                 }
 
-                return new MarkdownLink(memberInfo.Name, 
-                    $"{highestLevelType.FullName}{(this.options.GitHubPages || this.options.GitlabWiki ? String.Empty : ".md")}#{memberInfo.Name}".ToLower());
+                return new MarkdownLink(
+                    memberInfo.Name,
+                    $"{highestLevelType.FullName}{(this.options.GitHubPages || this.options.GitlabWiki ? string.Empty : ".md")}#{memberInfo.Name}".ToLower());
             }
 
             return new MarkdownText(crefAttribute);
-        }
-
-        private string GetMethodLink(MethodBase method, Type boundingType)
-        {
-            if (boundingType.FullName == null)
-            {
-                return string.Empty;
-            }
-
-            string typeName = boundingType.FullName.ToLower();
-            string link = 
-                this.options.GitlabWiki ? string.Empty : "./" + 
-                typeName + 
-                (this.options.GitHubPages || this.options.GitlabWiki ? string.Empty : ".md") + 
-                $"#{method.Name}";
-            ParameterInfo[] parameters = method.GetParameters();
-            link += GetMethodHeaderLink(parameters.Select(info => info.ParameterType).ToArray());
-            return link.ToLower();
-        }
-
-        private static string GetMethodHeaderLink(IReadOnlyList<Type> types)
-        {
-            string link = String.Empty;
-            for (int i = 0; i < types.Count; i++)
-            {
-                Type iType = types[i];
-                if (i != 0)
-                {
-                    link += "-";
-                }
-                if (iType.IsArray)
-                {
-                    link += iType.Name[..^2];
-                }
-                else if (iType.IsGenericType)
-                {
-                    link += iType.Name[..^2];
-                    link += GetMethodHeaderLink(iType.GenericTypeArguments);
-                }
-                else
-                {
-                    link += iType.Name;
-                }
-            }
-
-            return link.ToLower();
         }
     }
 }

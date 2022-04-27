@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace XMLDoc2Markdown
     {
         static int Main(string[] args)
         {
-            var app = new CommandLineApplication
+            CommandLineApplication app = new CommandLineApplication
             {
                 Name = "xmldoc2md"
             };
@@ -62,17 +62,13 @@ namespace XMLDoc2Markdown
                 string src = srcArg.Value;
                 string @out = outArg.Value;
                 string indexPageName = indexPageNameOption.Value() ?? "index";
-                var options = new TypeDocumentationOptions()
+                TypeDocumentationOptions options = new TypeDocumentationOptions()
                 {
                     ExamplesDirectory = examplesPathOption.Value(),
                     GitHubPages = gitHubPagesOption.HasValue(),
                     GitlabWiki = gitlabWikiOption.HasValue(),
                     BackButton = backButtonOption.HasValue()
                 };
-                if (options.GitlabWiki)
-                {
-                    options.GitHubPages = true;
-                }
                 int succeeded = 0;
                 int failed = 0;
 
@@ -85,7 +81,7 @@ namespace XMLDoc2Markdown
                     .LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(src)));
 
                 string assemblyName = assembly.GetName().Name;
-                var documentation = new XmlDocumentation(src);
+                XmlDocumentation documentation = new XmlDocumentation(src);
 
                 Logger.Info($"Generation started: Assembly: {assemblyName}");
 

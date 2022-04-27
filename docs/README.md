@@ -9,19 +9,19 @@ See sample generated documentation [here](sample).
 ### Install tool
 
 ```shell
-> dotnet tool install -g XMLDoc2Markdown
+dotnet tool install -g XMLDoc2Markdown
 ```
 
 ### Generate documentation
 
 ```shell
-> xmldoc2md <DLL_SOURCE_PATH> <OUTPUT_DIRECTORY>
+xmldoc2md <DLL_SOURCE_PATH> <OUTPUT_DIRECTORY>
 ```
 
 #### Example
 
 ```shell
-> xmldoc2md Sample.dll docs
+xmldoc2md Sample.dll docs
 ```
 
 ### Insert code example

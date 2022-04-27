@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Markdown;
 
 namespace XMLDoc2Markdown.Utils
 {
@@ -37,7 +38,7 @@ namespace XMLDoc2Markdown.Utils
 
         internal static string GetSignature(this MethodBase methodBase, bool full = false)
         {
-            var signature = new List<string>();
+            List<string> signature = new List<string>();
 
             if (full)
             {
@@ -83,6 +84,54 @@ namespace XMLDoc2Markdown.Utils
             signature.Add(displayName);
 
             return string.Join(' ', signature);
+        }
+        
+        internal static MarkdownInlineElement GetMethodLink(this MethodBase methodInfo, bool noExtension = false, bool noPrefix = false)
+        {
+            Type boundingType = methodInfo.DeclaringType;
+
+            if (boundingType.FullName == null)
+            {
+                return new MarkdownText(methodInfo.GetSignature());
+            }
+
+            string typeName = boundingType.FullName.ToLower();
+            string link =
+                noPrefix ? string.Empty : "./" +
+                typeName +
+                (noExtension ? string.Empty : ".md") +
+                $"#{methodInfo.Name}";
+            ParameterInfo[] parameters = methodInfo.GetParameters();
+            link += GetMethodHeaderLink(parameters.Select(info => info.ParameterType).ToArray());
+            return new MarkdownLink(methodInfo.GetSignature(), link.ToLower());
+        }
+
+        internal static string GetMethodHeaderLink(IReadOnlyList<Type> types)
+        {
+            string link = string.Empty;
+            for (int i = 0; i < types.Count; i++)
+            {
+                Type iType = types[i];
+                if (i != 0)
+                {
+                    link += "-";
+                }
+                if (iType.IsArray)
+                {
+                    link += iType.Name[..^2];
+                }
+                else if (iType.IsGenericType)
+                {
+                    link += iType.Name[..^2];
+                    link += GetMethodHeaderLink(iType.GenericTypeArguments);
+                }
+                else
+                {
+                    link += iType.Name;
+                }
+            }
+
+            return link.ToLower();
         }
     }
 }

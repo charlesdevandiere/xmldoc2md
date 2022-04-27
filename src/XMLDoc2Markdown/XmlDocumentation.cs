@@ -24,7 +24,7 @@ namespace XMLDoc2Markdown
 
             try
             {
-                var xDocument = XDocument.Parse(File.ReadAllText(xmlPath));
+                XDocument xDocument = XDocument.Parse(File.ReadAllText(xmlPath));
 
                 this.AssemblyName = xDocument.Descendants("assembly").First().Elements("name").First().Value;
                 this.Members = xDocument.Descendants("members").First().Elements("member");

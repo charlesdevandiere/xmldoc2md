@@ -19,7 +19,7 @@ namespace XMLDoc2Markdown.Utils
 
         internal static string GetSignature(this EventInfo eventInfo, bool full = false)
         {
-            var signature = new List<string>();
+            List<string> signature = new List<string>();
 
             if (full)
             {

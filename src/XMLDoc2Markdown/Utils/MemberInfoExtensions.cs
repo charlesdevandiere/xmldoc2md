@@ -47,7 +47,7 @@ namespace XMLDoc2Markdown.Utils
                     return memberInfo.DeclaringType.GetIdentifier() + "." + memberInfo.Name;
 
                 case MethodBase methodBase:
-                    var typeGenericMap = new Dictionary<string, int>();
+                    Dictionary<string, int> typeGenericMap = new Dictionary<string, int>();
                     Type[] typeGenericArguments = methodBase.DeclaringType.GetGenericArguments();
                     for (int i = 0; i < typeGenericArguments.Length; i++)
                     {
@@ -55,7 +55,7 @@ namespace XMLDoc2Markdown.Utils
                         typeGenericMap[typeGeneric.Name] = i;
                     }
 
-                    var methodGenericMap = new Dictionary<string, int>();
+                    Dictionary<string, int> methodGenericMap = new Dictionary<string, int>();
                     if (methodBase is MethodInfo)
                     {
                         Type[] methodGenericArguments = methodBase.GetGenericArguments();

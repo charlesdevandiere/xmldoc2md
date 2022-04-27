@@ -14,7 +14,7 @@ namespace XMLDoc2Markdown.Utils
             { typeof(void), "void" },
             // object
             { typeof(object), "object" },
-            // bool
+            // boolean
             { typeof(bool), "bool" },
             // numeric
             { typeof(sbyte), "sbyte" },
@@ -52,7 +52,7 @@ namespace XMLDoc2Markdown.Utils
 
         internal static string GetSignature(this Type type, bool full = false)
         {
-            var signature = new List<string>();
+            List<string> signature = new();
 
             if (full)
             {
@@ -93,7 +93,7 @@ namespace XMLDoc2Markdown.Utils
 
             if (type.IsClass || type.IsInterface)
             {
-                var baseTypeAndInterfaces = new List<Type>();
+                List<Type> baseTypeAndInterfaces = new();
 
                 if (type.IsClass && type.BaseType != null && type.BaseType != typeof(object))
                 {
@@ -120,7 +120,7 @@ namespace XMLDoc2Markdown.Utils
 
             if (genericParams.Length > 0)
             {
-                name = name.Substring(0, name.IndexOf('`'));
+                name = name[..name.IndexOf('`')];
                 name += $"<{string.Join(", ", genericParams.Select(t => t.GetDisplayName(simplifyName)))}>";
             }
 
@@ -161,12 +161,14 @@ namespace XMLDoc2Markdown.Utils
             if (!noExtension)
             {
                 url += ".md";
-                
+
             }
+
             if (!noPrefix)
             {
                 url = url.Insert(0, "./");
             }
+
             return url;
         }
 
@@ -175,8 +177,11 @@ namespace XMLDoc2Markdown.Utils
             return type.GetIdentifier().ToLower().Replace('`', '-');
         }
 
-        internal static MarkdownInlineElement GetDocsLink(this Type type, Assembly assembly, 
-            bool noExtension = false, bool noPrefix = false)
+        internal static MarkdownInlineElement GetDocsLink(
+            this Type type,
+            Assembly assembly,
+            bool noExtension = false,
+            bool noPrefix = false)
         {
             string typeName = type.GetDisplayName().FormatChevrons();
 
