@@ -6,6 +6,7 @@ namespace MyClassLib
     /// <summary>
     /// My class.
     /// </summary>
+    /// <remarks>A remark.</remarks>
     public class MyClass : IMyInterface
     {
         /// <summary>
@@ -49,12 +50,22 @@ namespace MyClassLib
         private string PrivateProperty { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MyClass" /> class.
+        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
         /// </summary>
+        /// <remarks>
+        /// See also <see cref="MyClassLib.MyClass.MyClass(string, int)" />.
+        /// <code>
+        /// if (true)
+        /// {
+        ///     var foo = new MyClass("foo", 1);
+        ///     Console.WriteLine(foo.ToString());
+        /// }
+        /// </code>
+        /// </remarks>
         public MyClass() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MyClass" /> class.
+        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
         /// </summary>
         /// <param name="firstParam">The first param.</param>
         /// <param name="secondParam">The second param.</param>

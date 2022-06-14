@@ -16,10 +16,6 @@ trigger:
       - README.md
 
 steps:
-  - checkout: self
-    clean: true
-    persistCredentials: true
-
   - task: UseGitVersion@5
     displayName: GitVersion
     inputs:
@@ -28,9 +24,6 @@ steps:
   - script: dotnet pack ./src/XMLDoc2Markdown/XMLDoc2Markdown.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/out -p:Version=$(GitVersion.SemVer)
     displayName: 'dotnet pack'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact'
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-    inputs:
-      PathtoPublish: $(Build.ArtifactStagingDirectory)/out
-      ArtifactName: out
+  - publish: $(Build.ArtifactStagingDirectory)/out
+    artifact: out
+    displayName: 'Publish artifact'
