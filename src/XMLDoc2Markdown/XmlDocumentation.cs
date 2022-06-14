@@ -6,43 +6,42 @@ using System.Reflection;
 using System.Xml.Linq;
 using XMLDoc2Markdown.Utils;
 
-namespace XMLDoc2Markdown
+namespace XMLDoc2Markdown;
+
+public class XmlDocumentation
 {
-    public class XmlDocumentation
+    public string AssemblyName { get; }
+    public IEnumerable<XElement> Members { get; }
+
+    public XmlDocumentation(string dllPath)
     {
-        public string AssemblyName { get; }
-        public IEnumerable<XElement> Members { get; }
+        string xmlPath = Path.Combine(Directory.GetParent(dllPath).FullName, Path.GetFileNameWithoutExtension(dllPath) + ".xml");
 
-        public XmlDocumentation(string dllPath)
+        if (!File.Exists(xmlPath))
         {
-            string xmlPath = Path.Combine(Directory.GetParent(dllPath).FullName, Path.GetFileNameWithoutExtension(dllPath) + ".xml");
-
-            if (!File.Exists(xmlPath))
-            {
-                throw new FileNotFoundException($"Could not load XML documentation file '{Path.GetFullPath(xmlPath)}'. File not found.", xmlPath);
-            }
-
-            try
-            {
-                var xDocument = XDocument.Parse(File.ReadAllText(xmlPath));
-
-                this.AssemblyName = xDocument.Descendants("assembly").First().Elements("name").First().Value;
-                this.Members = xDocument.Descendants("members").First().Elements("member");
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Unable to parse XML documentation", e);
-            }
+            throw new FileNotFoundException($"Could not load XML documentation file '{Path.GetFullPath(xmlPath)}'. File not found.", xmlPath);
         }
 
-        public XElement GetMember(MemberInfo memberInfo)
+        try
         {
-            return this.GetMember($"{memberInfo.MemberType.GetAlias()}:{memberInfo.GetIdentifier()}");
-        }
+            XDocument xDocument = XDocument.Parse(File.ReadAllText(xmlPath));
 
-        public XElement GetMember(string name)
-        {
-            return this.Members.FirstOrDefault(member => member.Attribute("name").Value == name);
+            this.AssemblyName = xDocument.Descendants("assembly").First().Elements("name").First().Value;
+            this.Members = xDocument.Descendants("members").First().Elements("member");
         }
+        catch (Exception e)
+        {
+            throw new Exception("Unable to parse XML documentation", e);
+        }
+    }
+
+    public XElement GetMember(MemberInfo memberInfo)
+    {
+        return this.GetMember($"{memberInfo.MemberType.GetAlias()}:{memberInfo.GetIdentifier()}");
+    }
+
+    public XElement GetMember(string name)
+    {
+        return this.Members.FirstOrDefault(member => member.Attribute("name").Value == name);
     }
 }

@@ -1,6 +1,6 @@
 # XMLDoc2Markdown
 
-Tool to generate markdown from C# XML documentation, based on [MarkdownGenerator](https://github.com/neuecc/MarkdownGenerator) project.
+Tool to generate markdown from C# XML documentation.
 
 See sample generated documentation [here](sample).
 
@@ -9,19 +9,19 @@ See sample generated documentation [here](sample).
 ### Install tool
 
 ```shell
-> dotnet tool install -g XMLDoc2Markdown
+dotnet tool install -g XMLDoc2Markdown
 ```
 
 ### Generate documentation
 
 ```shell
-> xmldoc2md <DLL_SOURCE_PATH> <OUTPUT_DIRECTORY>
+xmldoc2md <DLL_SOURCE_PATH> <OUTPUT_DIRECTORY>
 ```
 
 #### Example
 
 ```shell
-> xmldoc2md Sample.dll docs
+xmldoc2md Sample.dll docs
 ```
 
 ### Insert code example
@@ -85,8 +85,10 @@ new MyClass();
 ### Display command line help
 
 ```shell
-> xmldoc2md -h
+xmldoc2md -h
+```
 
+```text
 Usage: xmldoc2md [arguments] [options]
 
 Arguments:
@@ -99,5 +101,6 @@ Options:
   --index-page-name  Name of the index page (default: "index")
   --examples-path    Path to the code examples to insert in the documentation
   --github-pages     Remove '.md' extension from links for GitHub Pages
+  --gitlab-wiki      Remove '.md' extension and './' prefix from links for gitlab wikis
   --back-button      Add a back button on each page
 ```

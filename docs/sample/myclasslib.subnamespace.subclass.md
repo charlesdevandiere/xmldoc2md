@@ -65,8 +65,6 @@ The enum value
 
 ### **SubClass()**
 
-
-
 ```csharp
 public SubClass()
 ```

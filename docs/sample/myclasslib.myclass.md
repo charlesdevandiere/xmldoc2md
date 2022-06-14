@@ -15,6 +15,10 @@ public class MyClass : IMyInterface
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)
 
+**Remarks:**
+
+A remark.
+
 ## Fields
 
 ### **myField**
@@ -69,6 +73,18 @@ Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
 
 ```csharp
 public MyClass()
+```
+
+**Remarks:**
+
+See also [MyClass.MyClass(String, Int32)](./myclasslib.myclass#myclassstring-int32).
+
+```csharp
+if (true)
+{
+    var foo = new MyClass("foo", 1);
+    Console.WriteLine(foo.ToString());
+}
 ```
 
 ### **MyClass(String, Int32)**
@@ -132,6 +148,14 @@ An empty string.
 
 [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
+
+#### Example
+
+This example call the `Get` method.
+
+```csharp
+var bar = foo.Get("bar");
+```
 
 ### **StaticMethod()**
 
