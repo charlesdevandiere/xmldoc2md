@@ -426,12 +426,21 @@ public class TypeDocumentation
 
             foreach (ParameterInfo param in @params)
             {
-                string paramDoc = memberDocElement?.Elements("param").FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Value;
+                IEnumerable<XNode> xParam = memberDocElement
+                    ?.Elements("param")
+                    ?.FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)
+                    ?.Nodes();
+
                 MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(
                     this.assembly,
                     noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                     noPrefix: this.options.GitlabWiki);
-                this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>{Environment.NewLine}{paramDoc}");
+                this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>");
+
+                if (xParam != null)
+                {
+                    this.document.Append(this.XNodesToMarkdownParagraph(xParam));
+                }
             }
         }
     }
