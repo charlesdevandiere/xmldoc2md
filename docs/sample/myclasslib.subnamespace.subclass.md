@@ -38,7 +38,7 @@ public string MyProperty { get; protected set; }
 #### Property Value
 
 [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The property value.
+The property value. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
 
 #### Example
 

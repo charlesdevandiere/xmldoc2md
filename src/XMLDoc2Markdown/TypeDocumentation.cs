@@ -110,7 +110,7 @@ public class TypeDocumentation
 
     private void WriteInheritanceAndImplements()
     {
-        List<string> lignes = new();
+        List<string> lines = new();
 
         if (this.type.BaseType != null)
         {
@@ -120,7 +120,7 @@ public class TypeDocumentation
                     this.assembly,
                     noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                     noPrefix: this.options.GitlabWiki));
-            lignes.Add($"Inheritance {string.Join(" → ", inheritanceHierarchy)}");
+            lines.Add($"Inheritance {string.Join(" → ", inheritanceHierarchy)}");
         }
 
         Type[] interfaces = this.type.GetInterfaces();
@@ -131,12 +131,12 @@ public class TypeDocumentation
                     this.assembly,
                     noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                     noPrefix: this.options.GitlabWiki));
-            lignes.Add($"Implements {string.Join(", ", implements)}");
+            lines.Add($"Implements {string.Join(", ", implements)}");
         }
 
-        if (lignes.Any())
+        if (lines.Any())
         {
-            this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", lignes));
+            this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", lines));
         }
     }
 
@@ -227,32 +227,39 @@ public class TypeDocumentation
     {
         List<IMarkdownBlockElement> blocks = new();
         MarkdownText paragraph = null;
+        if (nodes is null)
+        {
+            return new MarkdownParagraph("");
+        }
+
         foreach (XNode node in nodes)
         {
             MarkdownTextElement element = this.XNodeToMarkdown(node);
-            if (element is not null)
+            if (element is null)
             {
-                switch (element)
-                {
-                    case MarkdownInlineElement inlineElement:
-                        if (paragraph is null)
-                        {
-                            paragraph = new MarkdownText(inlineElement);
-                        }
-                        else
-                        {
-                            paragraph.Append(inlineElement);
-                        }
-                        break;
-                    case IMarkdownBlockElement block:
-                        if (paragraph is not null)
-                        {
-                            blocks.Add(new MarkdownParagraph(paragraph));
-                            paragraph = null;
-                        }
-                        blocks.Add(block);
-                        break;
-                }
+                continue;
+            }
+            switch (element)
+            {
+                case MarkdownInlineElement inlineElement:
+                    if (paragraph is null)
+                    {
+                        paragraph = new MarkdownText(inlineElement);
+                    }
+                    else
+                    {
+                        paragraph.Append(inlineElement);
+                    }
+                    break;
+
+                case IMarkdownBlockElement block:
+                    if (paragraph is not null)
+                    {
+                        blocks.Add(new MarkdownParagraph(paragraph));
+                        paragraph = null;
+                    }
+                    blocks.Add(block);
+                    break;
             }
         }
 
@@ -329,12 +336,14 @@ public class TypeDocumentation
             {
                 this.document.AppendHeader("Property Value", 4);
 
-                string valueDoc = memberDocElement?.Element("value")?.Value;
                 MarkdownInlineElement typeName = propertyInfo.GetReturnType()?
                     .GetDocsLink(
                         this.assembly,
                         noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                         noPrefix: this.options.GitlabWiki);
+                IEnumerable<XNode> nodes = memberDocElement?.Element("value")?.Nodes();
+                MarkdownParagraph valueDoc = this.XNodesToMarkdownParagraph(nodes);
+
                 this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{valueDoc}");
             }
 
@@ -361,16 +370,19 @@ public class TypeDocumentation
     {
         IEnumerable<XElement> exceptionDocs = memberDocElement?.Elements("exception");
 
-        if (exceptionDocs?.Count() > 0)
+        if (!(exceptionDocs?.Count() > 0))
         {
-            this.document.AppendHeader("Exceptions", 4);
+            return;
+        }
+        this.document.AppendHeader("Exceptions", 4);
 
-            foreach (XElement exceptionDoc in exceptionDocs)
-            {
-                string cref = exceptionDoc.Attribute("cref")?.Value;
-                MarkdownInlineElement exceptionTypeName = this.GetLinkFromReference(cref);
-                this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", exceptionTypeName, exceptionDoc.Value));
-            }
+        foreach (XElement exceptionDoc in exceptionDocs)
+        {
+            string cref = exceptionDoc.Attribute("cref")?.Value;
+            MarkdownInlineElement exceptionTypeName = this.GetLinkFromReference(cref);
+            MarkdownParagraph exceptionSummary = this.XNodesToMarkdownParagraph(exceptionDoc.Nodes());
+
+            this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", exceptionTypeName, exceptionSummary));
         }
     }
 
@@ -380,12 +392,14 @@ public class TypeDocumentation
 
         this.document.AppendHeader("Returns", 4);
 
-        string returnsDoc = memberDocElement?.Element("returns")?.Value;
         MarkdownInlineElement typeName = methodInfo.ReturnType.GetDocsLink(
             this.assembly,
             noExtension: this.options.GitHubPages || this.options.GitlabWiki,
             noPrefix: this.options.GitlabWiki);
-        this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", typeName, returnsDoc));
+        IEnumerable<XNode> nodes = memberDocElement?.Element("returns")?.Nodes();
+        MarkdownParagraph typeParamDoc = this.XNodesToMarkdownParagraph(nodes);
+
+        this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{typeParamDoc}");
     }
 
     private void WriteTypeParameters(MemberInfo memberInfo, XElement memberDocElement)
@@ -399,19 +413,23 @@ public class TypeDocumentation
             _ => Array.Empty<Type>()
         };
 
-        if (typeParams.Length > 0)
+        if (typeParams.Length == 0)
         {
-            this.document.AppendHeader("Type Parameters", 4);
+            return;
+        }
 
-            foreach (Type typeParam in typeParams)
-            {
-                string typeParamDoc = memberDocElement?.Elements("typeparam").FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Value;
-                MarkdownInlineElement typeName = typeParam.GetDocsLink(
-                    this.assembly,
-                    noExtension: this.options.GitHubPages || this.options.GitlabWiki,
-                    noPrefix: this.options.GitlabWiki);
-                this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", new MarkdownInlineCode(typeName), typeParamDoc));
-            }
+        this.document.AppendHeader("Type Parameters", 4);
+
+        foreach (Type typeParam in typeParams)
+        {
+            MarkdownInlineElement typeName = typeParam.GetDocsLink(
+                this.assembly,
+                noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                noPrefix: this.options.GitlabWiki);
+            IEnumerable<XNode> nodes = memberDocElement?.Elements("typeparam").FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Nodes();
+            MarkdownParagraph typeParamDoc = this.XNodesToMarkdownParagraph(nodes);
+
+            this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", new MarkdownInlineCode(typeName), typeParamDoc));
         }
     }
 
@@ -421,19 +439,23 @@ public class TypeDocumentation
 
         ParameterInfo[] @params = methodBase.GetParameters();
 
-        if (@params.Length > 0)
+        if (@params.Length == 0)
         {
-            this.document.AppendHeader("Parameters", 4);
+            return;
+        }
 
-            foreach (ParameterInfo param in @params)
-            {
-                string paramDoc = memberDocElement?.Elements("param").FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Value;
-                MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(
-                    this.assembly,
-                    noExtension: this.options.GitHubPages || this.options.GitlabWiki,
-                    noPrefix: this.options.GitlabWiki);
-                this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>{Environment.NewLine}{paramDoc}");
-            }
+        this.document.AppendHeader("Parameters", 4);
+
+        foreach (ParameterInfo param in @params)
+        {
+            MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(
+                this.assembly,
+                noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                noPrefix: this.options.GitlabWiki);
+            IEnumerable<XNode> nodes = memberDocElement?.Elements("param").FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Nodes();
+            MarkdownParagraph paramDoc = this.XNodesToMarkdownParagraph(nodes);
+
+            this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>{Environment.NewLine}{paramDoc}");
         }
     }
 
@@ -441,34 +463,35 @@ public class TypeDocumentation
     {
         RequiredArgument.NotNull(fields, nameof(fields));
 
-        if (fields.Any())
+        if (!fields.Any())
         {
-            this.document.AppendHeader("Fields", 2);
+            return;
+        }
+        this.document.AppendHeader("Fields", 2);
 
-            MarkdownTableHeader header = new(
-                new MarkdownTableHeaderCell("Name"),
-                new MarkdownTableHeaderCell("Value", MarkdownTableTextAlignment.Right),
-                new MarkdownTableHeaderCell("Description")
-            );
+        MarkdownTableHeader header = new(
+            new MarkdownTableHeaderCell("Name"),
+            new MarkdownTableHeaderCell("Value", MarkdownTableTextAlignment.Right),
+            new MarkdownTableHeaderCell("Description")
+        );
 
-            MarkdownTable table = new(header, fields.Count());
+        MarkdownTable table = new(header, fields.Count());
 
-            foreach (FieldInfo field in fields)
+        foreach (FieldInfo field in fields)
+        {
+            IEnumerable<XNode> nodes = this.documentation.GetMember(field)?.Element("summary")?.Nodes();
+            if (nodes == null)
             {
-                IEnumerable<XNode> nodes = this.documentation.GetMember(field)?.Element("summary")?.Nodes();
-                if (nodes == null)
-                {
-                    continue;
-                }
-
-                MarkdownParagraph summary = this.XNodesToMarkdownParagraph(nodes);
-                string formattedSummary = TableFormat(summary.ToString());
-
-                table.AddRow(new MarkdownTableRow(field.Name, ((Enum)Enum.Parse(this.type, field.Name)).ToString("D"), formattedSummary));
+                continue;
             }
 
-            this.document.Append(table);
+            MarkdownParagraph summary = this.XNodesToMarkdownParagraph(nodes);
+            string formattedSummary = TableFormat(summary.ToString());
+
+            table.AddRow(new MarkdownTableRow(field.Name, ((Enum)Enum.Parse(this.type, field.Name)).ToString("D"), formattedSummary));
         }
+
+        this.document.Append(table);
     }
 
     private static string TableFormat(string input)
@@ -533,54 +556,84 @@ public class TypeDocumentation
     {
         memberInfo = null;
 
-        if (crefAttribute != null &&
-            crefAttribute.Length > 2 &&
-            crefAttribute[1] == ':' &&
-            MemberTypesAliases.TryGetMemberType(crefAttribute[0], out MemberTypes memberType))
+        if (crefAttribute == null ||
+            crefAttribute.Length <= 2 ||
+            crefAttribute[1] != ':' || 
+            !MemberTypesAliases.TryGetMemberType(crefAttribute[0], out MemberTypes memberType))
         {
-            string memberFullName = crefAttribute[2..];
+            return memberInfo != null;
+        }
 
-            if (memberType is MemberTypes.Constructor or MemberTypes.Method)
+        string memberFullName = crefAttribute[2..];
+
+        if (memberType is MemberTypes.Constructor or MemberTypes.Method)
+        {
+            var (@namespace, methodSignature, genericCount, parameterCount) = DeconstructMember(memberFullName);
+            Type type = this.GetTypeFromFullName(@namespace);
+            if (type is not null)
             {
-                int parenthesisIndex = memberFullName.IndexOf('(');
-                if (parenthesisIndex > -1)
-                {
-                    string memberFullNameWithoutParenthesis = memberFullName[..parenthesisIndex];
-                    int lastDotIndex = memberFullNameWithoutParenthesis.LastIndexOf(".");
-                    Type type = this.GetTypeFromFullName(memberFullNameWithoutParenthesis[..lastDotIndex]);
-                    if (type is not null)
+                memberInfo = type.GetMember($"{methodSignature}*")
+                            .FirstOrDefault(info =>
                     {
-                        string methodSignature = memberFullName[(lastDotIndex + 1)..parenthesisIndex].Replace('#', '.');
-                        List<string> methodArgs = new(memberFullName[(parenthesisIndex + 1)..].Split(","));
-                        string lastArg = methodArgs[^1];
-                        methodArgs[^1] = lastArg[..^1];
-                        MemberInfo[] members = type.GetMember($"{methodSignature}*");
-                        memberInfo =
-                            members.FirstOrDefault(info => ((MethodBase)info).GetParameters().Length == methodArgs.Count) ??
-                            members.FirstOrDefault();
-                    }
-                }
+                        MethodBase methodBase = (MethodBase)info;
+                        if (methodBase.ContainsGenericParameters
+                            && methodBase.GetGenericArguments().Length != genericCount)
+                        {
+                            return false;
+                        }
+                        return methodBase.GetParameters().Length == parameterCount;
+                    }) ??
+                    type.GetMember($"{methodSignature}*").FirstOrDefault();
             }
-            else if (memberType is MemberTypes.Event or MemberTypes.Field or MemberTypes.Property)
+        }
+        else if (memberType is MemberTypes.Event or MemberTypes.Field or MemberTypes.Property)
+        {
+            int idx = memberFullName.LastIndexOf(".");
+            Type type = this.GetTypeFromFullName(memberFullName[..idx]);
+            if (type is not null)
             {
-                int idx = memberFullName.LastIndexOf(".");
-                Type type = this.GetTypeFromFullName(memberFullName[..idx]);
-                if (type is not null)
-                {
-                    memberInfo = type.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
-                }
+                memberInfo = type.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
             }
-            else if (memberType is MemberTypes.TypeInfo or MemberTypes.NestedType)
+        }
+        else if (memberType is MemberTypes.TypeInfo or MemberTypes.NestedType)
+        {
+            Type type = this.GetTypeFromFullName(memberFullName);
+            if (type is not null)
             {
-                Type type = this.GetTypeFromFullName(memberFullName);
-                if (type is not null)
-                {
-                    memberInfo = type;
-                }
+                memberInfo = type;
             }
         }
 
         return memberInfo != null;
+    }
+
+    private static (string @namespace, string methodName, int genericCount, int parameterCount) DeconstructMember(string input)
+    {
+        int genericIndex = input.IndexOf("``");
+        int parameterIndex = input.IndexOf("(");
+        int genericCount = 0;
+        int parameterCount = 0;
+
+        string parameterStripped = parameterIndex > -1 ? input[..parameterIndex] : input;
+        int lastDotIndex = parameterStripped.LastIndexOf('.');
+        string @namespace = input[..lastDotIndex];
+
+        string methodName = input[(lastDotIndex + 1)..];
+
+        if (parameterIndex > -1)
+        {
+            parameterCount = input[parameterIndex..].Split(',').Count();
+            methodName = input[(lastDotIndex + 1)..parameterIndex];
+        }
+        if (genericIndex > -1)
+        {
+            genericCount = parameterIndex > 1
+                ? int.Parse(input[(genericIndex + 2)..parameterIndex])
+                : int.Parse(input[(genericIndex + 2)..]);
+            methodName = input[(lastDotIndex + 1)..genericIndex];
+        }
+
+        return (@namespace, methodName.Replace('#', '.'), genericCount, parameterCount);
     }
 
     private Type GetTypeFromFullName(string typeFullName)

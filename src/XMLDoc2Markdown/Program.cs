@@ -82,7 +82,6 @@ class Program
 
             string assemblyName = assembly.GetName().Name;
             XmlDocumentation documentation = new(src);
-
             Logger.Info($"Generation started: Assembly: {assemblyName}");
 
             IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assemblyName, 1);
