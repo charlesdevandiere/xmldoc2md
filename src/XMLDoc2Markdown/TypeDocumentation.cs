@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Markdown;
@@ -454,12 +455,36 @@ public class TypeDocumentation
 
             foreach (FieldInfo field in fields)
             {
-                string paramDoc = this.documentation.GetMember(field)?.Element("summary")?.Value ?? String.Empty;
-                table.AddRow(new MarkdownTableRow(field.Name, ((Enum)Enum.Parse(this.type, field.Name)).ToString("D"), paramDoc.Trim()));
+                IEnumerable<XNode> nodes = this.documentation.GetMember(field)?.Element("summary")?.Nodes();
+                if (nodes == null)
+                {
+                    continue;
+                }
+
+                MarkdownParagraph summary = this.XNodesToMarkdownParagraph(nodes);
+                string formattedSummary = TableFormat(summary.ToString());
+
+                table.AddRow(new MarkdownTableRow(field.Name, ((Enum)Enum.Parse(this.type, field.Name)).ToString("D"), formattedSummary));
             }
 
             this.document.Append(table);
         }
+    }
+
+    private static string TableFormat(string input)
+    {
+        input = input.Replace("\r\n", "\n");
+        StringBuilder sb = new(input.Length);
+
+        foreach (string line in input.Split("\n"))
+        {
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                sb.Append(line);
+            }
+        }
+
+        return sb.ToString();
     }
 
     private bool WriteExample(MemberInfo memberInfo)
