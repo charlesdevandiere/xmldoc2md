@@ -9,9 +9,9 @@ using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown;
 
-class Program
+internal class Program
 {
-    static int Main(string[] args)
+    private static int Main(string[] args)
     {
         CommandLineApplication app = new()
         {
@@ -57,6 +57,11 @@ class Program
             "Add a back button on each page",
             CommandOptionType.NoValue);
 
+        CommandOption IncludePrivateMethodOption = app.Option(
+            "--private-members",
+            "Write documentation for private members.",
+            CommandOptionType.NoValue);
+
         app.OnExecute(() =>
         {
             string src = srcArg.Value;
@@ -67,7 +72,8 @@ class Program
                 ExamplesDirectory = examplesPathOption.Value(),
                 GitHubPages = gitHubPagesOption.HasValue(),
                 GitlabWiki = gitlabWikiOption.HasValue(),
-                BackButton = backButtonOption.HasValue()
+                BackButton = backButtonOption.HasValue(),
+                IncludePrivateMembers = IncludePrivateMethodOption.HasValue(),
             };
             int succeeded = 0;
             int failed = 0;
@@ -82,7 +88,6 @@ class Program
 
             string assemblyName = assembly.GetName().Name;
             XmlDocumentation documentation = new(src);
-
             Logger.Info($"Generation started: Assembly: {assemblyName}");
 
             IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assemblyName, 1);

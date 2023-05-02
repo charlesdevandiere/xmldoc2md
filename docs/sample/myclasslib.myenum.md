@@ -19,7 +19,7 @@ Implements [IComparable](https://docs.microsoft.com/en-us/dotnet/api/system.icom
 
 | Name | Value | Description |
 | --- | --: | --- |
-| Default | 0 | The default. |
+| Default | 0 | The default value for [MyEnum](./myclasslib.myenum). This is additional information. |
 | First | 1 | The first. |
 | Second | 2 | The second. |
 

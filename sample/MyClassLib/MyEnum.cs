@@ -6,7 +6,8 @@ namespace MyClassLib
     public enum MyEnum
     {
         /// <summary>
-        /// The default.
+        /// The default value for <see cref="MyEnum"/>.
+        /// This is additional information.
         /// </summary>
         Default = 0,
 

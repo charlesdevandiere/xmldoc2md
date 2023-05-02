@@ -42,7 +42,7 @@ public string MyProperty { get; protected set; }
 #### Property Value
 
 [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The property value.
+The property value. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
 
 #### Example
 
@@ -125,6 +125,34 @@ The second param.
 
 [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
+
+### **DoGeneric&lt;T&gt;(T)**
+
+Do some thing.
+
+```csharp
+public int DoGeneric<T>(T value)
+```
+
+#### Type Parameters
+
+`T`<br>
+The type argument. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
+
+#### Parameters
+
+`value` T<br>
+The param. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
+
+#### Returns
+
+[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+Returns a value [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32).
+
+#### Exceptions
+
+[ArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
+Thrown instead of [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception).
 
 ### **Get(List&lt;String&gt;)**
 
