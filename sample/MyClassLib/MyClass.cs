@@ -17,7 +17,7 @@ namespace MyClassLib
         /// <summary>
         /// My property.
         /// </summary>
-        /// <value>The property value.</value>
+        /// <value>The property value. Used by <see cref="DoGeneric{T}(T)"/>.</value>
         public string MyProperty { get; protected set; }
 
         /// <summary>
@@ -78,6 +78,15 @@ namespace MyClassLib
         /// <param name="secondParam">The second param.</param>
         /// <exception cref="System.Exception">Thrown when...</exception>
         public void Do(string firstParam, int secondParam) { }
+
+        /// <summary>
+        /// Do some thing.
+        /// </summary>
+        /// <typeparam name="T">The type argument. Used by <see cref="DoGeneric{T}(T)"/>.</typeparam>
+        /// <param name="value">The param. Used by <see cref="DoGeneric{T}(T)"/>.</param>
+        /// <returns>Returns a value <see cref="int"/>.</returns>
+        /// <exception cref="ArgumentException">Thrown instead of <see cref="Exception"/>.</exception>
+        public int DoGeneric<T>(T value) { throw new ArgumentException(); }
 
         /// <summary>
         /// Gets some thing.
