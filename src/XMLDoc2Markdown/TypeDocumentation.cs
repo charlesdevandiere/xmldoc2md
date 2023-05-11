@@ -13,6 +13,8 @@ namespace XMLDoc2Markdown;
 
 public class TypeDocumentation
 {
+    private const string BackingFieldName = ">k__BackingField";
+
     private readonly Assembly assembly;
     private readonly Type type;
     private readonly XmlDocumentation documentation;
@@ -49,6 +51,7 @@ public class TypeDocumentation
             Logger.Info("    (documented)");
         }
 
+        this.WriteObsolete();
         this.WriteMemberInfoSummary(typeDocElement);
         this.WriteMemberInfoSignature(this.type);
         this.WriteTypeParameters(this.type, typeDocElement);
@@ -57,22 +60,22 @@ public class TypeDocumentation
 
         if (this.type.IsEnum)
         {
-            this.WriteEnumFields(this.type.GetFields().Where(m => !m.IsSpecialName));
+            this.WriteEnumFields(this.GetFields().Where(m => !m.IsSpecialName));
         }
         else
         {
-            this.WriteMembersDocumentation(this.type.GetFields());
+            this.WriteMembersDocumentation(this.GetFields());
         }
 
-        this.WriteMembersDocumentation(this.type.GetProperties());
-        this.WriteMembersDocumentation(this.type.GetConstructors());
+        this.WriteMembersDocumentation(this.GetProperties());
+        this.WriteMembersDocumentation(this.GetConstructors());
         this.WriteMembersDocumentation(
             this.type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(m => !m.IsSpecialName)
-                .Where(m => !m.IsPrivate)
+                .Where(m => !m.IsPrivate || this.options.IncludePrivateMembers)
             );
-        this.WriteMembersDocumentation(this.type.GetEvents());
+        this.WriteMembersDocumentation(this.GetEvents());
 
         bool example = this.WriteExample(this.type);
         if (example)
@@ -137,6 +140,37 @@ public class TypeDocumentation
         if (lines.Any())
         {
             this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", lines));
+        }
+    }
+
+    private void WriteObsolete()
+    {
+        IEnumerable<ObsoleteAttribute> attribute = this.type.GetCustomAttributes<ObsoleteAttribute>();
+        WriteObsolete(attribute, this.document, "This type is obsolete.");
+    }
+
+    private void WriteObsoleteMember(MemberInfo member)
+    {
+        IEnumerable<ObsoleteAttribute> attribute = member.GetCustomAttributes<ObsoleteAttribute>();
+        WriteObsolete(attribute, this.document, "This member is obsolete.");
+    }
+
+    private static void WriteObsolete(IEnumerable<ObsoleteAttribute> attribute, IMarkdownDocument document, string defaultMessage)
+    {
+        if (attribute.Any())
+        {
+            document.AppendHeader("Caution", 4);
+
+            string message = attribute.First().Message;
+            if (string.IsNullOrEmpty(message))
+            {
+                document.AppendParagraph(defaultMessage);
+            }
+            else
+            {
+                document.AppendParagraph(message);
+            }
+            document.AppendHorizontalRule();
         }
     }
 
@@ -318,6 +352,7 @@ public class TypeDocumentation
 
             XElement memberDocElement = this.documentation.GetMember(member);
 
+            this.WriteObsoleteMember(member);
             this.WriteMemberInfoSummary(memberDocElement);
             this.WriteMemberInfoSignature(member);
 
@@ -558,7 +593,7 @@ public class TypeDocumentation
 
         if (crefAttribute == null ||
             crefAttribute.Length <= 2 ||
-            crefAttribute[1] != ':' || 
+            crefAttribute[1] != ':' ||
             !MemberTypesAliases.TryGetMemberType(crefAttribute[0], out MemberTypes memberType))
         {
             return memberInfo != null;
@@ -634,6 +669,47 @@ public class TypeDocumentation
         }
 
         return (@namespace, methodName.Replace('#', '.'), genericCount, parameterCount);
+    }
+
+    private IEnumerable<FieldInfo> GetFields()
+    {
+        if (this.options.IncludePrivateMembers)
+        {
+            return this.type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                .Where(x => !x.Name.EndsWith(BackingFieldName));
+        }
+
+        return this.type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+    }
+
+    private IEnumerable<PropertyInfo> GetProperties()
+    {
+        if (this.options.IncludePrivateMembers)
+        {
+            return this.type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+        }
+
+        return this.type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+    }
+
+    private IEnumerable<ConstructorInfo> GetConstructors()
+    {
+        if (this.options.IncludePrivateMembers)
+        {
+            return this.type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+        }
+
+        return this.type.GetConstructors(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+    }
+
+    private IEnumerable<EventInfo> GetEvents()
+    {
+        if (this.options.IncludePrivateMembers)
+        {
+            return this.type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+        }
+
+        return this.type.GetEvents(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
     }
 
     private Type GetTypeFromFullName(string typeFullName)

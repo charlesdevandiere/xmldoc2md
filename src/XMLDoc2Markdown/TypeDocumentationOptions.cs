@@ -6,4 +6,5 @@ public class TypeDocumentationOptions
     public bool GitHubPages { get; set; }
     public bool BackButton { get; set; }
     public bool GitlabWiki { get; set; }
+    public bool IncludePrivateMembers { get; set; }
 }
