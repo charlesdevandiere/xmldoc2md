@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{EFB2BF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7883FFE9-1096-40A2-AA20-3D3A44ED8D0B}"
 	ProjectSection(SolutionItems) = preProject
+		docs\icon.png = docs\icon.png
 		docs\README.md = docs\README.md
 		docs\_config.yml = docs\_config.yml
 	EndProjectSection
@@ -48,11 +49,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{4D
 		sample\docs\examples\MyClassLib.MyClass.Get(System.Collections.Generic.List{System.String}).md = sample\docs\examples\MyClassLib.MyClass.Get(System.Collections.Generic.List{System.String}).md
 		sample\docs\examples\MyClassLib.MyClass.md = sample\docs\examples\MyClassLib.MyClass.md
 		sample\docs\examples\MyClassLib.MyClass.MyProperty.md = sample\docs\examples\MyClassLib.MyClass.MyProperty.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{889C85C8-7A87-4AF1-9184-692E256FA893}"
-	ProjectSection(SolutionItems) = preProject
-		docs\images\Icon.png = docs\images\Icon.png
 	EndProjectSection
 EndProject
 Global
@@ -99,7 +95,6 @@ Global
 		{9667AF75-DBF9-46BB-B8FA-E7FDEBE02B7B} = {7883FFE9-1096-40A2-AA20-3D3A44ED8D0B}
 		{571759AD-C20D-4DB0-84FB-5D7A29CD41C8} = {EFB2BF10-9D7D-43EC-A6D3-4CC3F927D5AE}
 		{4D4B51DE-D3E0-4824-AA42-76B7D0D5C021} = {571759AD-C20D-4DB0-84FB-5D7A29CD41C8}
-		{889C85C8-7A87-4AF1-9184-692E256FA893} = {7883FFE9-1096-40A2-AA20-3D3A44ED8D0B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4E6AFAFB-3393-4E2A-96A0-5EDD91169AC8}
