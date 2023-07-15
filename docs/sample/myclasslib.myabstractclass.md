@@ -1,6 +1,9 @@
-[`< Back`](./)
+# <img align="left" width="100" height="100" src="icon.png">Custom Title :MyAbstractClass 
+[![Build Status](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_apis/build/status/charlesdevandiere.xmldoc2md?branchName=master)](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_build/latest?definitionId=2&branchName=master)
+[![Nuget](https://img.shields.io/nuget/v/XMLDoc2Markdown.svg?color=blue&logo=nuget)](https://www.nuget.org/packages/XMLDoc2Markdown)
 
----
+[**Back to Index**](index.md)
+- - -
 
 # MyAbstractClass
 
@@ -12,11 +15,11 @@ My abstract class.
 public abstract class MyAbstractClass
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyAbstractClass](./myclasslib.myabstractclass)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyAbstractClass](./myclasslib.myabstractclass.md)
 
 ## Properties
 
-### **MyProperty**
+### <a id="properties-myproperty"/>**MyProperty**
 
 My abstract property.
 
@@ -31,7 +34,7 @@ The property value.
 
 ## Methods
 
-### **Do()**
+### <a id="methods-do"/>**Do()**
 
 Do something.
 
@@ -39,12 +42,12 @@ Do something.
 public abstract void Do()
 ```
 
-### **Get(List&lt;String&gt;)**
+### <a id="methods-get"/>**Get(List&lt;String&gt;)**
 
 Gets something.
 
 ```csharp
-protected string Get(List<string> param)
+protected string Get(List<String> param)
 ```
 
 #### Parameters
@@ -54,9 +57,8 @@ The param.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 A string.
 
----
 
-[`< Back`](./)
+- - -
+[**Back to Index**](index.md)

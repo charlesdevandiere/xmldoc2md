@@ -8,7 +8,7 @@ using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown;
 
-public class XmlDocumentation
+internal class XmlDocumentation
 {
     public string AssemblyName { get; }
     public IEnumerable<XElement> Members { get; }

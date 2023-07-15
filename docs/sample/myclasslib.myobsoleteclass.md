@@ -1,6 +1,9 @@
-[`< Back`](./)
+# <img align="left" width="100" height="100" src="icon.png">Custom Title :MyObsoleteClass 
+[![Build Status](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_apis/build/status/charlesdevandiere.xmldoc2md?branchName=master)](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_build/latest?definitionId=2&branchName=master)
+[![Nuget](https://img.shields.io/nuget/v/XMLDoc2Markdown.svg?color=blue&logo=nuget)](https://www.nuget.org/packages/XMLDoc2Markdown)
 
----
+[**Back to Index**](index.md)
+- - -
 
 # MyObsoleteClass
 
@@ -18,7 +21,7 @@ My obsolete class.
 public class MyObsoleteClass
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyObsoleteClass](./myclasslib.myobsoleteclass)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyObsoleteClass](./myclasslib.myobsoleteclass.md)
 
 **Remarks:**
 
@@ -26,7 +29,7 @@ A remark.
 
 ## Fields
 
-### **myField**
+### <a id="fields-myfield"/>**myField**
 
 #### Caution
 
@@ -42,7 +45,7 @@ public int myField;
 
 ## Properties
 
-### **MyProperty**
+### <a id="properties-myproperty"/>**MyProperty**
 
 #### Caution
 
@@ -61,7 +64,7 @@ public string MyProperty { get; protected set; }
 [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 The property value.
 
-### **MyProperty2**
+### <a id="properties-myproperty2"/>**MyProperty2**
 
 Instances.
 
@@ -73,7 +76,7 @@ public int MyProperty2 { get; set; }
 
 [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
-### **StaticProperty**
+### <a id="properties-staticproperty"/>**StaticProperty**
 
 This is my Static property.
 
@@ -87,7 +90,7 @@ public static int StaticProperty { get; set; }
 
 ## Constructors
 
-### **MyObsoleteClass()**
+### <a id="constructors-.ctor"/>**MyObsoleteClass()**
 
 #### Caution
 
@@ -95,7 +98,7 @@ This member is obsolete.
 
 ---
 
-Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
+Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
 
 ```csharp
 public MyObsoleteClass()
@@ -103,7 +106,7 @@ public MyObsoleteClass()
 
 **Remarks:**
 
-See also [MyClass.MyClass(String, Int32)](./myclasslib.myclass#myclassstring-int32).
+See also [MyClass.MyClass(String, Int32)](./myclasslib.myclass.md#myclassstring-int32).
 
 ```csharp
 if (true)
@@ -115,7 +118,7 @@ if (true)
 
 ## Methods
 
-### **Get(List&lt;String&gt;)**
+### <a id="methods-get"/>**Get(List&lt;String&gt;)**
 
 #### Caution
 
@@ -126,7 +129,7 @@ This member is obsolete.
 Gets some thing.
 
 ```csharp
-public string Get(List<string> param)
+public string Get(List<String> param)
 ```
 
 #### Parameters
@@ -136,7 +139,6 @@ The param.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 An empty string.
 
 #### Exceptions
@@ -144,7 +146,7 @@ An empty string.
 [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
-### **StaticMethod()**
+### <a id="methods-staticmethod"/>**StaticMethod()**
 
 #### Caution
 
@@ -158,6 +160,6 @@ A static method.
 public static void StaticMethod()
 ```
 
----
 
-[`< Back`](./)
+- - -
+[**Back to Index**](index.md)

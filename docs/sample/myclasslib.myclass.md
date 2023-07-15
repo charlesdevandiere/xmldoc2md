@@ -1,6 +1,9 @@
-[`< Back`](./)
+# <img align="left" width="100" height="100" src="icon.png">Custom Title :MyClass 
+[![Build Status](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_apis/build/status/charlesdevandiere.xmldoc2md?branchName=master)](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_build/latest?definitionId=2&branchName=master)
+[![Nuget](https://img.shields.io/nuget/v/XMLDoc2Markdown.svg?color=blue&logo=nuget)](https://www.nuget.org/packages/XMLDoc2Markdown)
 
----
+[**Back to Index**](index.md)
+- - -
 
 # MyClass
 
@@ -12,8 +15,8 @@ My class.
 public class MyClass : IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)<br>
-Implements [IMyInterface](./myclasslib.imyinterface)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass.md)<br>
+Implements [IMyInterface](./myclasslib.imyinterface.md)
 
 **Remarks:**
 
@@ -21,7 +24,7 @@ A remark.
 
 ## Fields
 
-### **myField**
+### <a id="fields-myfield"/>**myField**
 
 My field.
 
@@ -31,28 +34,7 @@ public int myField;
 
 ## Properties
 
-### **MyProperty**
-
-My property.
-
-```csharp
-public string MyProperty { get; protected set; }
-```
-
-#### Property Value
-
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The property value. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
-
-#### Example
-
-This example assign `"foo"` to MyProperty.
-
-```csharp
-foo.MyProperty = "foo";
-```
-
-### **MyEnum**
+### <a id="properties-myenum"/>**MyEnum**
 
 My enum
 
@@ -62,14 +44,37 @@ public MyEnum MyEnum { get; set; }
 
 #### Property Value
 
-[MyEnum](./myclasslib.myenum)<br>
+[MyEnum](./myclasslib.myenum.md)<br>
 The enum value
+
+### <a id="properties-myproperty"/>**MyProperty**
+
+My property.
+ <br>Teste
+
+```csharp
+public string MyProperty { get; protected set; }
+```
+
+#### Property Value
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The property value. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass.md#dogenerictt).
+
+#### Example
+
+This example assign `"foo"` to MyProperty.
+
+```csharp
+foo.MyProperty = "foo";
+```
 
 ## Constructors
 
-### **MyClass()**
+### <a id="constructors-.ctor"/>**MyClass()**
 
-Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
+Ctor MyClass.
+ <br>Line1<br>Line2<br>Line3<br>Line4<br>Line5
 
 ```csharp
 public MyClass()
@@ -77,7 +82,7 @@ public MyClass()
 
 **Remarks:**
 
-See also [MyClass.MyClass(String, Int32)](./myclasslib.myclass#myclassstring-int32).
+See also [MyClass.MyClass(String, Int32)](./myclasslib.myclass.md#myclassstring-int32).
 
 ```csharp
 if (true)
@@ -87,9 +92,9 @@ if (true)
 }
 ```
 
-### **MyClass(String, Int32)**
+### <a id="constructors-.ctor"/>**MyClass(String, Int32)**
 
-Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
+Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
 
 ```csharp
 public MyClass(string firstParam, int secondParam)
@@ -105,7 +110,7 @@ The second param.
 
 ## Methods
 
-### **Do(String, Int32)**
+### <a id="methods-do"/>**Do(String, Int32)**
 
 Do some thing.
 
@@ -126,7 +131,7 @@ The second param.
 [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
-### **DoGeneric&lt;T&gt;(T)**
+### <a id="methods-dogeneric"/>**DoGeneric&lt;T&gt;(T)**
 
 Do some thing.
 
@@ -137,29 +142,28 @@ public int DoGeneric<T>(T value)
 #### Type Parameters
 
 `T`<br>
-The type argument. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
+The type argument. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass.md#dogenerictt).
 
 #### Parameters
 
 `value` T<br>
-The param. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
+The param. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass.md#dogenerictt).
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
-Returns a value [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32).
+[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)
 
 #### Exceptions
 
 [ArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
 Thrown instead of [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception).
 
-### **Get(List&lt;String&gt;)**
+### <a id="methods-get"/>**Get(List&lt;String&gt;)**
 
 Gets some thing.
 
 ```csharp
-public string Get(List<string> param)
+public string Get(List<String> param)
 ```
 
 #### Parameters
@@ -169,8 +173,7 @@ The param.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-An empty string.
+An empty [String](https://docs.microsoft.com/en-us/dotnet/api/system.string).
 
 #### Exceptions
 
@@ -185,7 +188,7 @@ This example call the `Get` method.
 var bar = foo.Get("bar");
 ```
 
-### **StaticMethod()**
+### <a id="methods-staticmethod"/>**StaticMethod()**
 
 A static method.
 
@@ -195,7 +198,7 @@ public static void StaticMethod()
 
 ## Events
 
-### **MyEvent**
+### <a id="events-myevent"/>**MyEvent**
 
 My event.
 
@@ -211,6 +214,6 @@ var foo = new MyClass("one", 2);
 foo.Do("one", 2);
 ```
 
----
 
-[`< Back`](./)
+- - -
+[**Back to Index**](index.md)

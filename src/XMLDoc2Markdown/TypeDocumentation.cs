@@ -11,7 +11,7 @@ using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown;
 
-public class TypeDocumentation
+internal class TypeDocumentation
 {
     private const string BackingFieldName = ">k__BackingField";
 
@@ -21,7 +21,7 @@ public class TypeDocumentation
     private readonly TypeDocumentationOptions options;
     private readonly IMarkdownDocument document = new MarkdownDocument();
 
-    public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, TypeDocumentationOptions options = null)
+    public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, TypeDocumentationOptions options)
     {
         RequiredArgument.NotNull(assembly, nameof(assembly));
         RequiredArgument.NotNull(type, nameof(type));
@@ -35,7 +35,7 @@ public class TypeDocumentation
 
     public override string ToString()
     {
-        if (this.options.BackButton)
+        if (this.options.HasBackButton && !this.options.FoundBackButtonTemplate)
         {
             this.WriteBackButton(top: true);
         }
@@ -60,34 +60,34 @@ public class TypeDocumentation
 
         if (this.type.IsEnum)
         {
-            this.WriteEnumFields(this.GetFields().Where(m => !m.IsSpecialName));
+            this.WriteEnumFields(this.GetFields().Where(m => !m.IsSpecialName), Attribute.IsDefined(this.type, typeof(FlagsAttribute)));
         }
         else
         {
-            this.WriteMembersDocumentation(this.GetFields());
+            this.WriteMembersDocumentation(this.GetFields().OrderBy(x => x.Name));
         }
 
-        this.WriteMembersDocumentation(this.GetProperties());
-        this.WriteMembersDocumentation(this.GetConstructors());
+        this.WriteMembersDocumentation(this.GetProperties().OrderBy(x => x.Name));
+        this.WriteMembersDocumentation(this.GetConstructors().OrderBy(x => x.Name));
         this.WriteMembersDocumentation(
             this.type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(m => !m.IsSpecialName)
                 .Where(m => !m.IsPrivate || this.options.IncludePrivateMembers)
+                .Where(m => !m.IsAssembly || (m.IsAssembly && !this.options.ExcludeInternals))
+                .OrderBy(x => x.Name)
             );
-        this.WriteMembersDocumentation(this.GetEvents());
+        this.WriteMembersDocumentation(this.GetEvents().OrderBy(x => x.Name));
 
         bool example = this.WriteExample(this.type);
         if (example)
         {
             Logger.Info("    (example)");
         }
-
-        if (this.options.BackButton)
+        if (this.options.HasBackButton && !this.options.FoundBackButtonTemplate)
         {
             this.WriteBackButton(bottom: true);
         }
-
         return this.document.ToString();
     }
 
@@ -103,7 +103,7 @@ public class TypeDocumentation
             this.document.AppendHorizontalRule();
         }
 
-        this.document.AppendParagraph(new MarkdownLink(new MarkdownInlineCode("< Back"), "./"));
+        this.document.AppendParagraph(new MarkdownLink(new MarkdownInlineCode(this.options.BackButton), this.options.LinkBackButton));
 
         if (top)
         {
@@ -201,7 +201,7 @@ public class TypeDocumentation
             "see" => this.GetLinkFromReference(element.Attribute("cref")?.Value ?? element.Attribute("href")?.Value, element.Value),
             "seealso" => this.GetLinkFromReference(element.Attribute("cref")?.Value, element.Value),
             "c" => new MarkdownInlineCode(element.Value),
-            "br" => new MarkdownText("<br>"),
+            "br" => new MarkdownText($"<br>{element.Value ?? string.Empty}"),
             "para" => this.XNodesToMarkdownParagraph(element.Nodes()),
             "example" => this.XNodesToMarkdownParagraph(element.Nodes()),
             "code" => new MarkdownCode("csharp", TypeDocumentation.FormatCodeElementValue(element.Value)),
@@ -348,7 +348,7 @@ public class TypeDocumentation
 
         foreach (MemberInfo member in members)
         {
-            this.document.AppendHeader(new MarkdownStrongEmphasis(member.GetSignature().FormatChevrons()), 3);
+            this.document.AppendHeader($"<a id=\"{title.ToLowerInvariant()}-{member.Name.ToLowerInvariant()}\"/>" + new MarkdownStrongEmphasis(member.GetSignature().FormatChevrons()).ToString(), 3);
 
             XElement memberDocElement = this.documentation.GetMember(member);
 
@@ -432,9 +432,17 @@ public class TypeDocumentation
             noExtension: this.options.GitHubPages || this.options.GitlabWiki,
             noPrefix: this.options.GitlabWiki);
         IEnumerable<XNode> nodes = memberDocElement?.Element("returns")?.Nodes();
-        MarkdownParagraph typeParamDoc = this.XNodesToMarkdownParagraph(nodes);
 
-        this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{typeParamDoc}");
+        if (nodes != null && nodes.Any())
+        {
+            MarkdownParagraph typeParamDoc = this.XNodesToMarkdownParagraph(nodes);
+            this.document.AppendParagraph($"{typeParamDoc}");
+        }
+        else
+        {
+            this.document.AppendParagraph($"{typeName}");
+        }
+
     }
 
     private void WriteTypeParameters(MemberInfo memberInfo, XElement memberDocElement)
@@ -494,7 +502,7 @@ public class TypeDocumentation
         }
     }
 
-    private void WriteEnumFields(IEnumerable<FieldInfo> fields)
+    private void WriteEnumFields(IEnumerable<FieldInfo> fields, bool isFlag)
     {
         RequiredArgument.NotNull(fields, nameof(fields));
 
@@ -502,7 +510,15 @@ public class TypeDocumentation
         {
             return;
         }
-        this.document.AppendHeader("Fields", 2);
+
+        if (isFlag)
+        {
+            this.document.AppendHeader("Fields (Flags)", 2);
+        }
+        else
+        {
+            this.document.AppendHeader("Fields", 2);
+        }
 
         MarkdownTableHeader header = new(
             new MarkdownTableHeaderCell("Name"),
@@ -609,15 +625,15 @@ public class TypeDocumentation
             {
                 memberInfo = type.GetMember($"{methodSignature}*")
                             .FirstOrDefault(info =>
-                    {
-                        MethodBase methodBase = (MethodBase)info;
-                        if (methodBase.ContainsGenericParameters
-                            && methodBase.GetGenericArguments().Length != genericCount)
-                        {
-                            return false;
-                        }
-                        return methodBase.GetParameters().Length == parameterCount;
-                    }) ??
+                            {
+                                MethodBase methodBase = (MethodBase)info;
+                                if (methodBase.ContainsGenericParameters
+                                    && methodBase.GetGenericArguments().Length != genericCount)
+                                {
+                                    return false;
+                                }
+                                return methodBase.GetParameters().Length == parameterCount;
+                            }) ??
                     type.GetMember($"{methodSignature}*").FirstOrDefault();
             }
         }
@@ -675,6 +691,16 @@ public class TypeDocumentation
     {
         if (this.options.IncludePrivateMembers)
         {
+            if (this.options.ExcludeInternals)
+            {
+                return this.type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                    .Where(x => !x.Name.EndsWith(BackingFieldName) && !x.IsAssembly);
+            }
+            if (this.options.OnlyInternalMembers)
+            {
+                return this.type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                    .Where(x => !x.Name.EndsWith(BackingFieldName) && x.IsAssembly);
+            }
             return this.type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
                 .Where(x => !x.Name.EndsWith(BackingFieldName));
         }
@@ -686,6 +712,16 @@ public class TypeDocumentation
     {
         if (this.options.IncludePrivateMembers)
         {
+            if (this.options.ExcludeInternals)
+            {
+                return this.type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                    .Where(x => x.GetVisibility() != Visibility.Internal && x.GetVisibility() != Visibility.ProtectedInternal);
+            }
+            if (this.options.OnlyInternalMembers)
+            {
+                return this.type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                    .Where(x => x.GetVisibility() == Visibility.Internal || x.GetVisibility() == Visibility.ProtectedInternal);
+            }
             return this.type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
         }
 
@@ -696,6 +732,16 @@ public class TypeDocumentation
     {
         if (this.options.IncludePrivateMembers)
         {
+            if (this.options.ExcludeInternals)
+            {
+                return this.type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                    .Where(x => !x.IsAssembly);
+            }
+            if (this.options.OnlyInternalMembers)
+            {
+                return this.type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                    .Where(x => x.IsAssembly);
+            }
             return this.type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
         }
 
@@ -706,6 +752,16 @@ public class TypeDocumentation
     {
         if (this.options.IncludePrivateMembers)
         {
+            if (this.options.ExcludeInternals)
+            {
+                return this.type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                    .Where(x => x.GetVisibility() != Visibility.Internal && x.GetVisibility() != Visibility.ProtectedInternal);
+            }
+            if (this.options.OnlyInternalMembers)
+            {
+                return this.type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                   .Where(x => x.GetVisibility() == Visibility.Internal || x.GetVisibility() == Visibility.ProtectedInternal);
+            }
             return this.type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
         }
 

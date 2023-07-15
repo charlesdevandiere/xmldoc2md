@@ -35,19 +35,45 @@ internal static class TypeExtensions
 
     internal static string GetSimplifiedName(this Type type)
     {
-        return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.Name;
+        return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : PrettyTypeName(type);
     }
 
     internal static Visibility GetVisibility(this Type type)
     {
-        if (type.IsPublic)
+        if (!type.IsPublic)
+        {
+            return Visibility.Private;
+        }
+        if (type.IsPublic && type.IsVisible)
         {
             return Visibility.Public;
+        }
+        if (type.IsPublic && !type.IsVisible)
+        {
+            return Visibility.Internal;
         }
         else
         {
             return Visibility.None;
         }
+    }
+
+    internal static string PrettyTypeName(this Type t)
+    {
+        if (t.IsArray)
+        {
+            return PrettyTypeName(t.GetElementType()) + "[]";
+        }
+
+        if (t.IsGenericType)
+        {
+            return string.Format(
+                "{0}<{1}>",
+                t.Name.Substring(0, t.Name.LastIndexOf("`", StringComparison.InvariantCulture)),
+                string.Join(", ", t.GetGenericArguments().Select(x => x.PrettyTypeName())));
+        }
+
+        return t.Name;
     }
 
     internal static string GetSignature(this Type type, bool full = false)
@@ -104,7 +130,7 @@ internal static class TypeExtensions
 
             if (baseTypeAndInterfaces.Count > 0)
             {
-                signature.Add($": {string.Join(", ", baseTypeAndInterfaces.Select(t => t.Namespace != type.Namespace ? t.FullName : t.Name))}");
+                signature.Add($": {string.Join(", ", baseTypeAndInterfaces.Select(t => t.Namespace != type.Namespace ? t.FullName : PrettyTypeName(t)))}");
             }
         }
 
@@ -113,12 +139,12 @@ internal static class TypeExtensions
 
     internal static string GetDisplayName(this Type type, bool simplifyName = false)
     {
-        string name = simplifyName ? type.GetSimplifiedName() : type.Name;
+        string name = simplifyName ? type.GetSimplifiedName() : PrettyTypeName(type);
 
         TypeInfo typeInfo = type.GetTypeInfo();
         Type[] genericParams = typeInfo.GenericTypeArguments.Length > 0 ? typeInfo.GenericTypeArguments : typeInfo.GenericTypeParameters;
 
-        if (genericParams.Length > 0)
+        if (genericParams.Length > 0 && name.IndexOf('`') > 0)
         {
             name = name[..name.IndexOf('`')];
             name += $"<{string.Join(", ", genericParams.Select(t => t.GetDisplayName(simplifyName)))}>";
@@ -204,3 +230,4 @@ internal static class TypeExtensions
         return new MarkdownText(text);
     }
 }
+
