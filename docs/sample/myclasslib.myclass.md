@@ -108,6 +108,19 @@ The first param.
 `secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The second param.
 
+### <a id="constructors-.ctor"/>**MyClass(params Int32[])**
+
+Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class with params.
+
+```csharp
+public MyClass(params Int32[] values)
+```
+
+#### Parameters
+
+`values` [Int32[]](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+The values.
+
 ## Methods
 
 ### <a id="methods-do"/>**Do(String, Int32)**
@@ -157,6 +170,19 @@ The param. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass.md#dogen
 
 [ArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
 Thrown instead of [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception).
+
+### <a id="methods-doparams"/>**DoParams(params Int32[])**
+
+Do some thing with params atributes.
+
+```csharp
+public void DoParams(params Int32[] ints)
+```
+
+#### Parameters
+
+`ints` [Int32[]](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+ints params
 
 ### <a id="methods-get"/>**Get(List&lt;String&gt;)**
 

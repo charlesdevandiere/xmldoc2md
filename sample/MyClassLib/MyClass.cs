@@ -111,6 +111,13 @@ namespace MyClassLib
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class with params.
+        /// </summary>
+        /// <param name="values">The values.</param>
+        public MyClass(params int[] values)
+        { }
+
+        /// <summary>
         /// Do some thing.
         /// </summary>
         /// <param name="firstParam">The first param.</param>
@@ -118,6 +125,14 @@ namespace MyClassLib
         /// <exception cref="System.Exception">Thrown when...</exception>
         public void Do(string firstParam, int secondParam)
         { }
+
+        /// <summary>
+        /// Do some thing with params atributes.
+        /// </summary> 
+        /// <param name="ints">ints params</param>
+        public void DoParams(params int[] ints)
+        { }
+
 
         /// <summary>
         /// Do some thing.

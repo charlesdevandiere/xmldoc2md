@@ -79,11 +79,20 @@ internal static class MethodBaseExtensions
         }
         ParameterInfo[] @params = methodBase.GetParameters();
         IEnumerable<string> paramsNames = @params
-            .Select(p => $"{p.ParameterType.GetDisplayName(simplifyName: full)}{(full ? $" {p.Name}" : null)}");
+            .Select(p => $"{p.GetStringIsParams()}{p.ParameterType.GetDisplayName(simplifyName: full)}{(full ? $" {p.Name}" : null)}");
         displayName += $"({string.Join(", ", paramsNames)})";
         signature.Add(displayName);
 
         return string.Join(' ', signature);
+    }
+
+    internal static string GetStringIsParams(this ParameterInfo param)
+    {
+        if (param.IsDefined(typeof(ParamArrayAttribute), false))
+        {
+            return "params ";
+        }
+        return "";
     }
 
     internal static string GetMSDocsUrl(this MethodBase methodInfo, string msdocsBaseUrl = "https://docs.microsoft.com/en-us/dotnet/api")
