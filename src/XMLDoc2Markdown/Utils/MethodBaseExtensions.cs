@@ -79,11 +79,33 @@ internal static class MethodBaseExtensions
         }
         ParameterInfo[] @params = methodBase.GetParameters();
         IEnumerable<string> paramsNames = @params
-            .Select(p => $"{p.GetStringIsParams()}{p.ParameterType.GetDisplayName(simplifyName: full)}{(full ? $" {p.Name}" : null)}");
+            .Select(p => $"{p.GetStringIsbyRef()}{p.GetStringIsParams()}{ RemoveSymbolRef(p.ParameterType.GetDisplayName(simplifyName: full)) }{ RemoveSymbolRef((full ? $" { p.Name}" : null))}");
         displayName += $"({string.Join(", ", paramsNames)})";
         signature.Add(displayName);
 
         return string.Join(' ', signature);
+    }
+
+    internal static string RemoveSymbolRef(string name)
+    {
+        if (name == null)
+        {
+            return name;
+        }
+        if (name.EndsWith("&"))
+        {
+            return name.Substring(0,name.Length-1);
+        }
+        return name;
+    }
+
+    internal static string GetStringIsbyRef(this ParameterInfo param)
+    {
+        if (param.ParameterType.IsByRef)
+        {
+            return "ref ";
+        }
+        return "";
     }
 
     internal static string GetStringIsParams(this ParameterInfo param)

@@ -92,6 +92,19 @@ if (true)
 }
 ```
 
+### <a id="constructors-.ctor"/>**MyClass(ref Int32)**
+
+Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
+
+```csharp
+public MyClass(ref Int32 firstParam)
+```
+
+#### Parameters
+
+`firstParam` [Int32&](https://docs.microsoft.com/en-us/dotnet/api/system.int32&)<br>
+The first param by ref
+
 ### <a id="constructors-.ctor"/>**MyClass(String, Int32)**
 
 Initializes a new instance of the [MyClass](./myclasslib.myclass.md) class.
@@ -183,6 +196,19 @@ public void DoParams(params Int32[] ints)
 
 `ints` [Int32[]](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
 ints params
+
+### <a id="methods-doref"/>**DoRef(ref Int32)**
+
+Do some thing with ref param.
+
+```csharp
+public void DoRef(ref Int32 value)
+```
+
+#### Parameters
+
+`value` [Int32&](https://docs.microsoft.com/en-us/dotnet/api/system.int32&)<br>
+int by ref
 
 ### <a id="methods-get"/>**Get(List&lt;String&gt;)**
 

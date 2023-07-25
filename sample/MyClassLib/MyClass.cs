@@ -90,6 +90,14 @@ namespace MyClassLib
         /// <summary>
         /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
         /// </summary>
+        /// <param name="firstParam">The first param by ref</param>
+        public MyClass(ref int firstParam)
+        { }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
+        /// </summary>
         /// <param name="firstParam">The first param.</param>
         internal MyClass(int firstParam)
         { }
@@ -133,6 +141,13 @@ namespace MyClassLib
         public void DoParams(params int[] ints)
         { }
 
+
+        /// <summary>
+        /// Do some thing with ref param.
+        /// </summary> 
+        /// <param name="value">int by ref</param>
+        public void DoRef(ref int value)
+        { }
 
         /// <summary>
         /// Do some thing.
