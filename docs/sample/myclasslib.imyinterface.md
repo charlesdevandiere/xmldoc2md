@@ -1,6 +1,9 @@
-[`< Back`](./)
+# <img align="left" width="100" height="100" src="icon.png">Custom Title :IMyInterface 
+[![Build Status](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_apis/build/status/charlesdevandiere.xmldoc2md?branchName=master)](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_build/latest?definitionId=2&branchName=master)
+[![Nuget](https://img.shields.io/nuget/v/XMLDoc2Markdown.svg?color=blue&logo=nuget)](https://www.nuget.org/packages/XMLDoc2Markdown)
 
----
+[**Back to Index**](index.md)
+- - -
 
 # IMyInterface
 
@@ -14,7 +17,7 @@ public interface IMyInterface
 
 ## Methods
 
-### **Do(String, Int32)**
+### <a id="methods-do"/>**Do(String, Int32)**
 
 Do some thing.
 
@@ -30,12 +33,12 @@ The first param.
 `secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The second param.
 
-### **Get(List&lt;String&gt;)**
+### <a id="methods-get"/>**Get(List&lt;String&gt;)**
 
 Gets some thing.
 
 ```csharp
-string Get(List<string> param)
+string Get(List<String> param)
 ```
 
 #### Parameters
@@ -45,9 +48,8 @@ The param.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 An empty string.
 
----
 
-[`< Back`](./)
+- - -
+[**Back to Index**](index.md)

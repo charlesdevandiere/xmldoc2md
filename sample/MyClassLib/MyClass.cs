@@ -21,9 +21,16 @@ namespace MyClassLib
 
         /// <summary>
         /// My property.
+        /// <br>Teste</br>
         /// </summary>
         /// <value>The property value. Used by <see cref="DoGeneric{T}(T)"/>.</value>
         public string MyProperty { get; protected set; }
+
+        /// <summary>
+        /// My Internal property.
+        /// </summary>
+        /// <value>The property value. Used by <see cref="DoGeneric{T}(T)"/>.</value>
+        internal string MyInternalProperty { get; set; }
 
         /// <summary>
         /// My enum
@@ -60,7 +67,12 @@ namespace MyClassLib
         private string PrivateProperty { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
+        /// Ctor MyClass.
+        /// <br>Line1</br> 
+        /// <br>Line2</br> 
+        /// <br>Line3</br> 
+        /// <br>Line4</br> 
+        /// <br>Line5</br> 
         /// </summary>
         /// <remarks>
         /// See also <see cref="MyClassLib.MyClass.MyClass(string, int)" />.
@@ -73,6 +85,21 @@ namespace MyClassLib
         /// </code>
         /// </remarks>
         public MyClass()
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
+        /// </summary>
+        /// <param name="firstParam">The first param by ref</param>
+        public MyClass(ref int firstParam)
+        { }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
+        /// </summary>
+        /// <param name="firstParam">The first param.</param>
+        internal MyClass(int firstParam)
         { }
 
         /// <summary>
@@ -92,6 +119,13 @@ namespace MyClassLib
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class with params.
+        /// </summary>
+        /// <param name="values">The values.</param>
+        public MyClass(params int[] values)
+        { }
+
+        /// <summary>
         /// Do some thing.
         /// </summary>
         /// <param name="firstParam">The first param.</param>
@@ -101,29 +135,36 @@ namespace MyClassLib
         { }
 
         /// <summary>
-        /// Do some thing.
-        /// </summary>
-        /// <typeparam name="T">The type argument. Used by <see cref="DoGeneric{T}(T)"/>.</typeparam>
-        /// <param name="value">The param. Used by <see cref="DoGeneric{T}(T)"/>.</param>
-        /// <returns>Returns a value <see cref="int"/>.</returns>
-        /// <exception cref="ArgumentException">Thrown instead of <see cref="Exception"/>.</exception>
-        public int DoGeneric<T>(T value)
-        { throw new ArgumentException(); }
+        /// Do some thing with params atributes.
+        /// </summary> 
+        /// <param name="ints">ints params</param>
+        public void DoParams(params int[] ints)
+        { }
+
+
+        /// <summary>
+        /// Do some thing with ref param.
+        /// </summary> 
+        /// <param name="value">int by ref</param>
+        public void DoRef(ref int value)
+        { }
 
         /// <summary>
         /// Do some thing.
         /// </summary>
         /// <typeparam name="T">The type argument. Used by <see cref="DoGeneric{T}(T)"/>.</typeparam>
         /// <param name="value">The param. Used by <see cref="DoGeneric{T}(T)"/>.</param>
-        /// <returns>Returns a value <see cref="int"/>.</returns>
+        /// <returns><see cref="int"/></returns>
         /// <exception cref="ArgumentException">Thrown instead of <see cref="Exception"/>.</exception>
-        public int DoGeneric<T>(T value) { throw new ArgumentException(); }
+        public int DoGeneric<T>(T value)
+        { throw new ArgumentException(); }
+
 
         /// <summary>
         /// Gets some thing.
         /// </summary>
         /// <param name="param">The param.</param>
-        /// <returns>An empty string.</returns>
+        /// <returns>An empty <see cref="string"/>.</returns>
         /// <exception cref="System.Exception">Thrown when...</exception>
         public string Get(List<string> param) => string.Empty;
 
@@ -134,9 +175,16 @@ namespace MyClassLib
         { }
 
         /// <summary>
+        /// A static internal  method.
+        /// </summary>
+        internal static void InternalStaticMethod()
+        { }
+
+        /// <summary>
         /// A private method.
         /// </summary>
         private void PrivateWork()
         { }
     }
 }
+

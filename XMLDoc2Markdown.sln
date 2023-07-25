@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLDoc2Markdown", "src\XMLDoc2Markdown\XMLDoc2Markdown.csproj", "{DFCBB3CC-9CD3-4243-9D36-979B3DDF5CBC}"
 EndProject
@@ -22,12 +22,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{EFB2BF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7883FFE9-1096-40A2-AA20-3D3A44ED8D0B}"
 	ProjectSection(SolutionItems) = preProject
-		docs\_config.yml = docs\_config.yml
+		docs\icon.png = docs\icon.png
 		docs\README.md = docs\README.md
+		docs\_config.yml = docs\_config.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{9667AF75-DBF9-46BB-B8FA-E7FDEBE02B7B}"
 	ProjectSection(SolutionItems) = preProject
+		docs\sample\index.md = docs\sample\index.md
+		docs\sample\myclasslib.imyinterface.md = docs\sample\myclasslib.imyinterface.md
+		docs\sample\myclasslib.myabstractclass.md = docs\sample\myclasslib.myabstractclass.md
+		docs\sample\myclasslib.myclass.md = docs\sample\myclasslib.myclass.md
+		docs\sample\myclasslib.myenum.md = docs\sample\myclasslib.myenum.md
+		docs\sample\myclasslib.myobsoleteclass.md = docs\sample\myclasslib.myobsoleteclass.md
+		docs\sample\myclasslib.subnamespace.genericclass-1.md = docs\sample\myclasslib.subnamespace.genericclass-1.md
+		docs\sample\myclasslib.subnamespace.subclass.md = docs\sample\myclasslib.subnamespace.subclass.md
 		docs\sample\_config.yml = docs\sample\_config.yml
 	EndProjectSection
 EndProject
@@ -37,7 +46,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{571759AD-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{4D4B51DE-D3E0-4824-AA42-76B7D0D5C021}"
 	ProjectSection(SolutionItems) = preProject
-		sample\docs\examples\MyClassLib.MyClass.Get(System.String).md = sample\docs\examples\MyClassLib.MyClass.Get(System.String).md
+		sample\docs\examples\MyClassLib.MyClass.Get(System.Collections.Generic.List{System.String}).md = sample\docs\examples\MyClassLib.MyClass.Get(System.Collections.Generic.List{System.String}).md
 		sample\docs\examples\MyClassLib.MyClass.md = sample\docs\examples\MyClassLib.MyClass.md
 		sample\docs\examples\MyClassLib.MyClass.MyProperty.md = sample\docs\examples\MyClassLib.MyClass.MyProperty.md
 	EndProjectSection
