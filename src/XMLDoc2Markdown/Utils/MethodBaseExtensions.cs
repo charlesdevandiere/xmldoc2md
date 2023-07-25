@@ -94,7 +94,7 @@ internal static class MethodBaseExtensions
         }
         if (name.EndsWith("&"))
         {
-            return name.Substring(0,name.Length-1);
+            return name[..^1];
         }
         return name;
     }

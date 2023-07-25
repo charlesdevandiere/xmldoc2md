@@ -127,7 +127,7 @@ internal class Program
                 }
                 if (resultindexdoc.Contains("{xmldoc2md-Title()}", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    string titindex = indexPageName[0].ToString().ToUpper() + indexPageName.Substring(1);
+                    string titindex = indexPageName[0].ToString().ToUpper() + indexPageName[1..];
                     resultindexdoc = resultindexdoc.Replace("{xmldoc2md-Title()}", titindex, StringComparison.InvariantCultureIgnoreCase);
                 }
             }
@@ -215,7 +215,7 @@ internal class Program
                             {
                                 resultdoc = resultdoc
                                     .Replace("{xmldoc2md-Title()}",
-                                        typename[0].ToString().ToUpper() + typename.Substring(1),
+                                        typename[0].ToString().ToUpper() + typename[1..],
                                         StringComparison.InvariantCultureIgnoreCase);
                             }
 

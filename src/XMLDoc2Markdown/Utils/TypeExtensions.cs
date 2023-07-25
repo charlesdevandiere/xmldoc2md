@@ -69,7 +69,7 @@ internal static class TypeExtensions
         {
             return string.Format(
                 "{0}<{1}>",
-                t.Name.Substring(0, t.Name.LastIndexOf("`", StringComparison.InvariantCulture)),
+                t.Name[..t.Name.LastIndexOf("`", StringComparison.InvariantCulture)],
                 string.Join(", ", t.GetGenericArguments().Select(x => x.PrettyTypeName())));
         }
 

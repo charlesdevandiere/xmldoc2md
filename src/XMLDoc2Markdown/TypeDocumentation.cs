@@ -619,7 +619,7 @@ internal class TypeDocumentation
 
         if (memberType is MemberTypes.Constructor or MemberTypes.Method)
         {
-            var (@namespace, methodSignature, genericCount, parameterCount) = DeconstructMember(memberFullName);
+            (string @namespace, string methodSignature, int genericCount, int parameterCount) = DeconstructMember(memberFullName);
             Type type = this.GetTypeFromFullName(@namespace);
             if (type is not null)
             {
@@ -673,7 +673,7 @@ internal class TypeDocumentation
 
         if (parameterIndex > -1)
         {
-            parameterCount = input[parameterIndex..].Split(',').Count();
+            parameterCount = input[parameterIndex..].Split(',').Length;
             methodName = input[(lastDotIndex + 1)..parameterIndex];
         }
         if (genericIndex > -1)
