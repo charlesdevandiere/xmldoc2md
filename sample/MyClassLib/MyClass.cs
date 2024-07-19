@@ -71,6 +71,16 @@ namespace MyClassLib
         ///     Console.WriteLine(foo.ToString());
         /// }
         /// </code>
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term>item 1</term>
+        ///         <description>The first item. <c>1</c></description>
+        ///     </item>
+        ///     <item>
+        ///         <term>item 2</term>
+        ///         <description>The second item. <c>2</c></description>
+        ///     </item>
+        /// </list>
         /// </remarks>
         public MyClass()
         { }
@@ -109,15 +119,6 @@ namespace MyClassLib
         /// <exception cref="ArgumentException">Thrown instead of <see cref="Exception"/>.</exception>
         public int DoGeneric<T>(T value)
         { throw new ArgumentException(); }
-
-        /// <summary>
-        /// Do some thing.
-        /// </summary>
-        /// <typeparam name="T">The type argument. Used by <see cref="DoGeneric{T}(T)"/>.</typeparam>
-        /// <param name="value">The param. Used by <see cref="DoGeneric{T}(T)"/>.</param>
-        /// <returns>Returns a value <see cref="int"/>.</returns>
-        /// <exception cref="ArgumentException">Thrown instead of <see cref="Exception"/>.</exception>
-        public int DoGeneric<T>(T value) { throw new ArgumentException(); }
 
         /// <summary>
         /// Gets some thing.

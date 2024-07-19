@@ -87,6 +87,9 @@ if (true)
 }
 ```
 
+- **item 1** - The first item. `1`
+- **item 2** - The second item. `2`
+
 ### **MyClass(String, Int32)**
 
 Initializes a new instance of the [MyClass](./myclasslib.myclass) class.
