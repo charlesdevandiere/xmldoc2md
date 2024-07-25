@@ -87,7 +87,7 @@ internal static class MethodBaseExtensions
 
     internal static string GetMSDocsUrl(this MethodBase methodInfo, string msdocsBaseUrl = "https://docs.microsoft.com/en-us/dotnet/api")
     {
-        ArgumentNullException.ThrowIfNull(methodInfo, nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         Type type = methodInfo.DeclaringType ?? throw new Exception($"Method {methodInfo.Name} has no declaring type.");
 
@@ -101,7 +101,7 @@ internal static class MethodBaseExtensions
 
     internal static string GetInternalDocsUrl(this MethodBase methodInfo, DocumentationStructure structure, bool noExtension = false, bool noPrefix = false)
     {
-        ArgumentNullException.ThrowIfNull(methodInfo, nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         Type type = methodInfo.DeclaringType ?? throw new Exception($"Method {methodInfo.Name} has no declaring type.");
 
@@ -124,8 +124,8 @@ internal static class MethodBaseExtensions
 
     internal static MarkdownInlineElement GetDocsLink(this MethodBase methodInfo, Assembly assembly, DocumentationStructure structure, string? text = null, bool noExtension = false, bool noPrefix = false)
     {
-        ArgumentNullException.ThrowIfNull(methodInfo, nameof(methodInfo));
-        ArgumentNullException.ThrowIfNull(assembly, nameof(assembly));
+        ArgumentNullException.ThrowIfNull(methodInfo);
+        ArgumentNullException.ThrowIfNull(assembly);
 
         Type? type = methodInfo.DeclaringType;
 

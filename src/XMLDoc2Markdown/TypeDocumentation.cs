@@ -19,9 +19,9 @@ internal class TypeDocumentation
 
     internal TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, TypeDocumentationOptions? options = null)
     {
-        ArgumentNullException.ThrowIfNull(assembly, nameof(assembly));
-        ArgumentNullException.ThrowIfNull(type, nameof(type));
-        ArgumentNullException.ThrowIfNull(documentation, nameof(documentation));
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(documentation);
 
         this.assembly = assembly;
         this.type = type;
@@ -414,7 +414,7 @@ internal class TypeDocumentation
 
     private void WriteMembersDocumentation(IEnumerable<MemberInfo> members)
     {
-        ArgumentNullException.ThrowIfNull(members, nameof(members));
+        ArgumentNullException.ThrowIfNull(members);
 
         members = members.Where(member => member != null);
 
@@ -514,7 +514,7 @@ internal class TypeDocumentation
 
     private void WriteMethodReturnType(MethodInfo methodInfo, XElement? memberDocElement)
     {
-        ArgumentNullException.ThrowIfNull(methodInfo, nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         this.document.AppendHeader("Returns", 4);
 
@@ -531,7 +531,7 @@ internal class TypeDocumentation
 
     private void WriteTypeParameters(MemberInfo memberInfo, XElement? memberDocElement)
     {
-        ArgumentNullException.ThrowIfNull(memberInfo, nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
 
         Type[] typeParams = memberInfo switch
         {
@@ -563,7 +563,7 @@ internal class TypeDocumentation
 
     private void WriteMethodParams(MethodBase methodBase, XElement? memberDocElement)
     {
-        ArgumentNullException.ThrowIfNull(methodBase, nameof(methodBase));
+        ArgumentNullException.ThrowIfNull(methodBase);
 
         ParameterInfo[] @params = methodBase.GetParameters();
 
@@ -590,7 +590,7 @@ internal class TypeDocumentation
 
     private void WriteEnumFields(IEnumerable<FieldInfo> fields)
     {
-        ArgumentNullException.ThrowIfNull(fields, nameof(fields));
+        ArgumentNullException.ThrowIfNull(fields);
 
         if (!fields.Any())
         {
@@ -699,10 +699,10 @@ internal class TypeDocumentation
         if (memberType is MemberTypes.Constructor or MemberTypes.Method)
         {
             (string @namespace, string methodSignature, int genericCount, int parameterCount) = DeconstructMember(memberFullName);
-            Type? type = this.GetTypeFromFullName(@namespace);
-            if (type is not null)
+            Type? currentType = this.GetTypeFromFullName(@namespace);
+            if (currentType is not null)
             {
-                memberInfo = type.GetMember($"{methodSignature}*")
+                memberInfo = currentType.GetMember($"{methodSignature}*")
                     .FirstOrDefault(info =>
                     {
                         MethodBase methodBase = (MethodBase)info;
@@ -713,24 +713,24 @@ internal class TypeDocumentation
                         }
                         return methodBase.GetParameters().Length == parameterCount;
                     })
-                    ?? type.GetMember($"{methodSignature}*").FirstOrDefault();
+                    ?? currentType.GetMember($"{methodSignature}*").FirstOrDefault();
             }
         }
         else if (memberType is MemberTypes.Event or MemberTypes.Field or MemberTypes.Property)
         {
             int idx = memberFullName.LastIndexOf(".");
-            Type? type = this.GetTypeFromFullName(memberFullName[..idx]);
-            if (type is not null)
+            Type? currentType = this.GetTypeFromFullName(memberFullName[..idx]);
+            if (currentType is not null)
             {
-                memberInfo = type.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
+                memberInfo = currentType.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
             }
         }
         else if (memberType is MemberTypes.TypeInfo or MemberTypes.NestedType)
         {
-            Type? type = this.GetTypeFromFullName(memberFullName);
-            if (type is not null)
+            Type? currentType = this.GetTypeFromFullName(memberFullName);
+            if (currentType is not null)
             {
-                memberInfo = type;
+                memberInfo = currentType;
             }
         }
 
