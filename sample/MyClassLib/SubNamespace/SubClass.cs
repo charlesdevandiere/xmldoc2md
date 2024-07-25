@@ -1,17 +1,16 @@
-namespace MyClassLib.SubNamespace
+namespace MyClassLib.SubNamespace;
+
+/// <summary>
+/// Sub class from <see cref="MyClass" />
+/// </summary>
+public sealed class SubClass : MyClass
 {
     /// <summary>
-    /// Sub class from <see cref="MyClass" />
+    /// Convert instance to string.
     /// </summary>
-    public class SubClass : MyClass
+    /// <returns>A string.</returns>
+    public override string ToString()
     {
-        /// <summary>
-        /// Convert instance to string.
-        /// </summary>
-        /// <returns>A string.</returns>
-        public override string ToString()
-        {
-            return string.Empty;
-        }
+        return string.Empty;
     }
 }

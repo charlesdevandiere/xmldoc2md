@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Markdown;
@@ -40,23 +37,25 @@ internal static class MemberInfoExtensions
         switch (memberInfo)
         {
             case Type type:
-                return Regex.Replace(type.FullName, @"\[.*\]", string.Empty).Replace('+', '.');
+                return Regex.Replace(type.FullName ?? type.Name, @"\[.*\]", string.Empty).Replace('+', '.');
 
             case PropertyInfo _:
             case FieldInfo _:
             case EventInfo _:
-                return memberInfo.DeclaringType.GetIdentifier() + "." + memberInfo.Name;
+                return memberInfo.DeclaringType != null
+                    ? memberInfo.DeclaringType.GetIdentifier() + "." + memberInfo.Name
+                    : memberInfo.Name;
 
             case MethodBase methodBase:
-                Dictionary<string, int> typeGenericMap = new();
-                Type[] typeGenericArguments = methodBase.DeclaringType.GetGenericArguments();
-                for (int i = 0; i < typeGenericArguments.Length; i++)
+                Dictionary<string, int> typeGenericMap = [];
+                Type[]? typeGenericArguments = methodBase.DeclaringType?.GetGenericArguments();
+                for (int i = 0; i < typeGenericArguments?.Length; i++)
                 {
                     Type typeGeneric = typeGenericArguments[i];
                     typeGenericMap[typeGeneric.Name] = i;
                 }
 
-                Dictionary<string, int> methodGenericMap = new();
+                Dictionary<string, int> methodGenericMap = [];
                 if (methodBase is MethodInfo)
                 {
                     Type[] methodGenericArguments = methodBase.GetGenericArguments();
@@ -69,8 +68,12 @@ internal static class MemberInfoExtensions
 
                 ParameterInfo[] parameterInfos = methodBase.GetParameters();
 
-                string identifier = GetFormatedTypeName(methodBase.DeclaringType, false, typeGenericMap, methodGenericMap);
-                identifier += ".";
+                string identifier = "";
+                if (methodBase.DeclaringType != null)
+                {
+                    identifier += GetFormatedTypeName(methodBase.DeclaringType, false, typeGenericMap, methodGenericMap);
+                    identifier += ".";
+                }
                 identifier += methodBase is ConstructorInfo ? "#ctor" : methodBase.Name;
                 identifier += methodGenericMap.Count > 0 ? "``" + methodGenericMap.Count : string.Empty;
                 identifier += parameterInfos.Length > 0
@@ -95,7 +98,7 @@ internal static class MemberInfoExtensions
 
     internal static string GetMSDocsUrl(this MemberInfo memberInfo, string msdocsBaseUrl = "https://docs.microsoft.com/en-us/dotnet/api")
     {
-        RequiredArgument.NotNull(memberInfo, nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
 
         Type type = memberInfo.DeclaringType ?? throw new Exception($"Property {memberInfo.Name} has no declaring type.");
 
@@ -104,16 +107,16 @@ internal static class MemberInfoExtensions
             throw new InvalidOperationException($"{type.FullName} is not a mscorlib type.");
         }
 
-        return $"{msdocsBaseUrl}/{type.GetDocsFileName()}.{memberInfo.Name.ToLower()}";
+        return $"{msdocsBaseUrl}/{type.GetDocsFileName(DocumentationStructure.Flat)}.{memberInfo.Name.ToLower()}";
     }
 
-    internal static string GetInternalDocsUrl(this MemberInfo memberInfo, bool noExtension = false, bool noPrefix = false)
+    internal static string GetInternalDocsUrl(this MemberInfo memberInfo, DocumentationStructure structure, bool noExtension = false, bool noPrefix = false)
     {
-        RequiredArgument.NotNull(memberInfo, nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
 
         Type type = memberInfo.DeclaringType ?? throw new Exception($"Event {memberInfo.Name} has no declaring type.");
 
-        string url = $"{type.GetDocsFileName()}";
+        string url = $"{type.GetDocsFileName(structure)}";
 
         if (!noExtension)
         {
@@ -130,21 +133,21 @@ internal static class MemberInfoExtensions
         return $"{url}#{anchor}";
     }
 
-    internal static MarkdownInlineElement GetDocsLink(this MemberInfo memberInfo, Assembly assembly, string text = null, bool noExtension = false, bool noPrefix = false)
+    internal static MarkdownInlineElement GetDocsLink(this MemberInfo memberInfo, Assembly assembly, DocumentationStructure structure, string? text = null, bool noExtension = false, bool noPrefix = false)
     {
-        RequiredArgument.NotNull(memberInfo, nameof(memberInfo));
-        RequiredArgument.NotNull(assembly, nameof(assembly));
+        ArgumentNullException.ThrowIfNull(memberInfo);
+        ArgumentNullException.ThrowIfNull(assembly);
 
         return memberInfo switch
         {
-            Type type => type.GetDocsLink(assembly, text, noExtension, noPrefix),
-            MethodBase method => method.GetDocsLink(assembly, text, noExtension, noPrefix),
-            _ => getDocsLinkBase(memberInfo, assembly, text, noExtension, noPrefix),
+            Type type => type.GetDocsLink(assembly, structure, text, noExtension, noPrefix),
+            MethodBase method => method.GetDocsLink(assembly, structure, text, noExtension, noPrefix),
+            _ => getDocsLinkBase(memberInfo, assembly, structure, text, noExtension, noPrefix),
         };
 
-        static MarkdownInlineElement getDocsLinkBase(MemberInfo memberInfo, Assembly assembly, string text = null, bool noExtension = false, bool noPrefix = false)
+        static MarkdownInlineElement getDocsLinkBase(MemberInfo memberInfo, Assembly assembly, DocumentationStructure structure, string? text = null, bool noExtension = false, bool noPrefix = false)
         {
-            Type declaringType = memberInfo.DeclaringType;
+            Type? declaringType = memberInfo.DeclaringType;
 
             if (declaringType is not null)
             {
@@ -159,7 +162,7 @@ internal static class MemberInfoExtensions
                 }
                 else if (declaringType.Assembly == assembly)
                 {
-                    return new MarkdownLink(text, memberInfo.GetInternalDocsUrl(noExtension, noPrefix));
+                    return new MarkdownLink(text, memberInfo.GetInternalDocsUrl(structure, noExtension, noPrefix));
                 }
 
                 return new MarkdownText(text);
@@ -169,12 +172,17 @@ internal static class MemberInfoExtensions
         }
     }
 
-    private static string GetFormatedTypeName(
-        Type type,
+    private static string? GetFormatedTypeName(
+        Type? type,
         bool isMethodParameter,
         Dictionary<string, int> typeGenericMap,
         Dictionary<string, int> methodGenericMap)
     {
+        if (type == null)
+        {
+            return null;
+        }
+
         if (type.IsGenericParameter)
         {
             return methodGenericMap.TryGetValue(type.Name, out int methodIndex)
@@ -183,7 +191,7 @@ internal static class MemberInfoExtensions
         }
         else if (type.HasElementType)
         {
-            string elementTypeString = GetFormatedTypeName(
+            string? elementTypeString = GetFormatedTypeName(
                 type.GetElementType(),
                 isMethodParameter,
                 typeGenericMap,
@@ -224,7 +232,7 @@ internal static class MemberInfoExtensions
 
             if (type.IsGenericType && isMethodParameter)
             {
-                IEnumerable<string> genericArgs = type.GetGenericArguments()
+                IEnumerable<string?> genericArgs = type.GetGenericArguments()
                             .Select(argument => GetFormatedTypeName(argument, isMethodParameter, typeGenericMap, methodGenericMap));
                 name += $"{{{string.Join(",", genericArgs)}}}";
             }

@@ -2,11 +2,7 @@ name: $(GitVersion.FullSemVer)
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  buildConfiguration: Release
-
 trigger:
-  batch: true
   branches:
     include:
       - master
@@ -21,7 +17,7 @@ steps:
     inputs:
       versionSpec: '5.x'
 
-  - script: dotnet pack ./src/XMLDoc2Markdown/XMLDoc2Markdown.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/out -p:Version=$(GitVersion.SemVer)
+  - script: dotnet pack ./src/XMLDoc2Markdown/XMLDoc2Markdown.csproj -o $(Build.ArtifactStagingDirectory)/out -p:Version=$(GitVersion.SemVer)
     displayName: 'dotnet pack'
 
   - publish: $(Build.ArtifactStagingDirectory)/out

@@ -1,19 +1,18 @@
-using System;
 using System.Reflection;
 
 namespace XMLDoc2Markdown.Utils;
 
 internal static class MemberTypesAliases
 {
-    internal static readonly (MemberTypes memberType, char alias)[] ALIASES = {
-            (MemberTypes.Constructor, 'M'),
-            (MemberTypes.Event, 'E'),
-            (MemberTypes.Field, 'F'),
-            (MemberTypes.Method, 'M'),
-            (MemberTypes.TypeInfo, 'T'),
-            (MemberTypes.NestedType, 'T'),
-            (MemberTypes.Property, 'P'),
-        };
+    internal static readonly (MemberTypes memberType, char alias)[] ALIASES = [
+        (MemberTypes.Constructor, 'M'),
+        (MemberTypes.Event, 'E'),
+        (MemberTypes.Field, 'F'),
+        (MemberTypes.Method, 'M'),
+        (MemberTypes.TypeInfo, 'T'),
+        (MemberTypes.NestedType, 'T'),
+        (MemberTypes.Property, 'P'),
+    ];
 
     /// <summary>
     /// Gets the alias associated with the specified member type.

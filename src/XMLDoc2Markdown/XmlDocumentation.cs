@@ -1,21 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown;
 
-public class XmlDocumentation
+internal class XmlDocumentation
 {
-    public string AssemblyName { get; }
-    public IEnumerable<XElement> Members { get; }
+    internal string AssemblyName { get; }
+    internal IEnumerable<XElement> Members { get; }
 
-    public XmlDocumentation(string dllPath)
+    internal XmlDocumentation(string dllPath)
     {
-        string xmlPath = Path.Combine(Directory.GetParent(dllPath).FullName, Path.GetFileNameWithoutExtension(dllPath) + ".xml");
+        string xmlPath = Path.Combine(
+            Directory.GetParent(dllPath)?.FullName ?? string.Empty,
+            Path.GetFileNameWithoutExtension(dllPath) + ".xml");
 
         if (!File.Exists(xmlPath))
         {
@@ -35,13 +33,13 @@ public class XmlDocumentation
         }
     }
 
-    public XElement GetMember(MemberInfo memberInfo)
+    internal XElement? GetMember(MemberInfo memberInfo)
     {
         return this.GetMember($"{memberInfo.MemberType.GetAlias()}:{memberInfo.GetIdentifier()}");
     }
 
-    public XElement GetMember(string name)
+    internal XElement? GetMember(string name)
     {
-        return this.Members.FirstOrDefault(member => member.Attribute("name").Value == name);
+        return this.Members.FirstOrDefault(member => member.Attribute("name")?.Value == name);
     }
 }

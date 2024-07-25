@@ -15,13 +15,30 @@ dotnet tool install -g XMLDoc2Markdown
 ### Generate documentation
 
 ```shell
-xmldoc2md <DLL_SOURCE_PATH> <OUTPUT_DIRECTORY>
+dotnet xmldoc2md <src> [options]
 ```
+
+| Argument | Description |
+|---|---|
+| `<src>` | DLL source path |
+
+| Option | Description |
+|---|---|
+| `-o, --output <output>` | Output directory |
+| `--index-page-name <index-page-name>` | Name of the index page [default: index] |
+| `--examples-path <examples-path>` | Path to the code examples to insert in the documentation |
+| `--github-pages` | Remove '.md' extension from links for GitHub Pages |
+| `--gitlab-wiki` | Remove '.md' extension and './' prefix from links for gitlab wikis |
+| `--back-button` | Add a back button on each page |
+| `--member-accessibility-level <internal\|private\|protected\|public>` | Minimum accessibility level of members to be documented. [default: protected] |
+| `--structure <flat\|tree>` | Documentation structure. [default: flat] |
+| `--version` | Show version information |
+| `-?, -h, --help` | Show help and usage information |
 
 #### Example
 
 ```shell
-xmldoc2md Sample.dll docs
+dotnet xmldoc2md Sample.dll --output docs --github-pages --back-button
 ```
 
 ### Insert code example
@@ -81,26 +98,3 @@ Lorem ipsum...
 new MyClass();
 ```
 ~~~
-
-### Display command line help
-
-```shell
-xmldoc2md -h
-```
-
-```text
-Usage: xmldoc2md [arguments] [options]
-
-Arguments:
-  src  DLL source path
-  out  Output directory
-
-Options:
-  -v|--version       Show version information
-  -?|-h|--help       Show help information
-  --index-page-name  Name of the index page (default: "index")
-  --examples-path    Path to the code examples to insert in the documentation
-  --github-pages     Remove '.md' extension from links for GitHub Pages
-  --gitlab-wiki      Remove '.md' extension and './' prefix from links for gitlab wikis
-  --back-button      Add a back button on each page
-```
