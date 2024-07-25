@@ -1,8 +1,6 @@
-using System;
-
 namespace XMLDoc2Markdown.Utils;
 
-internal class Logger
+internal static class Logger
 {
     internal static void Info(string message)
     {

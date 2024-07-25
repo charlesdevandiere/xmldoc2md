@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,7 +7,7 @@ using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown;
 
-public class TypeDocumentation
+internal class TypeDocumentation
 {
     private const string BackingFieldName = ">k__BackingField";
 
@@ -19,18 +15,18 @@ public class TypeDocumentation
     private readonly Type type;
     private readonly XmlDocumentation documentation;
     private readonly TypeDocumentationOptions options;
-    private readonly IMarkdownDocument document = new MarkdownDocument();
+    private readonly MarkdownDocument document = new();
 
-    public TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, TypeDocumentationOptions options = null)
+    internal TypeDocumentation(Assembly assembly, Type type, XmlDocumentation documentation, TypeDocumentationOptions? options = null)
     {
-        RequiredArgument.NotNull(assembly, nameof(assembly));
-        RequiredArgument.NotNull(type, nameof(type));
-        RequiredArgument.NotNull(documentation, nameof(documentation));
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(documentation);
 
         this.assembly = assembly;
         this.type = type;
         this.documentation = documentation;
-        this.options = options ?? new TypeDocumentationOptions();
+        this.options = options ?? new();
     }
 
     public override string ToString()
@@ -42,9 +38,12 @@ public class TypeDocumentation
 
         this.document.AppendHeader(this.type.GetDisplayName().FormatChevrons(), 1);
 
-        this.document.AppendParagraph($"Namespace: {this.type.Namespace}");
+        if (this.type.Namespace != null)
+        {
+            this.document.AppendParagraph($"Namespace: {this.type.Namespace}");
+        }
 
-        XElement typeDocElement = this.documentation.GetMember(this.type);
+        XElement? typeDocElement = this.documentation.GetMember(this.type);
 
         if (typeDocElement != null)
         {
@@ -55,7 +54,7 @@ public class TypeDocumentation
         this.WriteMemberInfoSummary(typeDocElement);
         this.WriteMemberInfoSignature(this.type);
         this.WriteTypeParameters(this.type, typeDocElement);
-        this.WriteInheritanceAndImplements();
+        this.WriteInheritanceAndImplementsAndAttributes();
         this.WriteMemberInfoRemarks(typeDocElement);
 
         if (this.type.IsEnum)
@@ -73,8 +72,7 @@ public class TypeDocumentation
             this.type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(m => !m.IsSpecialName)
-                .Where(m => !m.IsPrivate || this.options.IncludePrivateMembers)
-            );
+                .Where(m => m.GetAccessibility() >= this.options.MemberAccessibilityLevel));
         this.WriteMembersDocumentation(this.GetEvents());
 
         bool example = this.WriteExample(this.type);
@@ -103,7 +101,12 @@ public class TypeDocumentation
             this.document.AppendHorizontalRule();
         }
 
-        this.document.AppendParagraph(new MarkdownLink(new MarkdownInlineCode("< Back"), "./"));
+        int deep = this.type.GetDocsFileName(this.options.Structure).Count(f => f == '/');
+        string route = deep > 0
+            ? string.Join('/', Enumerable.Repeat("..", deep))
+            : ".";
+        route += "/";
+        this.document.AppendParagraph(new MarkdownLink(new MarkdownInlineCode("< Back"), route));
 
         if (top)
         {
@@ -111,33 +114,50 @@ public class TypeDocumentation
         }
     }
 
-    private void WriteInheritanceAndImplements()
+    private void WriteInheritanceAndImplementsAndAttributes()
     {
-        List<string> lines = new();
+        List<string> lines = [];
 
+        // inheritance
         if (this.type.BaseType != null)
         {
             IEnumerable<MarkdownInlineElement> inheritanceHierarchy = this.type.GetInheritanceHierarchy()
                 .Reverse()
                 .Select(t => t.GetDocsLink(
                     this.assembly,
+                    this.options.Structure,
                     noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                     noPrefix: this.options.GitlabWiki));
             lines.Add($"Inheritance {string.Join(" → ", inheritanceHierarchy)}");
         }
 
+        // interfaces
         Type[] interfaces = this.type.GetInterfaces();
         if (interfaces.Length > 0)
         {
             IEnumerable<MarkdownInlineElement> implements = interfaces
                 .Select(i => i.GetDocsLink(
                     this.assembly,
+                    this.options.Structure,
                     noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                     noPrefix: this.options.GitlabWiki));
             lines.Add($"Implements {string.Join(", ", implements)}");
         }
 
-        if (lines.Any())
+        // attributes
+        IEnumerable<Attribute> attributes = this.type.GetCustomAttributes();
+        if (attributes.Any())
+        {
+            IEnumerable<MarkdownInlineElement> links = attributes
+                .Select(i => i.GetType().GetDocsLink(
+                    this.assembly,
+                    this.options.Structure,
+                    noExtension: this.options.GitHubPages || this.options.GitlabWiki,
+                    noPrefix: this.options.GitlabWiki));
+            lines.Add($"Attributes {string.Join(", ", links)}");
+        }
+
+        if (lines.Count != 0)
         {
             this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", lines));
         }
@@ -161,7 +181,7 @@ public class TypeDocumentation
         {
             document.AppendHeader("Caution", 4);
 
-            string message = attribute.First().Message;
+            string? message = attribute.First().Message;
             if (string.IsNullOrEmpty(message))
             {
                 document.AppendParagraph(defaultMessage);
@@ -174,9 +194,9 @@ public class TypeDocumentation
         }
     }
 
-    private void WriteMemberInfoSummary(XElement memberDocElement)
+    private void WriteMemberInfoSummary(XElement? memberDocElement)
     {
-        IEnumerable<XNode> nodes = memberDocElement?.Element("summary")?.Nodes();
+        IEnumerable<XNode>? nodes = memberDocElement?.Element("summary")?.Nodes();
         if (nodes != null)
         {
             MarkdownParagraph summary = this.XNodesToMarkdownParagraph(nodes);
@@ -184,9 +204,9 @@ public class TypeDocumentation
         }
     }
 
-    private void WriteMemberInfoRemarks(XElement memberDocElement)
+    private void WriteMemberInfoRemarks(XElement? memberDocElement)
     {
-        IEnumerable<XNode> nodes = memberDocElement?.Element("remarks")?.Nodes();
+        IEnumerable<XNode>? nodes = memberDocElement?.Element("remarks")?.Nodes();
         if (nodes != null)
         {
             this.document.AppendParagraph(new MarkdownStrongEmphasis("Remarks:"));
@@ -194,7 +214,7 @@ public class TypeDocumentation
         }
     }
 
-    private object XElementToMarkdown(XElement element)
+    private object? XElementToMarkdown(XElement element)
     {
         return element.Name.ToString() switch
         {
@@ -206,6 +226,7 @@ public class TypeDocumentation
             "example" => this.XNodesToMarkdownParagraph(element.Nodes()),
             "code" => new MarkdownCode("csharp", TypeDocumentation.FormatCodeElementValue(element.Value)),
             "list" => this.XElementToMarkdownList(element),
+            "paramref" => new MarkdownInlineCode(element.Attribute("name")?.Value),
             _ => new MarkdownText(element.Value)
         };
     }
@@ -238,7 +259,6 @@ public class TypeDocumentation
         }
         static string reindentLine(string line, int indent)
         {
-            string result = string.Empty;
             int i;
             for (i = 0; i < indent; i++)
             {
@@ -261,7 +281,7 @@ public class TypeDocumentation
     private MarkdownParagraph XNodesToMarkdownParagraph(IEnumerable<XNode> nodes)
     {
         List<IMarkdownBlockElement> blocks = new();
-        MarkdownText paragraph = null;
+        MarkdownText? paragraph = null;
         if (nodes is null)
         {
             return new MarkdownParagraph("");
@@ -269,7 +289,7 @@ public class TypeDocumentation
 
         foreach (XNode node in nodes)
         {
-            object element = this.XNodeToMarkdown(node);
+            object? element = this.XNodeToMarkdown(node);
             if (element is null)
             {
                 continue;
@@ -318,13 +338,13 @@ public class TypeDocumentation
         {
             MarkdownText markdownListItem = new(string.Empty);
 
-            IEnumerable<XNode> term = item.Element("term").Nodes();
+            IEnumerable<XNode> term = item.Element("term")?.Nodes() ?? [];
 
-            MarkdownText markdownTerm = null;
+            MarkdownText? markdownTerm = null;
 
             foreach (XNode node in term)
             {
-                object md = this.XNodeToMarkdown(node);
+                object? md = this.XNodeToMarkdown(node);
                 if (md is MarkdownInlineElement inlineElement)
                 {
                     if (markdownTerm is null)
@@ -343,13 +363,13 @@ public class TypeDocumentation
                 markdownListItem.Append(new MarkdownStrongEmphasis(markdownTerm));
             }
 
-            IEnumerable<XNode> description = item.Element("description").Nodes();
+            IEnumerable<XNode> description = item.Element("description")?.Nodes() ?? [];
 
-            MarkdownText markdownDescription = null;
+            MarkdownText? markdownDescription = null;
 
             foreach (XNode node in description)
             {
-                object md = this.XNodeToMarkdown(node);
+                object? md = this.XNodeToMarkdown(node);
                 if (md is MarkdownInlineElement inlineElement)
                 {
                     if (markdownDescription is null)
@@ -375,7 +395,7 @@ public class TypeDocumentation
         return markdownList;
     }
 
-    private object XNodeToMarkdown(XNode node)
+    private object? XNodeToMarkdown(XNode node)
     {
         return node switch
         {
@@ -394,7 +414,7 @@ public class TypeDocumentation
 
     private void WriteMembersDocumentation(IEnumerable<MemberInfo> members)
     {
-        RequiredArgument.NotNull(members, nameof(members));
+        ArgumentNullException.ThrowIfNull(members);
 
         members = members.Where(member => member != null);
 
@@ -420,7 +440,7 @@ public class TypeDocumentation
         {
             this.document.AppendHeader(new MarkdownStrongEmphasis(member.GetSignature().FormatChevrons()), 3);
 
-            XElement memberDocElement = this.documentation.GetMember(member);
+            XElement? memberDocElement = this.documentation.GetMember(member);
 
             this.WriteObsoleteMember(member);
             this.WriteMemberInfoSummary(memberDocElement);
@@ -441,12 +461,13 @@ public class TypeDocumentation
             {
                 this.document.AppendHeader("Property Value", 4);
 
-                MarkdownInlineElement typeName = propertyInfo.GetReturnType()?
+                MarkdownInlineElement? typeName = propertyInfo.GetReturnType()?
                     .GetDocsLink(
                         this.assembly,
+                        this.options.Structure,
                         noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                         noPrefix: this.options.GitlabWiki);
-                IEnumerable<XNode> nodes = memberDocElement?.Element("value")?.Nodes();
+                IEnumerable<XNode> nodes = memberDocElement?.Element("value")?.Nodes() ?? [];
                 MarkdownParagraph valueDoc = this.XNodesToMarkdownParagraph(nodes);
 
                 this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{valueDoc}");
@@ -471,9 +492,9 @@ public class TypeDocumentation
         }
     }
 
-    private void WriteExceptions(XElement memberDocElement)
+    private void WriteExceptions(XElement? memberDocElement)
     {
-        IEnumerable<XElement> exceptionDocs = memberDocElement?.Elements("exception");
+        IEnumerable<XElement> exceptionDocs = memberDocElement?.Elements("exception") ?? [];
 
         if (!(exceptionDocs?.Count() > 0))
         {
@@ -483,39 +504,40 @@ public class TypeDocumentation
 
         foreach (XElement exceptionDoc in exceptionDocs)
         {
-            string cref = exceptionDoc.Attribute("cref")?.Value;
-            MarkdownInlineElement exceptionTypeName = this.GetLinkFromReference(cref);
+            string? cref = exceptionDoc.Attribute("cref")?.Value;
+            MarkdownInlineElement? exceptionTypeName = this.GetLinkFromReference(cref);
             MarkdownParagraph exceptionSummary = this.XNodesToMarkdownParagraph(exceptionDoc.Nodes());
 
             this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", exceptionTypeName, exceptionSummary));
         }
     }
 
-    private void WriteMethodReturnType(MethodInfo methodInfo, XElement memberDocElement)
+    private void WriteMethodReturnType(MethodInfo methodInfo, XElement? memberDocElement)
     {
-        RequiredArgument.NotNull(methodInfo, nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         this.document.AppendHeader("Returns", 4);
 
         MarkdownInlineElement typeName = methodInfo.ReturnType.GetDocsLink(
             this.assembly,
+            this.options.Structure,
             noExtension: this.options.GitHubPages || this.options.GitlabWiki,
             noPrefix: this.options.GitlabWiki);
-        IEnumerable<XNode> nodes = memberDocElement?.Element("returns")?.Nodes();
+        IEnumerable<XNode> nodes = memberDocElement?.Element("returns")?.Nodes() ?? [];
         MarkdownParagraph typeParamDoc = this.XNodesToMarkdownParagraph(nodes);
 
         this.document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{typeParamDoc}");
     }
 
-    private void WriteTypeParameters(MemberInfo memberInfo, XElement memberDocElement)
+    private void WriteTypeParameters(MemberInfo memberInfo, XElement? memberDocElement)
     {
-        RequiredArgument.NotNull(memberInfo, nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
 
         Type[] typeParams = memberInfo switch
         {
             TypeInfo typeInfo => typeInfo.GenericTypeParameters,
             MethodInfo methodInfo => methodInfo.GetGenericArguments(),
-            _ => Array.Empty<Type>()
+            _ => []
         };
 
         if (typeParams.Length == 0)
@@ -529,18 +551,19 @@ public class TypeDocumentation
         {
             MarkdownInlineElement typeName = typeParam.GetDocsLink(
                 this.assembly,
+                this.options.Structure,
                 noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                 noPrefix: this.options.GitlabWiki);
-            IEnumerable<XNode> nodes = memberDocElement?.Elements("typeparam").FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Nodes();
+            IEnumerable<XNode> nodes = memberDocElement?.Elements("typeparam")?.FirstOrDefault(e => e.Attribute("name")?.Value == typeParam.Name)?.Nodes() ?? [];
             MarkdownParagraph typeParamDoc = this.XNodesToMarkdownParagraph(nodes);
 
             this.document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", new MarkdownInlineCode(typeName), typeParamDoc));
         }
     }
 
-    private void WriteMethodParams(MethodBase methodBase, XElement memberDocElement)
+    private void WriteMethodParams(MethodBase methodBase, XElement? memberDocElement)
     {
-        RequiredArgument.NotNull(methodBase, nameof(methodBase));
+        ArgumentNullException.ThrowIfNull(methodBase);
 
         ParameterInfo[] @params = methodBase.GetParameters();
 
@@ -555,9 +578,10 @@ public class TypeDocumentation
         {
             MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(
                 this.assembly,
+                this.options.Structure,
                 noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                 noPrefix: this.options.GitlabWiki);
-            IEnumerable<XNode> nodes = memberDocElement?.Elements("param").FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Nodes();
+            IEnumerable<XNode> nodes = memberDocElement?.Elements("param")?.FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Nodes() ?? [];
             MarkdownParagraph paramDoc = this.XNodesToMarkdownParagraph(nodes);
 
             this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>{Environment.NewLine}{paramDoc}");
@@ -566,7 +590,7 @@ public class TypeDocumentation
 
     private void WriteEnumFields(IEnumerable<FieldInfo> fields)
     {
-        RequiredArgument.NotNull(fields, nameof(fields));
+        ArgumentNullException.ThrowIfNull(fields);
 
         if (!fields.Any())
         {
@@ -584,7 +608,7 @@ public class TypeDocumentation
 
         foreach (FieldInfo field in fields)
         {
-            IEnumerable<XNode> nodes = this.documentation.GetMember(field)?.Element("summary")?.Nodes();
+            IEnumerable<XNode> nodes = this.documentation.GetMember(field)?.Element("summary")?.Nodes() ?? [];
             if (nodes == null)
             {
                 continue;
@@ -643,12 +667,13 @@ public class TypeDocumentation
         return false;
     }
 
-    private MarkdownInlineElement GetLinkFromReference(string crefAttribute, string text = null)
+    private MarkdownInlineElement? GetLinkFromReference(string? crefAttribute, string? text = null)
     {
-        if (this.TryGetMemberInfoFromReference(crefAttribute, out MemberInfo memberInfo))
+        if (this.TryGetMemberInfoFromReference(crefAttribute, out MemberInfo? memberInfo))
         {
-            return memberInfo.GetDocsLink(
+            return memberInfo?.GetDocsLink(
                 this.assembly,
+                this.options.Structure,
                 text: text,
                 noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                 noPrefix: this.options.GitlabWiki);
@@ -657,7 +682,7 @@ public class TypeDocumentation
         return new MarkdownText(text ?? crefAttribute);
     }
 
-    private bool TryGetMemberInfoFromReference(string crefAttribute, out MemberInfo memberInfo)
+    private bool TryGetMemberInfoFromReference(string? crefAttribute, out MemberInfo? memberInfo)
     {
         memberInfo = null;
 
@@ -673,12 +698,12 @@ public class TypeDocumentation
 
         if (memberType is MemberTypes.Constructor or MemberTypes.Method)
         {
-            var (@namespace, methodSignature, genericCount, parameterCount) = DeconstructMember(memberFullName);
-            Type type = this.GetTypeFromFullName(@namespace);
-            if (type is not null)
+            (string @namespace, string methodSignature, int genericCount, int parameterCount) = DeconstructMember(memberFullName);
+            Type? currentType = this.GetTypeFromFullName(@namespace);
+            if (currentType is not null)
             {
-                memberInfo = type.GetMember($"{methodSignature}*")
-                            .FirstOrDefault(info =>
+                memberInfo = currentType.GetMember($"{methodSignature}*")
+                    .FirstOrDefault(info =>
                     {
                         MethodBase methodBase = (MethodBase)info;
                         if (methodBase.ContainsGenericParameters
@@ -687,25 +712,25 @@ public class TypeDocumentation
                             return false;
                         }
                         return methodBase.GetParameters().Length == parameterCount;
-                    }) ??
-                    type.GetMember($"{methodSignature}*").FirstOrDefault();
+                    })
+                    ?? currentType.GetMember($"{methodSignature}*").FirstOrDefault();
             }
         }
         else if (memberType is MemberTypes.Event or MemberTypes.Field or MemberTypes.Property)
         {
             int idx = memberFullName.LastIndexOf(".");
-            Type type = this.GetTypeFromFullName(memberFullName[..idx]);
-            if (type is not null)
+            Type? currentType = this.GetTypeFromFullName(memberFullName[..idx]);
+            if (currentType is not null)
             {
-                memberInfo = type.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
+                memberInfo = currentType.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
             }
         }
         else if (memberType is MemberTypes.TypeInfo or MemberTypes.NestedType)
         {
-            Type type = this.GetTypeFromFullName(memberFullName);
-            if (type is not null)
+            Type? currentType = this.GetTypeFromFullName(memberFullName);
+            if (currentType is not null)
             {
-                memberInfo = type;
+                memberInfo = currentType;
             }
         }
 
@@ -727,7 +752,7 @@ public class TypeDocumentation
 
         if (parameterIndex > -1)
         {
-            parameterCount = input[parameterIndex..].Split(',').Count();
+            parameterCount = input[parameterIndex..].Split(',').Length;
             methodName = input[(lastDotIndex + 1)..parameterIndex];
         }
         if (genericIndex > -1)
@@ -743,46 +768,31 @@ public class TypeDocumentation
 
     private IEnumerable<FieldInfo> GetFields()
     {
-        if (this.options.IncludePrivateMembers)
-        {
-            return this.type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-                .Where(x => !x.Name.EndsWith(BackingFieldName));
-        }
-
-        return this.type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        return this.type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+            .Where(x => !x.Name.EndsWith(BackingFieldName))
+            .Where(x => !this.GetEvents().Any(e => e.Name == x.Name))
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
     }
 
     private IEnumerable<PropertyInfo> GetProperties()
     {
-        if (this.options.IncludePrivateMembers)
-        {
-            return this.type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-        }
-
-        return this.type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        return this.type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
     }
 
     private IEnumerable<ConstructorInfo> GetConstructors()
     {
-        if (this.options.IncludePrivateMembers)
-        {
-            return this.type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-        }
-
-        return this.type.GetConstructors(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        return this.type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
     }
 
     private IEnumerable<EventInfo> GetEvents()
     {
-        if (this.options.IncludePrivateMembers)
-        {
-            return this.type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-        }
-
-        return this.type.GetEvents(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        return this.type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
     }
 
-    private Type GetTypeFromFullName(string typeFullName)
+    private Type? GetTypeFromFullName(string typeFullName)
     {
         return Type.GetType(typeFullName) ?? this.assembly.GetType(typeFullName);
     }

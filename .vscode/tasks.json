@@ -4,37 +4,25 @@
         {
             "label": "build",
             "command": "dotnet",
+            "dependsOn": "build sample",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "${workspaceFolder}/src/XMLDoc2Markdown/XMLDoc2Markdown.csproj",
+                "--output",
+                "${workspaceFolder}/out/XMLDoc2Markdown"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "build sample",
             "command": "dotnet",
             "type": "process",
             "args": [
-                "publish",
-                "${workspaceFolder}/src/XMLDoc2Markdown/XMLDoc2Markdown.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/src/XMLDoc2Markdown/XMLDoc2Markdown.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "build",
+                "${workspaceFolder}/sample/MyClassLib/MyClassLib.csproj",
+                "--output",
+                "${workspaceFolder}/out/sample"
             ],
             "problemMatcher": "$msCompile"
         }

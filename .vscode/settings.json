@@ -1,5 +1,7 @@
 {
   "yaml.format.singleQuote": true,
-  "omnisharp.enableEditorConfigSupport": true,
-  "omnisharp.enableRoslynAnalyzers": true
+  "sonarlint.connectedMode.project": {
+    "connectionId": "charlesdevandiere",
+    "projectKey": "charlesdevandiere_xmldoc2md"
+  }
 }

@@ -9,7 +9,7 @@ Namespace: MyClassLib.SubNamespace
 Sub class from [MyClass](./myclasslib.myclass)
 
 ```csharp
-public class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
+public sealed class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
 
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)<br>
@@ -23,6 +23,14 @@ My field.
 
 ```csharp
 public int myField;
+```
+
+### **myProtectedField**
+
+My field.
+
+```csharp
+protected int myProtectedField;
 ```
 
 ## Properties
@@ -48,12 +56,51 @@ This example assign `"foo"` to MyProperty.
 foo.MyProperty = "foo";
 ```
 
+### **MyNullableProperty**
+
+My nullable property
+
+```csharp
+public Nullable<int> MyNullableProperty { get; set; }
+```
+
+#### Property Value
+
+[Nullable&lt;Int32&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
+The nullable property value.
+
 ### **MyEnum**
 
 My enum
 
 ```csharp
 public MyEnum MyEnum { get; set; }
+```
+
+#### Property Value
+
+[MyEnum](./myclasslib.myenum)<br>
+The enum value
+
+### **MyProtectedProperty**
+
+My property.
+
+```csharp
+protected string MyProtectedProperty { get; set; }
+```
+
+#### Property Value
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The property value. Used by .
+
+### **MyProtectedEnum**
+
+My enum
+
+```csharp
+protected MyEnum MyProtectedEnum { get; set; }
 ```
 
 #### Property Value
@@ -92,6 +139,14 @@ My event.
 
 ```csharp
 public event EventHandler<EventArgs> MyEvent;
+```
+
+### **MyProtectedEvent**
+
+My event.
+
+```csharp
+protected event EventHandler<EventArgs> MyProtectedEvent;
 ```
 
 ---

@@ -18,7 +18,8 @@ My obsolete class.
 public class MyObsoleteClass
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyObsoleteClass](./myclasslib.myobsoleteclass)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyObsoleteClass](./myclasslib.myobsoleteclass)<br>
+Attributes [ObsoleteAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.obsoleteattribute)
 
 **Remarks:**
 
@@ -54,6 +55,19 @@ My property.
 
 ```csharp
 public string MyProperty { get; protected set; }
+```
+
+#### Property Value
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The property value.
+
+### **ProtectedProperty**
+
+Protected property.
+
+```csharp
+protected string ProtectedProperty { get; set; }
 ```
 
 #### Property Value

@@ -5,12 +5,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Version>0.0.0</Version>
+    <AssemblyName>xmldoc2md</AssemblyName>
     <ToolCommandName>xmldoc2md</ToolCommandName>
     <PackAsTool>true</PackAsTool>
     <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     
     <Authors>Charles de Vandière</Authors>
     <Copyright>© 2024 Charles de Vandière</Copyright>
+    <PackageId>XMLDoc2Markdown</PackageId>
     <Product>XMLDoc2Markdown</Product>
     <Title>XMLDoc2Markdown</Title>
     <Description>Tool to generate markdown from C# XML documentation.</Description>
@@ -39,8 +43,8 @@
 
   <ItemGroup>
     <PackageReference Include="MarkdownBuilder" Version="0.2.0" />
-    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,15 @@
+using System;
+
 namespace MyClassLib;
 
 /// <summary>
 /// My enum.
 /// </summary>
-public enum MyEnum
+[Flags]
+public enum MyFlag
 {
     /// <summary>
-    /// The default value for <see cref="MyEnum"/>.
-    /// This is additional information.
+    /// The default
     /// </summary>
     Default = 0,
 
@@ -19,5 +21,10 @@ public enum MyEnum
     /// <summary>
     /// The second.
     /// </summary>
-    Second = 2
+    Second = 2,
+
+    /// <summary>
+    /// The Third.
+    /// </summary>
+    Third = 4
 }

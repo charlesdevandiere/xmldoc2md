@@ -1,45 +1,44 @@
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace XMLDoc2Markdown.Utils;
 
 internal static class FieldInfoExtensions
 {
-    internal static Visibility GetVisibility(this FieldInfo fieldInfo)
+    internal static Accessibility GetAccessibility(this FieldInfo fieldInfo)
     {
         if (fieldInfo.IsPublic)
         {
-            return Visibility.Public;
+            return Accessibility.Public;
         }
         else if (fieldInfo.IsAssembly)
         {
-            return Visibility.Internal;
+            return Accessibility.Internal;
         }
         else if (fieldInfo.IsFamily)
         {
-            return Visibility.Protected;
+            return Accessibility.Protected;
         }
         else if (fieldInfo.IsFamilyOrAssembly)
         {
-            return Visibility.ProtectedInternal;
+            return Accessibility.ProtectedInternal;
         }
         else if (fieldInfo.IsPrivate)
         {
-            return Visibility.Private;
+            return Accessibility.Private;
         }
         else
         {
-            return Visibility.None;
+            return Accessibility.None;
         }
     }
 
     internal static string GetSignature(this FieldInfo fieldInfo, bool full = false)
     {
-        List<string> signature = new();
+        List<string> signature = [];
 
         if (full)
         {
-            signature.Add(fieldInfo.GetVisibility().Print());
+            signature.Add(fieldInfo.GetAccessibility().Print());
 
             if (fieldInfo.IsStatic)
             {

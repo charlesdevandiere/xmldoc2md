@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Markdown;
 
@@ -8,31 +5,31 @@ namespace XMLDoc2Markdown.Utils;
 
 internal static class MethodBaseExtensions
 {
-    internal static Visibility GetVisibility(this MethodBase methodBase)
+    internal static Accessibility GetAccessibility(this MethodBase methodBase)
     {
         if (methodBase.IsPublic)
         {
-            return Visibility.Public;
+            return Accessibility.Public;
         }
         else if (methodBase.IsAssembly)
         {
-            return Visibility.Internal;
+            return Accessibility.Internal;
         }
         else if (methodBase.IsFamily)
         {
-            return Visibility.Protected;
+            return Accessibility.Protected;
         }
         else if (methodBase.IsFamilyOrAssembly)
         {
-            return Visibility.ProtectedInternal;
+            return Accessibility.ProtectedInternal;
         }
         else if (methodBase.IsPrivate)
         {
-            return Visibility.Private;
+            return Accessibility.Private;
         }
         else
         {
-            return Visibility.None;
+            return Accessibility.None;
         }
     }
 
@@ -42,9 +39,9 @@ internal static class MethodBaseExtensions
 
         if (full)
         {
-            if (methodBase.DeclaringType.IsClass)
+            if (methodBase.DeclaringType?.IsClass ?? false)
             {
-                signature.Add(methodBase.GetVisibility().Print());
+                signature.Add(methodBase.GetAccessibility().Print());
 
                 if (methodBase.IsStatic)
                 {
@@ -63,7 +60,9 @@ internal static class MethodBaseExtensions
             }
         }
 
-        string displayName = methodBase.MemberType == MemberTypes.Constructor ? methodBase.DeclaringType.Name : methodBase.Name;
+        string displayName = methodBase.MemberType == MemberTypes.Constructor && methodBase.DeclaringType != null
+            ? methodBase.DeclaringType.Name
+            : methodBase.Name;
         int genericCharIndex = displayName.IndexOf('`');
         if (genericCharIndex > -1)
         {
@@ -88,7 +87,7 @@ internal static class MethodBaseExtensions
 
     internal static string GetMSDocsUrl(this MethodBase methodInfo, string msdocsBaseUrl = "https://docs.microsoft.com/en-us/dotnet/api")
     {
-        RequiredArgument.NotNull(methodInfo, nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         Type type = methodInfo.DeclaringType ?? throw new Exception($"Method {methodInfo.Name} has no declaring type.");
 
@@ -97,16 +96,16 @@ internal static class MethodBaseExtensions
             throw new InvalidOperationException($"{type.FullName} is not a mscorlib type.");
         }
 
-        return $"{msdocsBaseUrl}/{type.GetDocsFileName()}.{methodInfo.Name.ToLower().Replace('`', '-')}";
+        return $"{msdocsBaseUrl}/{type.GetDocsFileName(DocumentationStructure.Flat)}.{methodInfo.Name.ToLower().Replace('`', '-')}";
     }
 
-    internal static string GetInternalDocsUrl(this MethodBase methodInfo, bool noExtension = false, bool noPrefix = false)
+    internal static string GetInternalDocsUrl(this MethodBase methodInfo, DocumentationStructure structure, bool noExtension = false, bool noPrefix = false)
     {
-        RequiredArgument.NotNull(methodInfo, nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         Type type = methodInfo.DeclaringType ?? throw new Exception($"Method {methodInfo.Name} has no declaring type.");
 
-        string url = $"{type.GetDocsFileName()}";
+        string url = $"{type.GetDocsFileName(structure)}";
 
         if (!noExtension)
         {
@@ -123,12 +122,12 @@ internal static class MethodBaseExtensions
         return $"{url}#{anchor}";
     }
 
-    internal static MarkdownInlineElement GetDocsLink(this MethodBase methodInfo, Assembly assembly, string text = null, bool noExtension = false, bool noPrefix = false)
+    internal static MarkdownInlineElement GetDocsLink(this MethodBase methodInfo, Assembly assembly, DocumentationStructure structure, string? text = null, bool noExtension = false, bool noPrefix = false)
     {
-        RequiredArgument.NotNull(methodInfo, nameof(methodInfo));
-        RequiredArgument.NotNull(assembly, nameof(assembly));
+        ArgumentNullException.ThrowIfNull(methodInfo);
+        ArgumentNullException.ThrowIfNull(assembly);
 
-        Type type = methodInfo.DeclaringType;
+        Type? type = methodInfo.DeclaringType;
 
         if (type is not null)
         {
@@ -143,7 +142,7 @@ internal static class MethodBaseExtensions
             }
             else if (type.Assembly == assembly)
             {
-                return new MarkdownLink(text, methodInfo.GetInternalDocsUrl(noExtension, noPrefix));
+                return new MarkdownLink(text, methodInfo.GetInternalDocsUrl(structure, noExtension, noPrefix));
             }
 
             return new MarkdownText(text);

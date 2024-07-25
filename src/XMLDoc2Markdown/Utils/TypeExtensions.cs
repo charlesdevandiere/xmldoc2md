@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using Markdown;
 
 namespace XMLDoc2Markdown.Utils;
@@ -35,18 +33,18 @@ internal static class TypeExtensions
 
     internal static string GetSimplifiedName(this Type type)
     {
-        return simplifiedTypeNames.TryGetValue(type, out string simplifiedName) ? simplifiedName : type.Name;
+        return simplifiedTypeNames.TryGetValue(type, out string? simplifiedName) ? simplifiedName : type.Name;
     }
 
-    internal static Visibility GetVisibility(this Type type)
+    internal static Accessibility GetAccessibility(this Type type)
     {
         if (type.IsPublic)
         {
-            return Visibility.Public;
+            return Accessibility.Public;
         }
         else
         {
-            return Visibility.None;
+            return Accessibility.Internal;
         }
     }
 
@@ -56,7 +54,7 @@ internal static class TypeExtensions
 
         if (full)
         {
-            signature.Add(type.GetVisibility().Print());
+            signature.Add(type.GetAccessibility().Print());
 
             if (type.IsClass)
             {
@@ -129,7 +127,7 @@ internal static class TypeExtensions
 
     internal static IEnumerable<Type> GetInheritanceHierarchy(this Type type)
     {
-        for (Type current = type; current != null; current = current.BaseType)
+        for (Type? current = type; current != null; current = current.BaseType)
         {
             yield return current;
         }
@@ -146,17 +144,17 @@ internal static class TypeExtensions
             throw new InvalidOperationException($"{type.FullName} is not a mscorlib type.");
         }
 
-        return $"{msdocsBaseUrl}/{type.GetDocsFileName()}";
+        return $"{msdocsBaseUrl}/{type.GetDocsFileName(DocumentationStructure.Flat)}";
     }
 
-    internal static string GetInternalDocsUrl(this Type type, bool noExtension = false, bool noPrefix = false)
+    internal static string GetInternalDocsUrl(this Type type, DocumentationStructure structure, bool noExtension = false, bool noPrefix = false)
     {
         if (type == null)
         {
             throw new ArgumentNullException(nameof(type));
         }
 
-        string url = $"{type.GetDocsFileName()}";
+        string url = $"{type.GetDocsFileName(structure)}";
 
         if (!noExtension)
         {
@@ -171,16 +169,23 @@ internal static class TypeExtensions
         return url;
     }
 
-    internal static string GetDocsFileName(this Type type)
+    internal static string GetDocsFileName(this Type type, DocumentationStructure structure)
     {
-        RequiredArgument.NotNull(type, nameof(type));
-        return type.GetIdentifier().ToLower().Replace('`', '-');
+        ArgumentNullException.ThrowIfNull(type);
+        string name = type.GetIdentifier().ToLower().Replace('`', '-');
+
+        return structure switch
+        {
+            DocumentationStructure.Tree => name.Replace('.', '/'),
+            _ => name
+        };
     }
 
     internal static MarkdownInlineElement GetDocsLink(
         this Type type,
         Assembly assembly,
-        string text = null,
+        DocumentationStructure structure,
+        string? text = null,
         bool noExtension = false,
         bool noPrefix = false)
     {
@@ -197,7 +202,7 @@ internal static class TypeExtensions
             }
             else if (type.Assembly == assembly)
             {
-                return new MarkdownLink(text, type.GetInternalDocsUrl(noExtension, noPrefix));
+                return new MarkdownLink(text, type.GetInternalDocsUrl(structure, noExtension, noPrefix));
             }
         }
 

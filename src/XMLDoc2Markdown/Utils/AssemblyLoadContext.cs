@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using System.Runtime.Loader;
 
@@ -8,14 +7,14 @@ internal class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
 {
     private readonly AssemblyDependencyResolver resolver;
 
-    public AssemblyLoadContext(string pluginPath)
+    internal AssemblyLoadContext(string pluginPath)
     {
         this.resolver = new AssemblyDependencyResolver(pluginPath);
     }
 
-    protected override Assembly Load(AssemblyName assemblyName)
+    protected override Assembly? Load(AssemblyName assemblyName)
     {
-        string assemblyPath = this.resolver.ResolveAssemblyToPath(assemblyName);
+        string? assemblyPath = this.resolver.ResolveAssemblyToPath(assemblyName);
         if (assemblyPath != null)
         {
             return this.LoadFromAssemblyPath(assemblyPath);
@@ -26,7 +25,7 @@ internal class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
 
     protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
     {
-        string libraryPath = this.resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
+        string? libraryPath = this.resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
         if (libraryPath != null)
         {
             return this.LoadUnmanagedDllFromPath(libraryPath);

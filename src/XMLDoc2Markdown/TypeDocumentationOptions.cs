@@ -1,10 +1,13 @@
+using XMLDoc2Markdown.Utils;
+
 namespace XMLDoc2Markdown;
 
-public class TypeDocumentationOptions
+internal class TypeDocumentationOptions
 {
-    public string ExamplesDirectory { get; set; }
-    public bool GitHubPages { get; set; }
-    public bool BackButton { get; set; }
-    public bool GitlabWiki { get; set; }
-    public bool IncludePrivateMembers { get; set; }
+    internal Accessibility MemberAccessibilityLevel { get; set; } = Accessibility.Public;
+    internal bool BackButton { get; set; }
+    internal string? ExamplesDirectory { get; set; }
+    internal bool GitHubPages { get; set; }
+    internal bool GitlabWiki { get; set; }
+    internal DocumentationStructure Structure { get; set; }
 }

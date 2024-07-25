@@ -1,28 +1,27 @@
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace XMLDoc2Markdown.Utils;
 
 internal static class EventInfoExtensions
 {
-    internal static Visibility GetVisibility(this EventInfo eventInfo)
+    internal static Accessibility GetAccessibility(this EventInfo eventInfo)
     {
-        Visibility addMethodeVisibility = eventInfo.AddMethod?.GetVisibility() ?? Visibility.None;
-        Visibility raiseMethodeVisibility = eventInfo.RaiseMethod?.GetVisibility() ?? Visibility.None;
-        Visibility removeMethodeVisibility = eventInfo.RemoveMethod?.GetVisibility() ?? Visibility.None;
+        Accessibility addMethodeVisibility = eventInfo.AddMethod?.GetAccessibility() ?? Accessibility.None;
+        Accessibility raiseMethodeVisibility = eventInfo.RaiseMethod?.GetAccessibility() ?? Accessibility.None;
+        Accessibility removeMethodeVisibility = eventInfo.RemoveMethod?.GetAccessibility() ?? Accessibility.None;
 
-        Visibility addOrRaiseMethodVisibility = addMethodeVisibility.CompareTo(raiseMethodeVisibility) >= 0 ? addMethodeVisibility : raiseMethodeVisibility;
+        Accessibility addOrRaiseMethodVisibility = addMethodeVisibility.CompareTo(raiseMethodeVisibility) >= 0 ? addMethodeVisibility : raiseMethodeVisibility;
 
         return removeMethodeVisibility.CompareTo(addOrRaiseMethodVisibility) >= 0 ? removeMethodeVisibility : addOrRaiseMethodVisibility;
     }
 
     internal static string GetSignature(this EventInfo eventInfo, bool full = false)
     {
-        List<string> signature = new();
+        List<string> signature = [];
 
         if (full)
         {
-            signature.Add(eventInfo.GetVisibility().Print());
+            signature.Add(eventInfo.GetAccessibility().Print());
 
             if ((eventInfo.AddMethod?.IsStatic ?? false) ||
                 (eventInfo.RaiseMethod?.IsStatic ?? false) ||

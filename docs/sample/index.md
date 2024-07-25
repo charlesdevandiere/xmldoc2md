@@ -1,5 +1,9 @@
 # MyClassLib
 
+## No namespace
+
+[Program](./program)
+
 ## MyClassLib
 
 [IMyInterface](./myclasslib.imyinterface)
@@ -10,7 +14,11 @@
 
 [MyEnum](./myclasslib.myenum)
 
+[MyFlag](./myclasslib.myflag)
+
 [MyObsoleteClass](./myclasslib.myobsoleteclass)
+
+[MyStaticClass](./myclasslib.mystaticclass)
 
 ## MyClassLib.SubNamespace
 

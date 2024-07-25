@@ -1,32 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace XMLDoc2Markdown.Utils;
 
 internal static class PropertyInfoExtensions
 {
-    internal static Visibility GetVisibility(this PropertyInfo propertyInfo)
+    internal static Accessibility GetAccessibility(this PropertyInfo propertyInfo)
     {
-        Visibility getMethodeVisibility = propertyInfo.GetMethod?.GetVisibility() ?? Visibility.None;
-        Visibility setMethodeVisibility = propertyInfo.SetMethod?.GetVisibility() ?? Visibility.None;
+        Accessibility getMethodeVisibility = propertyInfo.GetMethod?.GetAccessibility() ?? Accessibility.None;
+        Accessibility setMethodeVisibility = propertyInfo.SetMethod?.GetAccessibility() ?? Accessibility.None;
 
         return getMethodeVisibility.CompareTo(setMethodeVisibility) >= 0 ? getMethodeVisibility : setMethodeVisibility;
     }
 
-    internal static Type GetReturnType(this PropertyInfo propertyInfo)
+    internal static Type? GetReturnType(this PropertyInfo propertyInfo)
     {
         return propertyInfo.GetMethod?.ReturnType ?? propertyInfo.SetMethod?.GetParameters()?.FirstOrDefault()?.ParameterType;
     }
 
     internal static string GetSignature(this PropertyInfo propertyInfo, bool full = false)
     {
-        List<string> signature = new();
+        List<string?> signature = [];
 
         if (full)
         {
-            signature.Add(propertyInfo.GetVisibility().Print());
+            signature.Add(propertyInfo.GetAccessibility().Print());
 
             if (propertyInfo.GetMethod != null && propertyInfo.GetMethod.IsStatic ||
                 propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsStatic)
@@ -51,8 +48,8 @@ internal static class PropertyInfoExtensions
 
             if (propertyInfo.GetMethod != null)
             {
-                Visibility getMethodeVisibility = propertyInfo.GetMethod.GetVisibility();
-                if (getMethodeVisibility < propertyInfo.GetVisibility())
+                Accessibility getMethodeVisibility = propertyInfo.GetMethod.GetAccessibility();
+                if (getMethodeVisibility < propertyInfo.GetAccessibility())
                 {
                     signature.Add(getMethodeVisibility.Print());
                 }
@@ -62,8 +59,8 @@ internal static class PropertyInfoExtensions
 
             if (propertyInfo.SetMethod != null)
             {
-                Visibility setMethodeVisibility = propertyInfo.SetMethod.GetVisibility();
-                if (setMethodeVisibility < propertyInfo.GetVisibility())
+                Accessibility setMethodeVisibility = propertyInfo.SetMethod.GetAccessibility();
+                if (setMethodeVisibility < propertyInfo.GetAccessibility())
                 {
                     signature.Add(setMethodeVisibility.Print());
                 }
