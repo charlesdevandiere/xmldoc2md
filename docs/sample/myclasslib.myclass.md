@@ -248,6 +248,27 @@ This example call the `Get` method.
 var bar = foo.Get("bar");
 ```
 
+### **TryGet(Int64, String)**
+
+Try to get some thing.
+
+```csharp
+public bool TryGet(long param, out string result)
+```
+
+#### Parameters
+
+`param` [Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64)<br>
+The param.
+
+`result` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The output param.
+
+#### Returns
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+true if the function succeeded false otherwise
+
 ### **StaticMethod()**
 
 A static method.
