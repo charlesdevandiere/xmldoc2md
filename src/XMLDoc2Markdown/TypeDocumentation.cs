@@ -576,7 +576,7 @@ internal class TypeDocumentation
 
         foreach (ParameterInfo param in @params)
         {
-            MarkdownInlineElement typeName = param.ParameterType.GetDocsLink(
+            MarkdownInlineElement typeName = param.GetActualType().GetDocsLink(
                 this.assembly,
                 this.options.Structure,
                 noExtension: this.options.GitHubPages || this.options.GitlabWiki,

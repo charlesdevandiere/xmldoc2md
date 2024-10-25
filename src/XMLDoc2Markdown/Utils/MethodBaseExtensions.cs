@@ -76,10 +76,8 @@ internal static class MethodBaseExtensions
                 displayName += $"<{string.Join(", ", genericArguments.Select(a => a.Name))}>";
             }
         }
-        ParameterInfo[] @params = methodBase.GetParameters();
-        IEnumerable<string> paramsNames = @params
-            .Select(p => $"{p.ParameterType.GetDisplayName(simplifyName: full)}{(full ? $" {p.Name}" : null)}");
-        displayName += $"({string.Join(", ", paramsNames)})";
+
+        displayName += $"({string.Join(", ", methodBase.GetParameters().Select(p => p.GetDisplayLabel(full)))})";
         signature.Add(displayName);
 
         return string.Join(' ', signature);

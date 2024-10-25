@@ -102,6 +102,18 @@ public class MyClass : IMyInterface
     public string Get(List<string> param) => string.Empty;
 
     /// <summary>
+    /// Try to get some thing.
+    /// </summary>
+    /// <param name="param">The param.</param>
+    /// <param name="result">The output param.</param>
+    /// <returns> true if the function succeeded false otherwise</returns>
+    public bool TryGet(long param, out string result)
+    {
+        result = string.Empty;
+        return true;
+    }
+
+    /// <summary>
     /// A static method.
     /// </summary>
     public static void StaticMethod() { }
