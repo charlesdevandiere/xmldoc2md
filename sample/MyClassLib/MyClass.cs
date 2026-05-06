@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace MyClassLib;
 
 /// <summary>
@@ -18,7 +15,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="DoGeneric{T}(T)"/>.</value>
-    public string MyProperty { get; protected set; }
+    public string MyProperty { get; protected set; } = string.Empty;
 
     /// <summary>
     /// My nullable property
@@ -41,7 +38,7 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    public event EventHandler<EventArgs> MyEvent;
+    public event EventHandler<EventArgs>? MyEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
@@ -117,7 +114,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="PrivateDoGeneric{T}(T)"/>.</value>
-    private string MyPrivateProperty { get; set; }
+    private string MyPrivateProperty { get; set; } = string.Empty;
 
     /// <summary>
     /// My enum
@@ -134,7 +131,7 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    private event EventHandler<EventArgs> MyPrivateEvent;
+    private event EventHandler<EventArgs>? MyPrivateEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
@@ -184,7 +181,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="InternalDoGeneric{T}(T)"/>.</value>
-    internal string MyInternalProperty { get; set; }
+    internal string MyInternalProperty { get; set; } = string.Empty;
 
     /// <summary>
     /// My enum
@@ -201,7 +198,7 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    internal event EventHandler<EventArgs> MyInternalEvent;
+    internal event EventHandler<EventArgs>? MyInternalEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
@@ -251,7 +248,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="ProtectedDoGeneric{T}(T)"/>.</value>
-    protected string MyProtectedProperty { get; set; }
+    protected string MyProtectedProperty { get; set; } = string.Empty;
 
     /// <summary>
     /// My enum
@@ -268,7 +265,7 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    protected event EventHandler<EventArgs> MyProtectedEvent;
+    protected event EventHandler<EventArgs>? MyProtectedEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.

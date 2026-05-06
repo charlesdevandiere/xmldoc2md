@@ -1,0 +1,34 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/docs/">
+    <File Path="docs/README.md" />
+    <File Path="docs/_config.yml" />
+  </Folder>
+  <Folder Name="/docs/sample/">
+    <File Path="docs/sample/_config.yml" />
+  </Folder>
+  <Folder Name="/sample/">
+    <Project Path="sample/MyClassLib/MyClassLib.csproj" />
+  </Folder>
+  <Folder Name="/sample/docs/" />
+  <Folder Name="/sample/docs/examples/">
+    <File Path="sample/docs/examples/MyClassLib.MyClass.Get(System.String).md" />
+    <File Path="sample/docs/examples/MyClassLib.MyClass.md" />
+    <File Path="sample/docs/examples/MyClassLib.MyClass.MyProperty.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="azure-pipelines.yml" />
+    <File Path="GitVersion.yml" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/XMLDoc2Markdown/XMLDoc2Markdown.csproj" />
+  </Folder>
+</Solution>

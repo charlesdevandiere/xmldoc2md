@@ -13,7 +13,8 @@ public class MyClass : IMyInterface
 ```
 
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)<br>
-Implements [IMyInterface](./myclasslib.imyinterface)
+Implements [IMyInterface](./myclasslib.imyinterface)<br>
+Attributes [NullableContextAttribute](./system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](./system.runtime.compilerservices.nullableattribute)
 
 **Remarks:**
 

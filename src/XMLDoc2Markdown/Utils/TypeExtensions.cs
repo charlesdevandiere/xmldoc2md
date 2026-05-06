@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Security.Cryptography;
 using Markdown;
 
 namespace XMLDoc2Markdown.Utils;

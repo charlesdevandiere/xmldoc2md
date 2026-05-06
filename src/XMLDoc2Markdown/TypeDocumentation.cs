@@ -226,7 +226,7 @@ internal class TypeDocumentation
             "example" => this.XNodesToMarkdownParagraph(element.Nodes()),
             "code" => new MarkdownCode("csharp", TypeDocumentation.FormatCodeElementValue(element.Value)),
             "list" => this.XElementToMarkdownList(element),
-            "paramref" => new MarkdownInlineCode(element.Attribute("name")?.Value),
+            "paramref" => new MarkdownInlineCode(element.Attribute("name")?.Value ?? string.Empty),
             _ => new MarkdownText(element.Value)
         };
     }
@@ -584,7 +584,7 @@ internal class TypeDocumentation
             IEnumerable<XNode> nodes = memberDocElement?.Elements("param")?.FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)?.Nodes() ?? [];
             MarkdownParagraph paramDoc = this.XNodesToMarkdownParagraph(nodes);
 
-            this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name)} {typeName}<br>{Environment.NewLine}{paramDoc}");
+            this.document.AppendParagraph($"{new MarkdownInlineCode(param.Name ?? string.Empty)} {typeName}<br>{Environment.NewLine}{paramDoc}");
         }
     }
 
@@ -679,7 +679,7 @@ internal class TypeDocumentation
                 noPrefix: this.options.GitlabWiki);
         }
 
-        return new MarkdownText(text ?? crefAttribute);
+        return new MarkdownText(text ?? crefAttribute ?? string.Empty);
     }
 
     private bool TryGetMemberInfoFromReference(string? crefAttribute, out MemberInfo? memberInfo)

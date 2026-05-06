@@ -23,6 +23,8 @@ A remark.
 
 ### **Do(Object)**
 
+Do something.
+
 ```csharp
 public static void Do(object obj)
 ```
@@ -30,6 +32,7 @@ public static void Do(object obj)
 #### Parameters
 
 `obj` [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
+An object.
 
 ---
 
