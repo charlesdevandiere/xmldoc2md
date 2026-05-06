@@ -31,4 +31,7 @@
   <Folder Name="/src/">
     <Project Path="src/XMLDoc2Markdown/XMLDoc2Markdown.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/XMLDoc2Markdown.Tests/XMLDoc2Markdown.Tests.csproj" />
+  </Folder>
 </Solution>

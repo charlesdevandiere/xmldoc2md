@@ -41,6 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="XMLDoc2Markdown.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MarkdownBuilder" Version="1.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.203" PrivateAssets="All" />
     <PackageReference Include="System.CommandLine" Version="2.0.7" />
