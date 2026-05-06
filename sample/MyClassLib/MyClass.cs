@@ -99,9 +99,29 @@ public class MyClass : IMyInterface
     public string Get(List<string> param) => string.Empty;
 
     /// <summary>
-    /// A static method.
+    /// A static method. Referenced by <see cref="Nested"/>.
     /// </summary>
     public static void StaticMethod() { }
+
+    /// <summary>
+    /// Counts entries.
+    /// </summary>
+    /// <param name="input">A dictionary input.</param>
+    /// <returns>The total count.</returns>
+    public int Counts(IDictionary<string, int> input) => 0;
+
+    /// <summary>
+    /// A nested public type. See <see cref="StaticMethod()"/>,
+    /// <see cref="Counts(IDictionary{string, int})"/>,
+    /// and <see cref="System.Collections.Generic.Dictionary{TKey, TValue}"/>.
+    /// </summary>
+    public class Nested
+    {
+        /// <summary>
+        /// The nested value.
+        /// </summary>
+        public int Value { get; set; }
+    }
 
     #region private members
 

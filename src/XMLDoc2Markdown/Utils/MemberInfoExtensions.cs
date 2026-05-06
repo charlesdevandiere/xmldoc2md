@@ -4,8 +4,14 @@ using Markdown;
 
 namespace XMLDoc2Markdown.Utils;
 
-internal static class MemberInfoExtensions
+internal static partial class MemberInfoExtensions
 {
+    [GeneratedRegex(@"\[.*\]")]
+    private static partial Regex ArrayBracketsRegex();
+
+    [GeneratedRegex(@"`\d+")]
+    private static partial Regex GenericArityRegex();
+
     internal static string GetSignature(this MemberInfo memberInfo, bool full = false)
     {
         if (memberInfo is Type type)
@@ -37,7 +43,7 @@ internal static class MemberInfoExtensions
         switch (memberInfo)
         {
             case Type type:
-                return Regex.Replace(type.FullName ?? type.Name, @"\[.*\]", string.Empty, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Replace('+', '.');
+                return ArrayBracketsRegex().Replace(type.FullName ?? type.Name, string.Empty).Replace('+', '.');
 
             case PropertyInfo _:
             case FieldInfo _:
@@ -227,7 +233,7 @@ internal static class MemberInfoExtensions
                 : type.Namespace + ".";
 
             name += isMethodParameter
-                ? Regex.Replace(type.Name, @"`\d+", string.Empty)
+                ? GenericArityRegex().Replace(type.Name, string.Empty)
                 : type.Name;
 
             if (type.IsGenericType && isMethodParameter)

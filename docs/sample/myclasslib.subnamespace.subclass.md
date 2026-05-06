@@ -93,7 +93,7 @@ protected string MyProtectedProperty { get; set; }
 #### Property Value
 
 [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The property value. Used by .
+The property value. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass#protecteddogenerictt).
 
 ### **MyProtectedEnum**
 

@@ -7,7 +7,7 @@ internal class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
 {
     private readonly AssemblyDependencyResolver resolver;
 
-    internal AssemblyLoadContext(string pluginPath)
+    internal AssemblyLoadContext(string pluginPath) : base(isCollectible: true)
     {
         this.resolver = new AssemblyDependencyResolver(pluginPath);
     }

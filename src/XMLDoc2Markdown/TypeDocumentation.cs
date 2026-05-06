@@ -7,9 +7,12 @@ using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown;
 
-internal class TypeDocumentation
+internal partial class TypeDocumentation
 {
     private const string BackingFieldName = ">k__BackingField";
+
+    [GeneratedRegex("[ ]{2,}")]
+    private static partial Regex CollapseSpacesRegex();
 
     private readonly Assembly assembly;
     private readonly Type type;
@@ -59,7 +62,7 @@ internal class TypeDocumentation
 
         if (this.type.IsEnum)
         {
-            this.WriteEnumFields(this.GetFields().Where(m => !m.IsSpecialName));
+            this.WriteEnumFields(this.GetFields().Where(m => !m.IsSpecialName).ToArray());
         }
         else
         {
@@ -72,7 +75,8 @@ internal class TypeDocumentation
             this.type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(m => !m.IsSpecialName)
-                .Where(m => m.GetAccessibility() >= this.options.MemberAccessibilityLevel));
+                .Where(m => m.GetAccessibility() >= this.options.MemberAccessibilityLevel)
+                .ToArray());
         this.WriteMembersDocumentation(this.GetEvents());
 
         bool example = this.WriteExample(this.type);
@@ -177,11 +181,12 @@ internal class TypeDocumentation
 
     private static void WriteObsolete(IEnumerable<ObsoleteAttribute> attribute, IMarkdownDocument document, string defaultMessage)
     {
-        if (attribute.Any())
+        ObsoleteAttribute? first = attribute.FirstOrDefault();
+        if (first is not null)
         {
             document.AppendHeader("Caution", 4);
 
-            string? message = attribute.First().Message;
+            string? message = first.Message;
             if (string.IsNullOrEmpty(message))
             {
                 document.AppendParagraph(defaultMessage);
@@ -399,7 +404,7 @@ internal class TypeDocumentation
     {
         return node switch
         {
-            XText text => new MarkdownText(Regex.Replace(text.ToString(), "[ ]{2,}", " ")),
+            XText text => new MarkdownText(CollapseSpacesRegex().Replace(text.ToString(), " ")),
             XElement element => this.XElementToMarkdown(element),
             _ => null
         };
@@ -412,18 +417,16 @@ internal class TypeDocumentation
             memberInfo.GetSignature(full: true));
     }
 
-    private void WriteMembersDocumentation(IEnumerable<MemberInfo> members)
+    private void WriteMembersDocumentation(IReadOnlyList<MemberInfo> members)
     {
         ArgumentNullException.ThrowIfNull(members);
 
-        members = members.Where(member => member != null);
-
-        if (!members.Any())
+        if (members.Count == 0)
         {
             return;
         }
 
-        MemberTypes memberType = members.First().MemberType;
+        MemberTypes memberType = members[0].MemberType;
         string title = memberType switch
         {
             MemberTypes.Property => "Properties",
@@ -494,9 +497,9 @@ internal class TypeDocumentation
 
     private void WriteExceptions(XElement? memberDocElement)
     {
-        IEnumerable<XElement> exceptionDocs = memberDocElement?.Elements("exception") ?? [];
+        XElement[] exceptionDocs = memberDocElement?.Elements("exception").ToArray() ?? [];
 
-        if (!(exceptionDocs?.Count() > 0))
+        if (exceptionDocs.Length == 0)
         {
             return;
         }
@@ -588,11 +591,11 @@ internal class TypeDocumentation
         }
     }
 
-    private void WriteEnumFields(IEnumerable<FieldInfo> fields)
+    private void WriteEnumFields(IReadOnlyList<FieldInfo> fields)
     {
         ArgumentNullException.ThrowIfNull(fields);
 
-        if (!fields.Any())
+        if (fields.Count == 0)
         {
             return;
         }
@@ -604,7 +607,7 @@ internal class TypeDocumentation
             new MarkdownTableHeaderCell("Description")
         );
 
-        MarkdownTable table = new(header, fields.Count());
+        MarkdownTable table = new(header, fields.Count);
 
         foreach (FieldInfo field in fields)
         {
@@ -628,11 +631,11 @@ internal class TypeDocumentation
         input = input.Replace("\r\n", "\n");
         StringBuilder sb = new(input.Length);
 
-        foreach (string line in input.Split("\n"))
+        foreach (string line in input.Split('\n'))
         {
             if (!string.IsNullOrWhiteSpace(line))
             {
-                sb.Append(line);
+                sb.Append(line.Replace("|", "&#124;"));
             }
         }
 
@@ -669,17 +672,46 @@ internal class TypeDocumentation
 
     private MarkdownInlineElement? GetLinkFromReference(string? crefAttribute, string? text = null)
     {
+        string? effectiveText = text;
+
+        // For a self-closing <see cref="..."/>, element.Value is "" rather than null. When we have a
+        // generic-type cref or an unresolved (!:) cref, prefer a parsed display name over an empty link
+        // or a bare type-parameter display (Dictionary<TKey, TValue>).
+        if (string.IsNullOrEmpty(effectiveText) &&
+            crefAttribute is not null &&
+            crefAttribute.Length > 2 &&
+            crefAttribute[1] == ':' &&
+            (crefAttribute[0] == 'T' || crefAttribute[0] == '!') &&
+            crefAttribute.Contains('{'))
+        {
+            effectiveText = FormatCrefDisplayName(crefAttribute[2..]);
+        }
+
         if (this.TryGetMemberInfoFromReference(crefAttribute, out MemberInfo? memberInfo))
         {
             return memberInfo?.GetDocsLink(
                 this.assembly,
                 this.options.Structure,
-                text: text,
+                text: effectiveText,
                 noExtension: this.options.GitHubPages || this.options.GitlabWiki,
                 noPrefix: this.options.GitlabWiki);
         }
 
-        return new MarkdownText(text ?? crefAttribute ?? string.Empty);
+        // No member resolved. If we still have user-provided text, render it as plain markdown.
+        if (!string.IsNullOrEmpty(effectiveText))
+        {
+            return new MarkdownText(effectiveText);
+        }
+
+        // Fall back to the cref id itself. Strip the "T:" / "M:" / "!:" prefix and wrap in inline code
+        // so backticks (XML doc generic-arity markers like ``1) survive markdown rendering.
+        string fallback = crefAttribute is not null && crefAttribute.Length > 2 && crefAttribute[1] == ':'
+            ? crefAttribute[2..]
+            : (crefAttribute ?? string.Empty);
+
+        return string.IsNullOrEmpty(fallback)
+            ? new MarkdownText(string.Empty)
+            : new MarkdownInlineCode(fallback);
     }
 
     private bool TryGetMemberInfoFromReference(string? crefAttribute, out MemberInfo? memberInfo)
@@ -696,13 +728,18 @@ internal class TypeDocumentation
 
         string memberFullName = crefAttribute[2..];
 
+        const BindingFlags AllBindings =
+            BindingFlags.Public | BindingFlags.NonPublic |
+            BindingFlags.Instance | BindingFlags.Static;
+
         if (memberType is MemberTypes.Constructor or MemberTypes.Method)
         {
             (string @namespace, string methodSignature, int genericCount, int parameterCount) = DeconstructMember(memberFullName);
             Type? currentType = this.GetTypeFromFullName(@namespace);
             if (currentType is not null)
             {
-                memberInfo = currentType.GetMember($"{methodSignature}*")
+                MemberInfo[] candidates = currentType.GetMember($"{methodSignature}*", MemberTypes.Constructor | MemberTypes.Method, AllBindings);
+                memberInfo = candidates
                     .FirstOrDefault(info =>
                     {
                         MethodBase methodBase = (MethodBase)info;
@@ -713,16 +750,16 @@ internal class TypeDocumentation
                         }
                         return methodBase.GetParameters().Length == parameterCount;
                     })
-                    ?? currentType.GetMember($"{methodSignature}*").FirstOrDefault();
+                    ?? candidates.FirstOrDefault();
             }
         }
         else if (memberType is MemberTypes.Event or MemberTypes.Field or MemberTypes.Property)
         {
-            int idx = memberFullName.LastIndexOf(".");
+            int idx = memberFullName.LastIndexOf('.');
             Type? currentType = this.GetTypeFromFullName(memberFullName[..idx]);
             if (currentType is not null)
             {
-                memberInfo = currentType.GetMember(memberFullName[(idx + 1)..]).FirstOrDefault();
+                memberInfo = currentType.GetMember(memberFullName[(idx + 1)..], AllBindings).FirstOrDefault();
             }
         }
         else if (memberType is MemberTypes.TypeInfo or MemberTypes.NestedType)
@@ -740,7 +777,7 @@ internal class TypeDocumentation
     private static (string @namespace, string methodName, int genericCount, int parameterCount) DeconstructMember(string input)
     {
         int genericIndex = input.IndexOf("``");
-        int parameterIndex = input.IndexOf("(");
+        int parameterIndex = input.IndexOf('(');
         int genericCount = 0;
         int parameterCount = 0;
 
@@ -752,48 +789,204 @@ internal class TypeDocumentation
 
         if (parameterIndex > -1)
         {
-            parameterCount = input[parameterIndex..].Split(',').Length;
+            int closeParenIndex = input.LastIndexOf(')');
+            int paramListEnd = closeParenIndex > parameterIndex ? closeParenIndex : input.Length;
+            parameterCount = CountTopLevelParameters(input, parameterIndex + 1, paramListEnd);
             methodName = input[(lastDotIndex + 1)..parameterIndex];
         }
         if (genericIndex > -1)
         {
-            genericCount = parameterIndex > 1
-                ? int.Parse(input[(genericIndex + 2)..parameterIndex])
-                : int.Parse(input[(genericIndex + 2)..]);
+            int genericEnd = parameterIndex > -1 ? parameterIndex : input.Length;
+            if (int.TryParse(
+                    input.AsSpan((genericIndex + 2)..genericEnd),
+                    System.Globalization.NumberStyles.Integer,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    out int parsed))
+            {
+                genericCount = parsed;
+            }
             methodName = input[(lastDotIndex + 1)..genericIndex];
         }
 
         return (@namespace, methodName.Replace('#', '.'), genericCount, parameterCount);
     }
 
-    private IEnumerable<FieldInfo> GetFields()
+    private static int CountTopLevelParameters(string input, int start, int end)
     {
+        if (start >= end)
+        {
+            return 0;
+        }
+
+        int count = 1;
+        int depth = 0;
+        for (int i = start; i < end; i++)
+        {
+            char c = input[i];
+            if (c == '{' || c == '(' || c == '[')
+            {
+                depth++;
+            }
+            else if (c == '}' || c == ')' || c == ']')
+            {
+                depth--;
+            }
+            else if (c == ',' && depth == 0)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private FieldInfo[] GetFields()
+    {
+        HashSet<string> eventNames = new(this.GetEvents().Select(e => e.Name), StringComparer.Ordinal);
         return this.type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
             .Where(x => !x.Name.EndsWith(BackingFieldName))
-            .Where(x => !this.GetEvents().Any(e => e.Name == x.Name))
-            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
+            .Where(x => !eventNames.Contains(x.Name))
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel)
+            .ToArray();
     }
 
-    private IEnumerable<PropertyInfo> GetProperties()
+    private PropertyInfo[] GetProperties()
     {
         return this.type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel)
+            .ToArray();
     }
 
-    private IEnumerable<ConstructorInfo> GetConstructors()
+    private ConstructorInfo[] GetConstructors()
     {
         return this.type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel)
+            .ToArray();
     }
 
-    private IEnumerable<EventInfo> GetEvents()
+    private EventInfo[] GetEvents()
     {
         return this.type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel);
+            .Where(x => x.GetAccessibility() >= this.options.MemberAccessibilityLevel)
+            .ToArray();
     }
 
     private Type? GetTypeFromFullName(string typeFullName)
     {
-        return Type.GetType(typeFullName) ?? this.assembly.GetType(typeFullName);
+        string normalized = NormalizeGenericTypeName(typeFullName);
+        return Type.GetType(normalized) ?? this.assembly.GetType(normalized);
+    }
+
+    // XML doc cref values denote closed generic types as `Type{Arg1,Arg2}` (e.g. Dictionary{System.String,System.Int32}).
+    // For type lookup we collapse each {…} to the CLR arity form `N so we can resolve the open generic and
+    // produce a working docs link.
+    private static string NormalizeGenericTypeName(string name)
+    {
+        int braceIdx = name.IndexOf('{');
+        if (braceIdx == -1)
+        {
+            return name;
+        }
+
+        int closeBrace = FindMatchingBrace(name, braceIdx);
+        if (closeBrace == -1)
+        {
+            return name;
+        }
+
+        int arity = 1;
+        int depth = 0;
+        for (int i = braceIdx + 1; i < closeBrace; i++)
+        {
+            char c = name[i];
+            if (c == '{')
+            {
+                depth++;
+            }
+            else if (c == '}')
+            {
+                depth--;
+            }
+            else if (c == ',' && depth == 0)
+            {
+                arity++;
+            }
+        }
+
+        string head = name[..braceIdx];
+        string tail = name[(closeBrace + 1)..];
+        return $"{head}`{arity}{NormalizeGenericTypeName(tail)}";
+    }
+
+    // Render a cref like `Namespace.Dictionary{System.String,System.Int32}` as `Dictionary<String, Int32>`
+    // for use as link text when the cref element has no inner content.
+    private static string FormatCrefDisplayName(string crefName)
+    {
+        int braceIdx = crefName.IndexOf('{');
+        string typePart = braceIdx > -1 ? crefName[..braceIdx] : crefName;
+        int lastDot = typePart.LastIndexOf('.');
+        string simpleName = lastDot > -1 ? typePart[(lastDot + 1)..] : typePart;
+
+        if (braceIdx == -1)
+        {
+            return simpleName;
+        }
+
+        int closeBrace = FindMatchingBrace(crefName, braceIdx);
+        if (closeBrace == -1)
+        {
+            return simpleName;
+        }
+
+        string argsRaw = crefName[(braceIdx + 1)..closeBrace];
+        IEnumerable<string> formatted = SplitTopLevelArgs(argsRaw).Select(FormatCrefDisplayName);
+        return $"{simpleName}<{string.Join(", ", formatted)}>";
+    }
+
+    private static int FindMatchingBrace(string s, int openIdx)
+    {
+        int depth = 1;
+        for (int i = openIdx + 1; i < s.Length; i++)
+        {
+            if (s[i] == '{')
+            {
+                depth++;
+            }
+            else if (s[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static IEnumerable<string> SplitTopLevelArgs(string args)
+    {
+        int start = 0;
+        int depth = 0;
+        for (int i = 0; i < args.Length; i++)
+        {
+            char c = args[i];
+            if (c == '{')
+            {
+                depth++;
+            }
+            else if (c == '}')
+            {
+                depth--;
+            }
+            else if (c == ',' && depth == 0)
+            {
+                yield return args[start..i];
+                start = i + 1;
+            }
+        }
+        if (start <= args.Length)
+        {
+            yield return args[start..];
+        }
     }
 }

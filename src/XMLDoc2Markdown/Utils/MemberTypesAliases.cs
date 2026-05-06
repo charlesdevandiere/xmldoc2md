@@ -4,13 +4,17 @@ namespace XMLDoc2Markdown.Utils;
 
 internal static class MemberTypesAliases
 {
+    // Note: Constructor and Method both use the alias 'M' in C# XML doc IDs, and TypeInfo and NestedType
+    // both use 'T'. TryGetMemberType returns the first match for an alias — Method and TypeInfo are listed
+    // first so reverse lookups land on the more general member type. Forward lookups (TryGetAlias) are
+    // keyed by MemberTypes and remain correct regardless of order.
     internal static readonly (MemberTypes memberType, char alias)[] ALIASES = [
-        (MemberTypes.Constructor, 'M'),
-        (MemberTypes.Event, 'E'),
-        (MemberTypes.Field, 'F'),
         (MemberTypes.Method, 'M'),
+        (MemberTypes.Constructor, 'M'),
         (MemberTypes.TypeInfo, 'T'),
         (MemberTypes.NestedType, 'T'),
+        (MemberTypes.Event, 'E'),
+        (MemberTypes.Field, 'F'),
         (MemberTypes.Property, 'P'),
     ];
 

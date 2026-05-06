@@ -20,6 +20,8 @@
 
 [MyStaticClass](./myclasslib.mystaticclass)
 
+[Nested](./myclasslib.myclass.nested)
+
 ## MyClassLib.SubNamespace
 
 [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1)

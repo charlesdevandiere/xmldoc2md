@@ -7,12 +7,12 @@ namespace XMLDoc2Markdown;
 internal class XmlDocumentation
 {
     internal string AssemblyName { get; }
-    internal IEnumerable<XElement> Members { get; }
+    internal IReadOnlyDictionary<string, XElement> Members { get; }
 
     internal XmlDocumentation(string dllPath)
     {
         string xmlPath = Path.Combine(
-            Directory.GetParent(dllPath)?.FullName ?? string.Empty,
+            Path.GetDirectoryName(dllPath) ?? string.Empty,
             Path.GetFileNameWithoutExtension(dllPath) + ".xml");
 
         if (!File.Exists(xmlPath))
@@ -22,10 +22,20 @@ internal class XmlDocumentation
 
         try
         {
-            XDocument xDocument = XDocument.Parse(File.ReadAllText(xmlPath));
+            XDocument xDocument = XDocument.Load(xmlPath);
 
             this.AssemblyName = xDocument.Descendants("assembly").First().Elements("name").First().Value;
-            this.Members = xDocument.Descendants("members").First().Elements("member");
+
+            Dictionary<string, XElement> members = new(StringComparer.Ordinal);
+            foreach (XElement member in xDocument.Descendants("members").First().Elements("member"))
+            {
+                string? name = member.Attribute("name")?.Value;
+                if (name is not null)
+                {
+                    members[name] = member;
+                }
+            }
+            this.Members = members;
         }
         catch (Exception e)
         {
@@ -40,6 +50,6 @@ internal class XmlDocumentation
 
     internal XElement? GetMember(string name)
     {
-        return this.Members.FirstOrDefault(member => member.Attribute("name")?.Value == name);
+        return this.Members.TryGetValue(name, out XElement? element) ? element : null;
     }
 }

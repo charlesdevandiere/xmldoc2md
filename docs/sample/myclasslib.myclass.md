@@ -98,7 +98,7 @@ protected string MyProtectedProperty { get; set; }
 #### Property Value
 
 [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The property value. Used by .
+The property value. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass#protecteddogenerictt).
 
 ### **MyProtectedEnum**
 
@@ -251,11 +251,29 @@ var bar = foo.Get("bar");
 
 ### **StaticMethod()**
 
-A static method.
+A static method. Referenced by `MyClassLib.MyClass.Nested`.
 
 ```csharp
 public static void StaticMethod()
 ```
+
+### **Counts(IDictionary&lt;String, Int32&gt;)**
+
+Counts entries.
+
+```csharp
+public int Counts(IDictionary<string, int> input)
+```
+
+#### Parameters
+
+`input` [IDictionary&lt;String, Int32&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.idictionary-2)<br>
+A dictionary input.
+
+#### Returns
+
+[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+The total count.
 
 ### **ProtectedDo(String, Int32)**
 
@@ -289,12 +307,12 @@ protected int ProtectedDoGeneric<T>(T value)
 #### Type Parameters
 
 `T`<br>
-The type argument. Used by .
+The type argument. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass#protecteddogenerictt).
 
 #### Parameters
 
 `value` T<br>
-The param. Used by .
+The param. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass#protecteddogenerictt).
 
 #### Returns
 

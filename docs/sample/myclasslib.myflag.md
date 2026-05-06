@@ -23,7 +23,7 @@ Attributes [FlagsAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.f
 | Default | 0 | The default |
 | First | 1 | The first. |
 | Second | 2 | The second. |
-| Third | 4 | The Third. |
+| Third | 4 | The Third. Combines First &#124; Second semantics. |
 
 ---
 

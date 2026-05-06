@@ -96,6 +96,8 @@ rootCommand.SetAction(parseResult =>
         int succeeded = 0;
         int failed = 0;
 
+        Directory.CreateDirectory(@out);
+
         Assembly assembly = new AssemblyLoadContext(src)
             .LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(src)));
 
@@ -105,8 +107,21 @@ rootCommand.SetAction(parseResult =>
 
         IMarkdownDocument indexPage = new MarkdownDocument().AppendHeader(assemblyName, 1);
 
-        IEnumerable<Type> types = assembly.GetTypes()
-            .Where(type => type.IsPublic && !typeof(Delegate).IsAssignableFrom(type));
+        Type?[] loadedTypes;
+        try
+        {
+            loadedTypes = assembly.GetTypes();
+        }
+        catch (ReflectionTypeLoadException ex)
+        {
+            Logger.Warning($"Some types failed to load: {ex.LoaderExceptions.Length} loader exception(s).");
+            loadedTypes = ex.Types;
+        }
+
+        IEnumerable<Type> types = loadedTypes
+            .Where(type => type is not null)
+            .Select(type => type!)
+            .Where(type => (type.IsPublic || type.IsNestedPublic) && !typeof(Delegate).IsAssignableFrom(type));
         IEnumerable<IGrouping<string?, Type>> typesByNamespace = types.GroupBy(type => type.Namespace).OrderBy(g => g.Key);
         foreach (IGrouping<string?, Type> namespaceTypes in typesByNamespace)
         {
