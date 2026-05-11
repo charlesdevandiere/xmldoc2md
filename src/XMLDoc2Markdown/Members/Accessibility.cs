@@ -1,4 +1,4 @@
-namespace XMLDoc2Markdown.Utils;
+namespace XMLDoc2Markdown.Members;
 
 internal enum Accessibility
 {

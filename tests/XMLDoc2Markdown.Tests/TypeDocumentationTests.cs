@@ -1,6 +1,6 @@
 using MyClassLib;
 using MyClassLib.SubNamespace;
-using XMLDoc2Markdown.Utils;
+using XMLDoc2Markdown.Members;
 
 namespace XMLDoc2Markdown.Tests;
 

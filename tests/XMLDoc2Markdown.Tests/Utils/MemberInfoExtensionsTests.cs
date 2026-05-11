@@ -1,7 +1,8 @@
 using System.Reflection;
 using MyClassLib;
 using MyClassLib.SubNamespace;
-using XMLDoc2Markdown.Utils;
+using XMLDoc2Markdown.Signatures;
+using XMLDoc2Markdown.XmlDocId;
 
 namespace XMLDoc2Markdown.Tests.Utils;
 

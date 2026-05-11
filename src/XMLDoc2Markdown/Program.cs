@@ -2,6 +2,8 @@ using System.CommandLine;
 using System.Reflection;
 using Markdown;
 using XMLDoc2Markdown;
+using XMLDoc2Markdown.Linking;
+using XMLDoc2Markdown.Members;
 using XMLDoc2Markdown.Utils;
 
 Argument<string> srcArgument = new("src")

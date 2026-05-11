@@ -1,3 +1,4 @@
+using XMLDoc2Markdown.Linking;
 using XMLDoc2Markdown.Utils;
 
 namespace XMLDoc2Markdown.Tests.Utils;
