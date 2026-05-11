@@ -4,6 +4,14 @@ internal static class BaseListModifier
 {
     internal static SignatureBuilder AppendBaseList(this SignatureBuilder b, Type type)
     {
+        if (type.IsEnum)
+        {
+            Type underlying = Enum.GetUnderlyingType(type);
+            return underlying == typeof(int)
+                ? b
+                : b.Append($": {underlying.GetSimplifiedName()}");
+        }
+
         if (!type.IsClass && !type.IsInterface)
         {
             return b;

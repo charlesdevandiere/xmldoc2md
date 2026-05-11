@@ -15,7 +15,7 @@ internal class Nested
 ```
 
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [Nested](./myclasslib.myclass.nested)<br>
-Attributes [NullableContextAttribute](./system.runtime.compilerservices.nullablecontextattribute)
+Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute)
 
 ## Properties
 

@@ -13,6 +13,7 @@ internal static class FieldSignatureBuilder
         if (full)
         {
             b.AppendAccessibility(fieldInfo.GetAccessibility())
+             .AppendIfRequired(fieldInfo)
              .AppendIfStatic(fieldInfo.IsStatic)
              .Append(fieldInfo.FieldType.GetDisplayName(simplifyName: true));
         }

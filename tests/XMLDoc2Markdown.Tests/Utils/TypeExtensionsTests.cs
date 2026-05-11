@@ -151,4 +151,28 @@ public class TypeExtensionsTests
         Assert.Equal(typeof(MyClass), hierarchy[0]);
         Assert.Equal(typeof(object), hierarchy[^1]);
     }
+
+    [Fact]
+    public void GetSignature_readonly_struct_emits_readonly_keyword()
+    {
+        Assert.Contains("readonly struct MyReadonlyStruct", typeof(MyReadonlyStruct).GetSignature(full: true));
+    }
+
+    [Fact]
+    public void GetSignature_ref_struct_emits_ref_keyword()
+    {
+        Assert.Contains("ref struct MyRefStruct", typeof(MyRefStruct).GetSignature(full: true));
+    }
+
+    [Fact]
+    public void GetSignature_byte_enum_includes_underlying_type()
+    {
+        Assert.Equal("public enum MyByteEnum : byte", typeof(MyByteEnum).GetSignature(full: true));
+    }
+
+    [Fact]
+    public void GetSignature_int_enum_omits_underlying_type()
+    {
+        Assert.DoesNotContain(":", typeof(MyEnum).GetSignature(full: true));
+    }
 }

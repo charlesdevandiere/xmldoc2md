@@ -1,3 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+
 namespace MyClassLib;
 
 /// <summary>
@@ -28,6 +31,23 @@ public class MyClass : IMyInterface
     /// </summary>
     /// <value>The enum value</value>
     public MyEnum MyEnum { get; set; }
+
+    /// <summary>
+    /// An init-only property.
+    /// </summary>
+    /// <value>The initialization value.</value>
+    public string MyInitProperty { get; init; } = string.Empty;
+
+    /// <summary>
+    /// A required property.
+    /// </summary>
+    /// <value>The required value.</value>
+    public required string MyRequiredProperty { get; set; }
+
+    /// <summary>
+    /// A required field.
+    /// </summary>
+    public required int myRequiredField;
 
     /// <summary>
     /// My delegate.
@@ -63,7 +83,11 @@ public class MyClass : IMyInterface
     ///     </item>
     /// </list>
     /// </remarks>
-    public MyClass() { }
+    [SetsRequiredMembers]
+    public MyClass()
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.<br/>
@@ -71,7 +95,11 @@ public class MyClass : IMyInterface
     /// </summary>
     /// <param name="firstParam">The first param.</param>
     /// <param name="secondParam">The second param.</param>
-    public MyClass(string firstParam, int secondParam) { }
+    [SetsRequiredMembers]
+    public MyClass(string firstParam, int secondParam)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.
@@ -102,6 +130,15 @@ public class MyClass : IMyInterface
     /// A static method. Referenced by <see cref="Nested"/>.
     /// </summary>
     public static void StaticMethod() { }
+
+    /// <summary>
+    /// An asynchronous operation.
+    /// </summary>
+    /// <returns>A task that completes when the operation finishes.</returns>
+    public async Task DoAsync()
+    {
+        await Task.Yield();
+    }
 
     /// <summary>
     /// Counts entries.
@@ -156,7 +193,11 @@ public class MyClass : IMyInterface
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
     /// </summary>
-    private MyClass(short @short) { }
+    [SetsRequiredMembers]
+    private MyClass(short @short)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.
@@ -223,7 +264,11 @@ public class MyClass : IMyInterface
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
     /// </summary>
-    internal MyClass(long @long) { }
+    [SetsRequiredMembers]
+    internal MyClass(long @long)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.
@@ -290,7 +335,11 @@ public class MyClass : IMyInterface
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
     /// </summary>
-    protected MyClass(int @int) { }
+    [SetsRequiredMembers]
+    protected MyClass(int @int)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.

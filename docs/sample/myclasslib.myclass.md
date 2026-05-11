@@ -14,7 +14,7 @@ public class MyClass : IMyInterface
 
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)<br>
-Attributes [NullableContextAttribute](./system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](./system.runtime.compilerservices.nullableattribute)
+Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute), [RequiredMemberAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.requiredmemberattribute)
 
 **Remarks:**
 
@@ -28,6 +28,14 @@ My field.
 
 ```csharp
 public int myField;
+```
+
+### **myRequiredField**
+
+A required field.
+
+```csharp
+public required int myRequiredField;
 ```
 
 ### **myProtectedField**
@@ -86,6 +94,32 @@ public MyEnum MyEnum { get; set; }
 
 [MyEnum](./myclasslib.myenum)<br>
 The enum value
+
+### **MyInitProperty**
+
+An init-only property.
+
+```csharp
+public string MyInitProperty { get; init; }
+```
+
+#### Property Value
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The initialization value.
+
+### **MyRequiredProperty**
+
+A required property.
+
+```csharp
+public required string MyRequiredProperty { get; set; }
+```
+
+#### Property Value
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The required value.
 
 ### **MyProtectedProperty**
 
@@ -256,6 +290,19 @@ A static method. Referenced by `MyClassLib.MyClass.Nested`.
 ```csharp
 public static void StaticMethod()
 ```
+
+### **DoAsync()**
+
+An asynchronous operation.
+
+```csharp
+public async Task DoAsync()
+```
+
+#### Returns
+
+[Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)<br>
+A task that completes when the operation finishes.
 
 ### **Counts(IDictionary&lt;String, Int32&gt;)**
 

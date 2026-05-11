@@ -78,8 +78,10 @@ internal sealed class TypeDocumentation
         }
 
         new PropertySectionRenderer(this.context, converter, examples).Render(this.document, discovery.GetProperties());
+        new IndexerSectionRenderer(this.context, converter, examples).Render(this.document, discovery.GetIndexers());
         new ConstructorSectionRenderer(this.context, converter, examples, parameters).Render(this.document, discovery.GetConstructors());
         new MethodSectionRenderer(this.context, converter, examples, parameters).Render(this.document, discovery.GetMethods());
+        new OperatorSectionRenderer(this.context, converter, examples, parameters).Render(this.document, discovery.GetOperators());
         new EventSectionRenderer(this.context, converter, examples).Render(this.document, discovery.GetEvents());
 
         if (examples.Inject(this.document, type))

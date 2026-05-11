@@ -55,4 +55,11 @@ public class FieldInfoExtensionsTests
         FieldInfo f = typeof(MyClass).GetField(nameof(MyClass.myField))!;
         Assert.Equal("public int myField;", f.GetSignature(full: true));
     }
+
+    [Fact]
+    public void GetSignature_full_required_field_emits_required()
+    {
+        FieldInfo f = typeof(MyClass).GetField(nameof(MyClass.myRequiredField))!;
+        Assert.Contains("required", f.GetSignature(full: true));
+    }
 }

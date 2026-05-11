@@ -1,5 +1,6 @@
 using System.Reflection;
 using XMLDoc2Markdown.Members;
+using XMLDoc2Markdown.Signatures;
 
 namespace XMLDoc2Markdown.Rendering;
 
@@ -40,6 +41,13 @@ internal sealed class MemberDiscovery
 
     internal PropertyInfo[] GetProperties() =>
         this.type.GetProperties(AllInstanceAndStatic)
+            .Where(p => p.GetIndexParameters().Length == 0)
+            .Where(p => p.GetAccessibility() >= this.minAccessibility)
+            .ToArray();
+
+    internal PropertyInfo[] GetIndexers() =>
+        this.type.GetProperties(AllInstanceAndStatic)
+            .Where(p => p.GetIndexParameters().Length > 0)
             .Where(p => p.GetAccessibility() >= this.minAccessibility)
             .ToArray();
 
@@ -51,6 +59,12 @@ internal sealed class MemberDiscovery
     internal MethodInfo[] GetMethods() =>
         this.type.GetMethods(AllInstanceAndStatic | BindingFlags.DeclaredOnly)
             .Where(m => !m.IsSpecialName)
+            .Where(m => m.GetAccessibility() >= this.minAccessibility)
+            .ToArray();
+
+    internal MethodInfo[] GetOperators() =>
+        this.type.GetMethods(AllInstanceAndStatic | BindingFlags.DeclaredOnly)
+            .Where(OperatorNames.IsOperator)
             .Where(m => m.GetAccessibility() >= this.minAccessibility)
             .ToArray();
 

@@ -28,9 +28,14 @@ internal static class PropertyAccessorsModifier
             {
                 b.Append(setter.Print());
             }
-            b.Append("set;");
+            b.Append(IsInitOnly(propertyInfo.SetMethod) ? "init;" : "set;");
         }
 
         return b.Append("}");
     }
+
+    private static bool IsInitOnly(MethodInfo setter)
+        => setter.ReturnParameter
+            .GetRequiredCustomModifiers()
+            .Any(t => t.FullName == "System.Runtime.CompilerServices.IsExternalInit");
 }

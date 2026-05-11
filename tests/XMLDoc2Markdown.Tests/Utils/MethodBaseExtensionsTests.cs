@@ -118,4 +118,38 @@ public class MethodBaseExtensionsTests
         // Punctuation is dropped in place (no replacement dash) — only spaces become '-'.
         Assert.Equal("./myclasslib.myclass.md#dostring-int32", url);
     }
+
+    [Fact]
+    public void GetSignature_full_async_method_includes_async_keyword()
+    {
+        MethodInfo m = typeof(MyClass).GetMethod(nameof(MyClass.DoAsync))!;
+        Assert.Contains("async", m.GetSignature(full: true));
+    }
+
+    [Fact]
+    public void GetSignature_binary_operator_renders_as_operator_plus()
+    {
+        MethodInfo m = typeof(MyOperators).GetMethod("op_Addition")!;
+        string sig = m.GetSignature(full: true);
+        Assert.Contains("operator +", sig);
+        Assert.Contains("public static", sig);
+        Assert.DoesNotContain("op_Addition", sig);
+    }
+
+    [Fact]
+    public void GetSignature_implicit_conversion_operator_renders_as_implicit_operator()
+    {
+        MethodInfo m = typeof(MyOperators).GetMethod("op_Implicit")!;
+        string sig = m.GetSignature(full: true);
+        Assert.Contains("implicit operator int", sig);
+        Assert.DoesNotContain("op_Implicit", sig);
+    }
+
+    [Fact]
+    public void GetSignature_explicit_conversion_operator_renders_as_explicit_operator()
+    {
+        MethodInfo m = typeof(MyOperators).GetMethod("op_Explicit")!;
+        string sig = m.GetSignature(full: true);
+        Assert.Contains("explicit operator MyOperators", sig);
+    }
 }

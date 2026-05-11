@@ -25,6 +25,14 @@ My field.
 public int myField;
 ```
 
+### **myRequiredField**
+
+A required field.
+
+```csharp
+public required int myRequiredField;
+```
+
 ### **myProtectedField**
 
 My field.
@@ -82,6 +90,32 @@ public MyEnum MyEnum { get; set; }
 [MyEnum](./myclasslib.myenum)<br>
 The enum value
 
+### **MyInitProperty**
+
+An init-only property.
+
+```csharp
+public string MyInitProperty { get; init; }
+```
+
+#### Property Value
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The initialization value.
+
+### **MyRequiredProperty**
+
+A required property.
+
+```csharp
+public required string MyRequiredProperty { get; set; }
+```
+
+#### Property Value
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The required value.
+
 ### **MyProtectedProperty**
 
 My property.
@@ -111,6 +145,8 @@ The enum value
 ## Constructors
 
 ### **SubClass()**
+
+Sub class from [MyClass](./myclasslib.myclass)
 
 ```csharp
 public SubClass()

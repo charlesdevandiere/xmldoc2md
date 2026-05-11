@@ -12,7 +12,7 @@ My interface.
 public interface IMyInterface
 ```
 
-Attributes [NullableContextAttribute](./system.runtime.compilerservices.nullablecontextattribute)
+Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute)
 
 ## Methods
 

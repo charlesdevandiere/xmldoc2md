@@ -87,4 +87,30 @@ public class PropertyInfoExtensionsTests
         Assert.Contains("get;", sig);
         Assert.Contains("set;", sig);
     }
+
+    [Fact]
+    public void GetSignature_full_init_only_property_emits_init()
+    {
+        PropertyInfo p = typeof(MyClass).GetProperty(nameof(MyClass.MyInitProperty))!;
+        string sig = p.GetSignature(full: true);
+        Assert.Contains("init;", sig);
+        Assert.DoesNotContain("set;", sig);
+    }
+
+    [Fact]
+    public void GetSignature_full_required_property_emits_required()
+    {
+        PropertyInfo p = typeof(MyClass).GetProperty(nameof(MyClass.MyRequiredProperty))!;
+        string sig = p.GetSignature(full: true);
+        Assert.Contains("required", sig);
+    }
+
+    [Fact]
+    public void GetSignature_indexer_uses_this_brackets()
+    {
+        PropertyInfo p = typeof(MyIndexer).GetProperty("Item", [typeof(int)])!;
+        string sig = p.GetSignature(full: true);
+        Assert.Contains("this[int index]", sig);
+        Assert.DoesNotContain("Item", sig);
+    }
 }

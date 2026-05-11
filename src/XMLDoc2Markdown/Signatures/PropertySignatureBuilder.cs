@@ -12,6 +12,11 @@ internal static class PropertySignatureBuilder
 
     internal static string GetSignature(this PropertyInfo propertyInfo, bool full = false)
     {
+        if (propertyInfo.GetIndexParameters().Length > 0)
+        {
+            return propertyInfo.GetIndexerSignature(full);
+        }
+
         SignatureBuilder b = new();
 
         if (full)
@@ -22,6 +27,7 @@ internal static class PropertySignatureBuilder
                 || (propertyInfo.SetMethod?.IsAbstract ?? false);
 
             b.AppendAccessibility(propertyInfo.GetAccessibility())
+             .AppendIfRequired(propertyInfo)
              .AppendIfStatic(isStatic)
              .AppendIfAbstract(isAbstract)
              .AppendReturnType(propertyInfo.GetReturnType());
