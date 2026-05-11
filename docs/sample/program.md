@@ -14,15 +14,15 @@ Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) 
 
 ## Methods
 
-### **Main(Object[])**
+### **Main(params Object[])**
 
 ```csharp
-public static void Main(Object[] args)
+public static void Main(params Object[] args)
 ```
 
 #### Parameters
 
-`args` [Object[]](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
+`params` `args` [Object[]](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
 
 ---
 

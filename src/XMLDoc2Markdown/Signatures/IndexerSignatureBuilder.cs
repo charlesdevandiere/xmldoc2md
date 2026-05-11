@@ -13,6 +13,9 @@ namespace XMLDoc2Markdown.Signatures;
 internal static class IndexerSignatureBuilder
 {
     internal static string GetIndexerSignature(this PropertyInfo propertyInfo, bool full = false)
+        => GetIndexerSignature(propertyInfo, null, full);
+
+    internal static string GetIndexerSignature(this PropertyInfo propertyInfo, NullabilityInfoContext? nullCtx, bool full)
     {
         SignatureBuilder b = new();
 
@@ -22,14 +25,20 @@ internal static class IndexerSignatureBuilder
                 || (propertyInfo.SetMethod?.IsStatic ?? false);
             bool isAbstract = (propertyInfo.GetMethod?.IsAbstract ?? false)
                 || (propertyInfo.SetMethod?.IsAbstract ?? false);
+            bool isInterface = propertyInfo.DeclaringType?.IsInterface ?? false;
 
-            b.AppendAccessibility(propertyInfo.GetAccessibility())
+            b.AppendAccessibilityUnlessInterface(propertyInfo.GetAccessibility(), isInterface)
              .AppendIfStatic(isStatic)
-             .AppendIfAbstract(isAbstract)
-             .AppendReturnType(propertyInfo.GetReturnType());
+             .AppendIfAbstract(isAbstract, isInterface, isStatic);
+
+            DisplayMeta meta = nullCtx == null
+                ? DisplayMeta.Empty
+                : DisplayMeta.For(propertyInfo, nullCtx);
+            b.AppendVirtuality(propertyInfo)
+             .AppendReturnType(propertyInfo.GetReturnType(), meta);
         }
 
-        b.Append($"this{FormatIndexParameters(propertyInfo, full)}");
+        b.Append($"this{FormatIndexParameters(propertyInfo, nullCtx, full)}");
 
         if (full)
         {
@@ -39,18 +48,14 @@ internal static class IndexerSignatureBuilder
         return b.ToString();
     }
 
-    private static string FormatIndexParameters(PropertyInfo propertyInfo, bool full)
+    private static string FormatIndexParameters(PropertyInfo propertyInfo, NullabilityInfoContext? nullCtx, bool full)
     {
         ParameterInfo[] @params = propertyInfo.GetIndexParameters();
         StringBuilder sb = new("[");
         for (int i = 0; i < @params.Length; i++)
         {
             if (i > 0) sb.Append(", ");
-            sb.Append(@params[i].ParameterType.GetDisplayName(simplifyName: true));
-            if (full)
-            {
-                sb.Append(' ').Append(@params[i].Name);
-            }
+            sb.Append(ParameterListModifier.FormatParameter(@params[i], nullCtx, full));
         }
         return sb.Append(']').ToString();
     }

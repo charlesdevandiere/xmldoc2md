@@ -18,6 +18,11 @@ internal static class TypeSignatureBuilder
         b.Append(type.GetDisplayName())
          .AppendBaseList(type);
 
+        if (full)
+        {
+            b.AppendGenericConstraints(type);
+        }
+
         return b.ToString();
     }
 }

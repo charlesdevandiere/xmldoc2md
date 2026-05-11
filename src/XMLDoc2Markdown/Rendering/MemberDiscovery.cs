@@ -1,6 +1,7 @@
 using System.Reflection;
 using XMLDoc2Markdown.Members;
 using XMLDoc2Markdown.Signatures;
+using XMLDoc2Markdown.Signatures.Modifiers;
 
 namespace XMLDoc2Markdown.Rendering;
 
@@ -15,13 +16,25 @@ internal sealed class MemberDiscovery
         BindingFlags.Public | BindingFlags.NonPublic |
         BindingFlags.Instance | BindingFlags.Static;
 
+    private static readonly HashSet<string> RecordSynthesizedMethodNames = new(StringComparer.Ordinal)
+    {
+        "<Clone>$",
+        "PrintMembers",
+        "Deconstruct",
+        "Equals",
+        "GetHashCode",
+        "ToString",
+    };
+
     private readonly Type type;
     private readonly Accessibility minAccessibility;
+    private readonly bool isRecord;
 
     internal MemberDiscovery(Type type, Accessibility minAccessibility)
     {
         this.type = type;
         this.minAccessibility = minAccessibility;
+        this.isRecord = RecordDetection.IsRecord(type);
     }
 
     internal FieldInfo[] GetFields()
@@ -42,6 +55,7 @@ internal sealed class MemberDiscovery
     internal PropertyInfo[] GetProperties() =>
         this.type.GetProperties(AllInstanceAndStatic)
             .Where(p => p.GetIndexParameters().Length == 0)
+            .Where(p => !this.IsRecordSynthesizedProperty(p))
             .Where(p => p.GetAccessibility() >= this.minAccessibility)
             .ToArray();
 
@@ -59,12 +73,14 @@ internal sealed class MemberDiscovery
     internal MethodInfo[] GetMethods() =>
         this.type.GetMethods(AllInstanceAndStatic | BindingFlags.DeclaredOnly)
             .Where(m => !m.IsSpecialName)
+            .Where(m => !this.IsRecordSynthesizedMethod(m))
             .Where(m => m.GetAccessibility() >= this.minAccessibility)
             .ToArray();
 
     internal MethodInfo[] GetOperators() =>
         this.type.GetMethods(AllInstanceAndStatic | BindingFlags.DeclaredOnly)
             .Where(OperatorNames.IsOperator)
+            .Where(m => !this.IsRecordSynthesizedMethod(m))
             .Where(m => m.GetAccessibility() >= this.minAccessibility)
             .ToArray();
 
@@ -72,4 +88,20 @@ internal sealed class MemberDiscovery
         this.type.GetEvents(AllInstanceAndStatic)
             .Where(e => e.GetAccessibility() >= this.minAccessibility)
             .ToArray();
+
+    private bool IsRecordSynthesizedMethod(MethodInfo m)
+    {
+        if (!this.isRecord)
+        {
+            return false;
+        }
+        if (RecordSynthesizedMethodNames.Contains(m.Name))
+        {
+            return true;
+        }
+        return m.Name is "op_Equality" or "op_Inequality";
+    }
+
+    private bool IsRecordSynthesizedProperty(PropertyInfo p)
+        => this.isRecord && p.Name == "EqualityContract";
 }

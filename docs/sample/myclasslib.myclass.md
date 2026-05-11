@@ -74,12 +74,12 @@ foo.MyProperty = "foo";
 My nullable property
 
 ```csharp
-public Nullable<int> MyNullableProperty { get; set; }
+public int? MyNullableProperty { get; set; }
 ```
 
 #### Property Value
 
-[Nullable&lt;Int32&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
+[Int32?](https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
 The nullable property value.
 
 ### **MyEnum**
@@ -409,7 +409,7 @@ protected static void ProtectedStaticMethod()
 My event.
 
 ```csharp
-public event EventHandler<EventArgs> MyEvent;
+public event EventHandler<EventArgs>? MyEvent;
 ```
 
 ### **MyProtectedEvent**
@@ -417,7 +417,7 @@ public event EventHandler<EventArgs> MyEvent;
 My event.
 
 ```csharp
-protected event EventHandler<EventArgs> MyProtectedEvent;
+protected event EventHandler<EventArgs>? MyProtectedEvent;
 ```
 
 ## Example

@@ -7,15 +7,21 @@ namespace XMLDoc2Markdown.Signatures;
 internal static class FieldSignatureBuilder
 {
     internal static string GetSignature(this FieldInfo fieldInfo, bool full = false)
+        => GetSignature(fieldInfo, null, full);
+
+    internal static string GetSignature(this FieldInfo fieldInfo, NullabilityInfoContext? nullCtx, bool full)
     {
         SignatureBuilder b = new();
 
         if (full)
         {
+            DisplayMeta meta = nullCtx == null
+                ? DisplayMeta.Empty
+                : DisplayMeta.For(fieldInfo, nullCtx);
             b.AppendAccessibility(fieldInfo.GetAccessibility())
              .AppendIfRequired(fieldInfo)
              .AppendIfStatic(fieldInfo.IsStatic)
-             .Append(fieldInfo.FieldType.GetDisplayName(simplifyName: true));
+             .Append(fieldInfo.FieldType.GetDisplayName(meta, simplifyName: true));
         }
 
         b.Append(fieldInfo.Name);

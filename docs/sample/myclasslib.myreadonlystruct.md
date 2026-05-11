@@ -37,7 +37,7 @@ The integer value.
 Initializes a new [MyReadonlyStruct](./myclasslib.myreadonlystruct).
 
 ```csharp
-MyReadonlyStruct(int value)
+public MyReadonlyStruct(int value)
 ```
 
 #### Parameters

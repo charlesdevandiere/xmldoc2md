@@ -15,6 +15,7 @@ internal sealed class RenderingContext
     internal Type Type { get; }
     internal XmlDocumentation Documentation { get; }
     internal TypeDocumentationOptions Options { get; }
+    internal NullabilityInfoContext Nullability { get; } = new();
 
     internal RenderingContext(
         Assembly assembly,

@@ -1,6 +1,8 @@
 using System.Reflection;
 using System.Xml.Linq;
 using Markdown;
+using XMLDoc2Markdown.Signatures;
+using XMLDoc2Markdown.Signatures.Modifiers;
 
 namespace XMLDoc2Markdown.Rendering.Sections;
 
@@ -60,14 +62,22 @@ internal sealed class MethodParametersRenderer
 
         foreach (ParameterInfo param in @params)
         {
-            MarkdownInlineElement typeName = this.context.DocsLink(param.ParameterType);
+            Type linkType = param.ParameterType.IsByRef
+                ? param.ParameterType.GetElementType()!
+                : param.ParameterType;
+            DisplayMeta meta = BuildParameterMeta(param);
+            string typeDisplay = RenderTypeForProse(linkType, meta);
+
+            string? passing = ParameterListModifier.GetPassingModifier(param);
+            string passingPrefix = passing == null ? string.Empty : $"`{passing}` ";
+
             IEnumerable<XNode> nodes = memberDocElement?
                 .Elements("param")
                 .FirstOrDefault(e => e.Attribute("name")?.Value == param.Name)
                 ?.Nodes() ?? [];
             MarkdownParagraph paramDoc = this.converter.ToMarkdownParagraph(nodes);
 
-            document.AppendParagraph($"{new MarkdownInlineCode(param.Name ?? string.Empty)} {typeName}<br>{Environment.NewLine}{paramDoc}");
+            document.AppendParagraph($"{passingPrefix}{new MarkdownInlineCode(param.Name ?? string.Empty)} {typeDisplay}<br>{Environment.NewLine}{paramDoc}");
         }
     }
 
@@ -80,10 +90,38 @@ internal sealed class MethodParametersRenderer
 
         document.AppendHeader("Returns", 4);
 
-        MarkdownInlineElement typeName = this.context.DocsLink(methodInfo.ReturnType);
+        DisplayMeta returnMeta = DisplayMeta.ForReturn(methodInfo, this.context.Nullability);
+        string typeDisplay = RenderTypeForProse(methodInfo.ReturnType, returnMeta);
         IEnumerable<XNode> nodes = memberDocElement?.Element("returns")?.Nodes() ?? [];
         MarkdownParagraph paragraph = this.converter.ToMarkdownParagraph(nodes);
 
-        document.AppendParagraph($"{typeName}<br>{Environment.NewLine}{paragraph}");
+        document.AppendParagraph($"{typeDisplay}<br>{Environment.NewLine}{paragraph}");
+    }
+
+    private DisplayMeta BuildParameterMeta(ParameterInfo param)
+    {
+        DisplayMeta meta = DisplayMeta.For(param, this.context.Nullability);
+        return param.ParameterType.IsByRef ? meta.ForElement() : meta;
+    }
+
+    /// <summary>
+    /// Renders a type for inline prose. Tuples are emitted as inline code
+    /// (no link — the named tuple syntax does not point at a single docs page).
+    /// Reference types receive a trailing <c>?</c> when nullable. All other
+    /// types fall through to the existing <see cref="RenderingContext.DocsLink(Type, string?)"/>
+    /// path so cross-references continue to work.
+    /// </summary>
+    private string RenderTypeForProse(Type type, DisplayMeta meta)
+    {
+        if (type.IsValueTuple())
+        {
+            return new MarkdownInlineCode(type.GetDisplayName(meta, simplifyName: false)).ToString();
+        }
+
+        MarkdownInlineElement link = this.context.DocsLink(type);
+        bool isNullableReference = !type.IsValueType
+            && !type.IsGenericParameter
+            && meta.Nullability is { ReadState: NullabilityState.Nullable };
+        return isNullableReference ? $"{link}?" : (link.ToString() ?? string.Empty);
     }
 }

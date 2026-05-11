@@ -56,7 +56,7 @@ internal abstract class MemberSectionRenderer<T> where T : MemberInfo
 
         ObsoleteRenderer.Write(document, member, this.ObsoleteDefaultMessage);
         this.WriteSummary(document, memberDocElement);
-        document.AppendCode("csharp", member.GetSignature(full: true));
+        document.AppendCode("csharp", this.GetFullSignature(member));
 
         this.RenderBody(document, member, memberDocElement);
 
@@ -71,6 +71,14 @@ internal abstract class MemberSectionRenderer<T> where T : MemberInfo
     }
 
     protected abstract void RenderBody(IMarkdownDocument document, T member, XElement? memberDocElement);
+
+    /// <summary>
+    /// Produces the full signature for the fenced code block, with nullable
+    /// reference and tuple-name annotations resolved via the rendering context's
+    /// <see cref="System.Reflection.NullabilityInfoContext"/>.
+    /// </summary>
+    protected virtual string GetFullSignature(T member)
+        => member.GetSignature(this.Context.Nullability, full: true);
 
     protected void WriteSummary(IMarkdownDocument document, XElement? memberDocElement)
     {

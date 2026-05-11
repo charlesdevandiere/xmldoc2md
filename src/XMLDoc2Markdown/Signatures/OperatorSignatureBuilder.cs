@@ -12,32 +12,43 @@ namespace XMLDoc2Markdown.Signatures;
 internal static class OperatorSignatureBuilder
 {
     internal static string GetOperatorSignature(this MethodInfo methodInfo, bool full = false)
+        => GetOperatorSignature(methodInfo, null, full);
+
+    internal static string GetOperatorSignature(this MethodInfo methodInfo, NullabilityInfoContext? nullCtx, bool full)
     {
         SignatureBuilder b = new();
 
+        Type? declaring = methodInfo.DeclaringType;
+        bool isInterface = declaring?.IsInterface ?? false;
+
         if (full)
         {
-            b.AppendAccessibility(methodInfo.GetAccessibility())
-             .AppendIfStatic(methodInfo.IsStatic);
+            b.AppendAccessibilityUnlessInterface(methodInfo.GetAccessibility(), isInterface)
+             .AppendIfStatic(methodInfo.IsStatic)
+             .AppendIfAbstract(methodInfo.IsAbstract, isInterface, methodInfo.IsStatic);
         }
+
+        DisplayMeta returnMeta = nullCtx == null
+            ? DisplayMeta.Empty
+            : DisplayMeta.ForReturn(methodInfo, nullCtx);
 
         if (OperatorNames.IsConversion(methodInfo))
         {
             b.Append(methodInfo.Name == "op_Implicit" ? "implicit" : "explicit")
              .Append("operator")
-             .Append(methodInfo.ReturnType.GetDisplayName(simplifyName: true));
+             .Append(methodInfo.ReturnType.GetDisplayName(returnMeta, simplifyName: true));
         }
         else
         {
             if (full)
             {
-                b.AppendReturnType(methodInfo.ReturnType);
+                b.AppendReturnType(methodInfo.ReturnType, returnMeta);
             }
             b.Append("operator")
              .Append(OperatorNames.TryGetSymbol(methodInfo.Name) ?? methodInfo.Name);
         }
 
-        b.AppendParameterList(methodInfo, full);
+        b.AppendParameterList(methodInfo, nullCtx, full);
 
         return b.ToString();
     }

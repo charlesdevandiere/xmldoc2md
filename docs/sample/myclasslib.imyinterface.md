@@ -50,6 +50,19 @@ The param.
 [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 An empty string.
 
+### **Greet()**
+
+A default interface method — has a body, callers can use it as-is.
+
+```csharp
+virtual string Greet()
+```
+
+#### Returns
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+A greeting.
+
 ---
 
 [`< Back`](./)

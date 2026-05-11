@@ -8,7 +8,5 @@ internal static class RequiredModifier
         "System.Runtime.CompilerServices.RequiredMemberAttribute";
 
     internal static SignatureBuilder AppendIfRequired(this SignatureBuilder b, MemberInfo member)
-        => member.CustomAttributes.Any(a => a.AttributeType.FullName == RequiredMemberAttributeFullName)
-            ? b.Append("required")
-            : b;
+        => member.HasAttribute(RequiredMemberAttributeFullName) ? b.Append("required") : b;
 }

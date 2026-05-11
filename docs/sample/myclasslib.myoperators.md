@@ -49,12 +49,12 @@ The wrapped value.
 ### **Equals(Object)**
 
 ```csharp
-public bool Equals(object obj)
+public override bool Equals(object? obj)
 ```
 
 #### Parameters
 
-`obj` [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
+`obj` [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)?<br>
 
 #### Returns
 
@@ -63,7 +63,7 @@ public bool Equals(object obj)
 ### **GetHashCode()**
 
 ```csharp
-public int GetHashCode()
+public override int GetHashCode()
 ```
 
 #### Returns

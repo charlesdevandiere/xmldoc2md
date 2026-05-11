@@ -11,10 +11,13 @@ internal static class PropertySignatureBuilder
             ?? propertyInfo.SetMethod?.GetParameters().FirstOrDefault()?.ParameterType;
 
     internal static string GetSignature(this PropertyInfo propertyInfo, bool full = false)
+        => GetSignature(propertyInfo, null, full);
+
+    internal static string GetSignature(this PropertyInfo propertyInfo, NullabilityInfoContext? nullCtx, bool full)
     {
         if (propertyInfo.GetIndexParameters().Length > 0)
         {
-            return propertyInfo.GetIndexerSignature(full);
+            return propertyInfo.GetIndexerSignature(nullCtx, full);
         }
 
         SignatureBuilder b = new();
@@ -25,12 +28,18 @@ internal static class PropertySignatureBuilder
                 || (propertyInfo.SetMethod?.IsStatic ?? false);
             bool isAbstract = (propertyInfo.GetMethod?.IsAbstract ?? false)
                 || (propertyInfo.SetMethod?.IsAbstract ?? false);
+            bool isInterface = propertyInfo.DeclaringType?.IsInterface ?? false;
 
-            b.AppendAccessibility(propertyInfo.GetAccessibility())
+            b.AppendAccessibilityUnlessInterface(propertyInfo.GetAccessibility(), isInterface)
              .AppendIfRequired(propertyInfo)
              .AppendIfStatic(isStatic)
-             .AppendIfAbstract(isAbstract)
-             .AppendReturnType(propertyInfo.GetReturnType());
+             .AppendIfAbstract(isAbstract, isInterface, isStatic);
+
+            DisplayMeta meta = nullCtx == null
+                ? DisplayMeta.Empty
+                : DisplayMeta.For(propertyInfo, nullCtx);
+            b.AppendVirtuality(propertyInfo)
+             .AppendReturnType(propertyInfo.GetReturnType(), meta);
         }
 
         b.Append(propertyInfo.Name);

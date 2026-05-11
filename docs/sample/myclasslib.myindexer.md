@@ -17,7 +17,7 @@ Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/ap
 
 ## Indexers
 
-### **this[int]**
+### **this[Int32]**
 
 ```csharp
 public int this[int index] { get; set; }
@@ -31,7 +31,7 @@ public int this[int index] { get; set; }
 
 [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
-### **this[string]**
+### **this[String]**
 
 ```csharp
 public int this[string key] { get; }

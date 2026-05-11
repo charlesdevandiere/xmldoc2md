@@ -1,8 +1,11 @@
+using System.Reflection;
+
 namespace XMLDoc2Markdown.Signatures.Modifiers;
 
 /// <summary>
 /// Emits the class/struct/interface/enum keyword. For class, also emits
 /// static / abstract / sealed in front. For struct, prepends readonly / ref.
+/// Records are detected and emitted as <c>record class</c> / <c>record struct</c>.
 /// </summary>
 internal static class TypeKindModifier
 {
@@ -25,6 +28,10 @@ internal static class TypeKindModifier
             {
                 b.Append("sealed");
             }
+            if (RecordDetection.IsRecordClass(type))
+            {
+                b.Append("record");
+            }
             b.Append("class");
         }
         else if (type.IsInterface)
@@ -37,13 +44,17 @@ internal static class TypeKindModifier
         }
         else if (type.IsValueType)
         {
-            if (type.CustomAttributes.Any(a => a.AttributeType.FullName == IsReadOnlyAttributeFullName))
+            if (type.HasAttribute(IsReadOnlyAttributeFullName))
             {
                 b.Append("readonly");
             }
             if (type.IsByRefLike)
             {
                 b.Append("ref");
+            }
+            if (RecordDetection.IsRecordStruct(type))
+            {
+                b.Append("record");
             }
             b.Append("struct");
         }
