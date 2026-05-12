@@ -103,7 +103,28 @@ internal sealed class CrefResolver
     private Type? GetTypeFromFullName(string typeFullName)
     {
         string normalized = NormalizeGenericTypeName(typeFullName);
-        return Type.GetType(normalized) ?? this.assembly.GetType(normalized);
+        Type? type = Type.GetType(normalized) ?? this.assembly.GetType(normalized);
+        if (type is not null)
+        {
+            return type;
+        }
+
+        // XML doc IDs use `.` for both namespace and nesting separators, but reflection
+        // wants `+` between an outer type and its nested type. Walk the dots right-to-left,
+        // converting each to `+` and retrying — first match wins.
+        string candidate = normalized;
+        int dotIdx = candidate.LastIndexOf('.');
+        while (dotIdx > -1)
+        {
+            candidate = candidate[..dotIdx] + '+' + candidate[(dotIdx + 1)..];
+            type = Type.GetType(candidate) ?? this.assembly.GetType(candidate);
+            if (type is not null)
+            {
+                return type;
+            }
+            dotIdx = candidate.LastIndexOf('.', dotIdx - 1);
+        }
+        return null;
     }
 
     // XML doc cref values denote closed generic types as `Type{Arg1,Arg2}` (e.g. Dictionary{System.String,System.Int32}).

@@ -285,7 +285,7 @@ var bar = foo.Get("bar");
 
 ### **StaticMethod()**
 
-A static method. Referenced by `MyClassLib.MyClass.Nested`.
+A static method. Referenced by [Nested](./myclasslib.myclass.nested).
 
 ```csharp
 public static void StaticMethod()
