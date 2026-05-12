@@ -44,8 +44,26 @@ internal abstract class MemberSectionRenderer<T> where T : MemberInfo
 
         foreach (T member in members)
         {
-            this.RenderMember(document, member);
+            try
+            {
+                this.RenderMember(document, member);
+            }
+            catch (Exception ex) when (ex is FileNotFoundException or FileLoadException or TypeLoadException)
+            {
+                this.RenderMemberDegraded(document, member, ex);
+            }
         }
+    }
+
+    protected virtual void RenderMemberDegraded(IMarkdownDocument document, T member, Exception ex)
+    {
+        // member.GetIdentifier() touches GetParameters()/ReturnType (XmlDocIdBuilder:56,68)
+        // and rethrows the same FileNotFoundException — fall back to a plain qualified name.
+        document.AppendHeader(new MarkdownStrongEmphasis(member.Name), 3);
+        string qualifiedName = member.DeclaringType is { } declaring
+            ? $"{declaring.FullName}.{member.Name}"
+            : member.Name;
+        Logger.Warning($"      {qualifiedName} skipped (unresolved external type): {ex.Message}");
     }
 
     protected virtual void RenderMember(IMarkdownDocument document, T member)

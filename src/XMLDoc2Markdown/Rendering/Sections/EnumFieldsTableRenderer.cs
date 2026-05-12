@@ -16,6 +16,8 @@ internal sealed class EnumFieldsTableRenderer
         this.converter = converter;
     }
 
+    // No per-row try/catch for unresolved external types (cf. MemberSectionRenderer<T>):
+    // enum fields only touch the enum's own underlying type, never an external assembly.
     internal void Render(IMarkdownDocument document, IReadOnlyList<FieldInfo> fields)
     {
         if (fields.Count == 0)
