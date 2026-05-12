@@ -10,7 +10,7 @@ The program class
 public static class Program
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [Program](./program)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [Program](./program)
 
 ## Methods
 
@@ -22,7 +22,7 @@ public static void Main(params Object[] args)
 
 #### Parameters
 
-`params` `args` [Object[]](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
+`params` `args` [Object[]](https://learn.microsoft.com/en-us/dotnet/api/system.object)<br>
 
 ---
 

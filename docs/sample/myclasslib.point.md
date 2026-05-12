@@ -12,9 +12,9 @@ A record struct representing a 2D point.
 public readonly record struct Point
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/system.valuetype) → [Point](./myclasslib.point)<br>
-Implements [IEquatable&lt;Point&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1)<br>
-Attributes [IsReadOnlyAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.isreadonlyattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [ValueType](https://learn.microsoft.com/en-us/dotnet/api/system.valuetype) → [Point](./myclasslib.point)<br>
+Implements [IEquatable&lt;Point&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1)<br>
+Attributes [IsReadOnlyAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.isreadonlyattribute)
 
 ## Properties
 
@@ -28,7 +28,7 @@ public int X { get; init; }
 
 #### Property Value
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
 ### **Y**
 
@@ -40,7 +40,7 @@ public int Y { get; init; }
 
 #### Property Value
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
 ## Constructors
 
@@ -54,10 +54,10 @@ public Point(int X, int Y)
 
 #### Parameters
 
-`X` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`X` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The X coordinate.
 
-`Y` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`Y` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The Y coordinate.
 
 ---

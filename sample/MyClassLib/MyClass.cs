@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace MyClassLib;
 
@@ -146,6 +147,19 @@ public class MyClass : IMyInterface
     /// <param name="input">A dictionary input.</param>
     /// <returns>The total count.</returns>
     public int Counts(IDictionary<string, int> input) => 0;
+
+    /// <summary>
+    /// Configures EF Core. See <see cref="DbContextOptionsBuilder"/>.
+    /// </summary>
+    /// <param name="builder">The options builder.</param>
+    public void ConfigureDb(DbContextOptionsBuilder builder) { }
+
+    /// <summary>
+    /// Parses JSON. See <see cref="JObject"/>.
+    /// </summary>
+    /// <param name="json">The JSON payload.</param>
+    /// <returns>The parsed object.</returns>
+    public JObject? ParseJson(string json) => JObject.Parse(json);
 
     /// <summary>
     /// A nested public type. See <see cref="StaticMethod()"/>,

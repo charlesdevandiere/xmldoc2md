@@ -12,7 +12,7 @@ Sub class from [MyClass](./myclasslib.myclass)
 public sealed class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)<br>
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)
 
 **Remarks:**
@@ -57,7 +57,7 @@ public string MyProperty { get; protected set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The property value. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
 
 #### Example
@@ -78,7 +78,7 @@ public int? MyNullableProperty { get; set; }
 
 #### Property Value
 
-[Int32?](https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
+[Int32?](https://learn.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
 The nullable property value.
 
 ### **MyEnum**
@@ -104,7 +104,7 @@ public string MyInitProperty { get; init; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The initialization value.
 
 ### **MyRequiredProperty**
@@ -117,7 +117,7 @@ public required string MyRequiredProperty { get; set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The required value.
 
 ### **MyProtectedProperty**
@@ -130,7 +130,7 @@ protected string MyProtectedProperty { get; set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The property value. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass#protecteddogenerictt).
 
 ### **MyProtectedEnum**
@@ -183,7 +183,7 @@ public override string ToString()
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 A string.
 
 ## Events

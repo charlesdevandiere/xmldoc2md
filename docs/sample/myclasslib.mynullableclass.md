@@ -12,8 +12,8 @@ Showcases nullable reference types and named-tuple element rendering.
 public class MyNullableClass
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyNullableClass](./myclasslib.mynullableclass)<br>
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyNullableClass](./myclasslib.mynullableclass)<br>
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
 
 ## Fields
 
@@ -37,7 +37,7 @@ public string? OptionalName { get; set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 
 ### **RequiredName**
 
@@ -49,7 +49,7 @@ public string RequiredName { get; set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 
 ### **Counter**
 
@@ -61,7 +61,7 @@ public int? Counter { get; set; }
 
 #### Property Value
 
-[Int32?](https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
+[Int32?](https://learn.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
 
 ## Constructors
 
@@ -104,7 +104,7 @@ A positional pair.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 A descriptive label.
 
 ### **Echo(String)**
@@ -117,12 +117,12 @@ public string? Echo(string? input)
 
 #### Parameters
 
-`input` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)?<br>
+`input` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)?<br>
 Possibly null input.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)?<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)?<br>
 Possibly null output.
 
 ---

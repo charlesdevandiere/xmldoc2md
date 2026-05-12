@@ -134,7 +134,7 @@ public class TypeExtensionsTests
     public void GetMSDocsUrl_for_mscorlib_type()
     {
         string url = typeof(string).GetMSDocsUrl();
-        Assert.StartsWith("https://docs.microsoft.com/en-us/dotnet/api/", url);
+        Assert.StartsWith("https://learn.microsoft.com/en-us/dotnet/api/", url);
         Assert.EndsWith("system.string", url);
     }
 

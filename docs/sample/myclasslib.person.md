@@ -12,9 +12,9 @@ A record class representing a person.
 public record class Person : System.IEquatable`1[[MyClassLib.Person, MyClassLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [Person](./myclasslib.person)<br>
-Implements [IEquatable&lt;Person&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1)<br>
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [Person](./myclasslib.person)<br>
+Implements [IEquatable&lt;Person&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1)<br>
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
 
 ## Properties
 
@@ -28,7 +28,7 @@ public string FirstName { get; init; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 
 ### **LastName**
 
@@ -40,7 +40,7 @@ public string LastName { get; init; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 
 ### **FullName**
 
@@ -52,7 +52,7 @@ public string FullName { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 
 ## Constructors
 
@@ -66,10 +66,10 @@ public Person(string FirstName, string LastName)
 
 #### Parameters
 
-`FirstName` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`FirstName` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The first name.
 
-`LastName` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`LastName` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The last name.
 
 ### **Person(Person)**

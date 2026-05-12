@@ -39,7 +39,7 @@ internal class XmlDocumentation
         }
         catch (Exception e)
         {
-            throw new Exception("Unable to parse XML documentation", e);
+            throw new InvalidDataException("Unable to parse XML documentation", e);
         }
     }
 

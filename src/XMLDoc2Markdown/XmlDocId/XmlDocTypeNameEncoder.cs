@@ -40,7 +40,7 @@ internal static partial class XmlDocTypeNameEncoder
                 return element + dims;
             }
 
-            throw new Exception($"{nameof(XmlDocTypeNameEncoder)}.{nameof(Encode)} encountered an unhandled element type: {type}");
+            throw new NotSupportedException($"{nameof(XmlDocTypeNameEncoder)}.{nameof(Encode)} encountered an unhandled element type: {type}");
         }
 
         string name = type.IsNested

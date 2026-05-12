@@ -13,7 +13,7 @@ internal static partial class XmlDocIdBuilder
         Type type => BuildTypeId(type),
         PropertyInfo or FieldInfo or EventInfo => BuildMemberId(memberInfo),
         MethodBase methodBase => BuildMethodId(methodBase),
-        _ => throw new Exception($"{nameof(GetIdentifier)} encountered an unhandled member info: {memberInfo}")
+        _ => throw new NotSupportedException($"{nameof(GetIdentifier)} encountered an unhandled member info: {memberInfo}")
     };
 
     private static string BuildTypeId(Type type)

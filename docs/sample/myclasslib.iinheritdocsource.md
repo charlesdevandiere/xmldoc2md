@@ -12,7 +12,7 @@ Interface used for `<inheritdoc/>` implementation demos.
 public interface IInheritDocSource
 ```
 
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute)
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute)
 
 ## Methods
 
@@ -26,12 +26,12 @@ string Lookup(string key)
 
 #### Parameters
 
-`key` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`key` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The lookup key.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The matched item, or an empty string.
 
 ---

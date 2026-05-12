@@ -78,6 +78,14 @@ internal sealed partial class XmlDocToMarkdownConverter
             return this.context.DocsLink(memberInfo, effectiveText);
         }
 
+        string? msUrl = Linking.DocLinkFactory.MsDocsUrlFromCref(cref);
+        if (msUrl is not null)
+        {
+            // msUrl is non-null only when MsDocsUrlFromCref validated the "X:..." shape, so cref![2..] is safe.
+            string linkText = string.IsNullOrEmpty(effectiveText) ? cref![2..] : effectiveText;
+            return new MarkdownLink(linkText, msUrl);
+        }
+
         if (!string.IsNullOrEmpty(effectiveText))
         {
             return new MarkdownText(effectiveText);

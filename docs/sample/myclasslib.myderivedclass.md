@@ -13,7 +13,7 @@ A concrete class deriving from [MyAbstractClass](./myclasslib.myabstractclass) t
 public class MyDerivedClass : MyAbstractClass
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyAbstractClass](./myclasslib.myabstractclass) → [MyDerivedClass](./myclasslib.myderivedclass)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyAbstractClass](./myclasslib.myabstractclass) → [MyDerivedClass](./myclasslib.myderivedclass)
 
 ## Properties
 
@@ -27,7 +27,7 @@ public override int MyProperty { get; set; }
 
 #### Property Value
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The property value.
 
 ## Constructors
@@ -58,7 +58,7 @@ public virtual string Label()
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 A label.
 
 ---

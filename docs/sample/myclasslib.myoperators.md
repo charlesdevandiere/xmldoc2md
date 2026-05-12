@@ -12,8 +12,8 @@ A class exercising operator overloads.
 public class MyOperators
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyOperators](./myclasslib.myoperators)<br>
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyOperators](./myclasslib.myoperators)<br>
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
 
 ## Properties
 
@@ -27,7 +27,7 @@ public int Value { get; }
 
 #### Property Value
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
 ## Constructors
 
@@ -41,7 +41,7 @@ public MyOperators(int value)
 
 #### Parameters
 
-`value` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`value` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The wrapped value.
 
 ## Methods
@@ -54,11 +54,11 @@ public override bool Equals(object? obj)
 
 #### Parameters
 
-`obj` [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)?<br>
+`obj` [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object)?<br>
 
 #### Returns
 
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+[Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 
 ### **GetHashCode()**
 
@@ -68,7 +68,7 @@ public override int GetHashCode()
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
 ## Operators
 
@@ -132,7 +132,7 @@ The right operand.
 
 #### Returns
 
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+[Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 True when values are equal.
 
 ### **operator !=(MyOperators, MyOperators)**
@@ -153,12 +153,12 @@ The right operand.
 
 #### Returns
 
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+[Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 True when values are not equal.
 
 ### **implicit operator int(MyOperators)**
 
-Implicit conversion to [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32).
+Implicit conversion to [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32).
 
 ```csharp
 public static implicit operator int(MyOperators value)
@@ -171,11 +171,11 @@ The value to convert.
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
 ### **explicit operator MyOperators(Int32)**
 
-Explicit conversion from [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32).
+Explicit conversion from [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32).
 
 ```csharp
 public static explicit operator MyOperators(int value)
@@ -183,7 +183,7 @@ public static explicit operator MyOperators(int value)
 
 #### Parameters
 
-`value` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`value` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The value to convert.
 
 #### Returns

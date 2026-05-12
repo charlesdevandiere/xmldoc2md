@@ -17,8 +17,8 @@ public class GenericClass<T> where T : new()
 `T`<br>
 The type param.
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1)<br>
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1)<br>
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
 
 ## Constructors
 
@@ -129,7 +129,7 @@ public void StoreOrdered<TKey, TValue>(TKey key, TValue value) where TKey : ICom
 A non-nullable comparable key.
 
 `TValue`<br>
-A reference type implementing [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable).
+A reference type implementing [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/system.idisposable).
 
 #### Parameters
 

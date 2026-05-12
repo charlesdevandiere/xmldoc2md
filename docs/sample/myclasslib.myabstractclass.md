@@ -12,7 +12,7 @@ My abstract class.
 public abstract class MyAbstractClass
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyAbstractClass](./myclasslib.myabstractclass)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyAbstractClass](./myclasslib.myabstractclass)
 
 ## Properties
 
@@ -26,7 +26,7 @@ public abstract int MyProperty { get; set; }
 
 #### Property Value
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The property value.
 
 ## Constructors
@@ -57,12 +57,12 @@ protected string Get(List<string> param)
 
 #### Parameters
 
-`param` [List&lt;String&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
+`param` [List&lt;String&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
 The param.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 A string.
 
 ---

@@ -17,7 +17,7 @@ public interface INumeric<T> where T : INumeric<T>
 `T`<br>
 The implementing type.
 
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute)
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute)
 
 ## Methods
 

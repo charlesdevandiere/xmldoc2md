@@ -17,8 +17,8 @@ public class Repository<TEntity> where TEntity : class, new()
 `TEntity`<br>
 A reference-type entity with a parameterless ctor.
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [Repository&lt;TEntity&gt;](./myclasslib.subnamespace.repository-1)<br>
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [Repository&lt;TEntity&gt;](./myclasslib.subnamespace.repository-1)<br>
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
 
 ## Constructors
 

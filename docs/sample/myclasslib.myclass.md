@@ -12,9 +12,9 @@ My class.
 public class MyClass : IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)<br>
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)<br>
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute), [RequiredMemberAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.requiredmemberattribute)
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute), [RequiredMemberAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.requiredmemberattribute)
 
 **Remarks:**
 
@@ -58,7 +58,7 @@ public string MyProperty { get; protected set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The property value. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
 
 #### Example
@@ -79,7 +79,7 @@ public int? MyNullableProperty { get; set; }
 
 #### Property Value
 
-[Int32?](https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
+[Int32?](https://learn.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
 The nullable property value.
 
 ### **MyEnum**
@@ -105,7 +105,7 @@ public string MyInitProperty { get; init; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The initialization value.
 
 ### **MyRequiredProperty**
@@ -118,7 +118,7 @@ public required string MyRequiredProperty { get; set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The required value.
 
 ### **MyProtectedProperty**
@@ -131,7 +131,7 @@ protected string MyProtectedProperty { get; set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The property value. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass#protecteddogenerictt).
 
 ### **MyProtectedEnum**
@@ -183,10 +183,10 @@ public MyClass(string firstParam, int secondParam)
 
 #### Parameters
 
-`firstParam` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`firstParam` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The first param.
 
-`secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`secondParam` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The second param.
 
 ### **MyClass(Int32)**
@@ -199,7 +199,7 @@ protected MyClass(int int)
 
 #### Parameters
 
-`int` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`int` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
 ## Methods
 
@@ -213,15 +213,15 @@ public void Do(string firstParam, int secondParam)
 
 #### Parameters
 
-`firstParam` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`firstParam` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The first param.
 
-`secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`secondParam` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The second param.
 
 #### Exceptions
 
-[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
+[Exception](https://learn.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
 ### **DoGeneric&lt;T&gt;(T)**
@@ -244,13 +244,13 @@ The param. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogeneri
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
-Returns a value [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32).
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
+Returns a value [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32).
 
 #### Exceptions
 
-[ArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
-Thrown instead of [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception).
+[ArgumentException](https://learn.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
+Thrown instead of [Exception](https://learn.microsoft.com/en-us/dotnet/api/system.exception).
 
 ### **Get(List&lt;String&gt;)**
 
@@ -262,17 +262,17 @@ public string Get(List<string> param)
 
 #### Parameters
 
-`param` [List&lt;String&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
+`param` [List&lt;String&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
 The param.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 An empty string.
 
 #### Exceptions
 
-[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
+[Exception](https://learn.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
 #### Example
@@ -301,7 +301,7 @@ public async Task DoAsync()
 
 #### Returns
 
-[Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)<br>
+[Task](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)<br>
 A task that completes when the operation finishes.
 
 ### **Counts(IDictionary&lt;String, Int32&gt;)**
@@ -314,13 +314,44 @@ public int Counts(IDictionary<string, int> input)
 
 #### Parameters
 
-`input` [IDictionary&lt;String, Int32&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.idictionary-2)<br>
+`input` [IDictionary&lt;String, Int32&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.idictionary-2)<br>
 A dictionary input.
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The total count.
+
+### **ConfigureDb(DbContextOptionsBuilder)**
+
+Configures EF Core. See [Microsoft.EntityFrameworkCore.DbContextOptionsBuilder](https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder).
+
+```csharp
+public void ConfigureDb(DbContextOptionsBuilder builder)
+```
+
+#### Parameters
+
+`builder` [DbContextOptionsBuilder](https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder)<br>
+The options builder.
+
+### **ParseJson(String)**
+
+Parses JSON. See `Newtonsoft.Json.Linq.JObject`.
+
+```csharp
+public JObject? ParseJson(string json)
+```
+
+#### Parameters
+
+`json` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
+The JSON payload.
+
+#### Returns
+
+JObject?<br>
+The parsed object.
 
 ### **ProtectedDo(String, Int32)**
 
@@ -332,15 +363,15 @@ protected void ProtectedDo(string firstParam, int secondParam)
 
 #### Parameters
 
-`firstParam` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`firstParam` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The first param.
 
-`secondParam` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`secondParam` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The second param.
 
 #### Exceptions
 
-[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
+[Exception](https://learn.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
 ### **ProtectedDoGeneric&lt;T&gt;(T)**
@@ -363,13 +394,13 @@ The param. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
-Returns a value [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32).
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
+Returns a value [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32).
 
 #### Exceptions
 
-[ArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
-Thrown instead of [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception).
+[ArgumentException](https://learn.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
+Thrown instead of [Exception](https://learn.microsoft.com/en-us/dotnet/api/system.exception).
 
 ### **ProtectedGet(List&lt;String&gt;)**
 
@@ -381,17 +412,17 @@ protected string ProtectedGet(List<string> param)
 
 #### Parameters
 
-`param` [List&lt;String&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
+`param` [List&lt;String&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
 The param.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 An empty string.
 
 #### Exceptions
 
-[Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception)<br>
+[Exception](https://learn.microsoft.com/en-us/dotnet/api/system.exception)<br>
 Thrown when...
 
 ### **ProtectedStaticMethod()**

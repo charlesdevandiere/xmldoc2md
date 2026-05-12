@@ -18,8 +18,8 @@ A ref struct sample.
 public ref struct MyRefStruct
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/system.valuetype) → [MyRefStruct](./myclasslib.myrefstruct)<br>
-Attributes [IsByRefLikeAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.isbyreflikeattribute), [ObsoleteAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.obsoleteattribute), [CompilerFeatureRequiredAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.compilerfeaturerequiredattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [ValueType](https://learn.microsoft.com/en-us/dotnet/api/system.valuetype) → [MyRefStruct](./myclasslib.myrefstruct)<br>
+Attributes [IsByRefLikeAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.isbyreflikeattribute), [ObsoleteAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.obsoleteattribute), [CompilerFeatureRequiredAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.compilerfeaturerequiredattribute)
 
 ## Fields
 

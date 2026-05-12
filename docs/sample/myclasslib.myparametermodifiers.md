@@ -13,8 +13,8 @@ Showcases `ref`, `in`, `out`, `params` parameter modifiers
 public class MyParameterModifiers
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyParameterModifiers](./myclasslib.myparametermodifiers)<br>
-Attributes [NullableContextAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyParameterModifiers](./myclasslib.myparametermodifiers)<br>
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
 
 ## Constructors
 
@@ -36,7 +36,7 @@ public void RefIncrement(ref int value)
 
 #### Parameters
 
-`ref` `value` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`ref` `value` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The reference-passed value.
 
 ### **Read(in Int32)**
@@ -49,12 +49,12 @@ public int Read(in int value)
 
 #### Parameters
 
-`in` `value` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`in` `value` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The read-only reference.
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The value squared.
 
 ### **TryParse(String, out Int32)**
@@ -67,15 +67,15 @@ public bool TryParse(string input, out int value)
 
 #### Parameters
 
-`input` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`input` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The text to parse.
 
-`out` `value` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`out` `value` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The parsed value.
 
 #### Returns
 
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+[Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 on success.
 
 ### **Join(params String[])**
@@ -88,12 +88,12 @@ public string Join(params String[] items)
 
 #### Parameters
 
-`params` `items` [String[]](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`params` `items` [String[]](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The items to join.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The joined string.
 
 ### **Defaults(String, Int32, Double, Boolean, MyEnum, String)**
@@ -106,22 +106,22 @@ public void Defaults(string name = "anakin", int count = 42, double ratio = 1.5d
 
 #### Parameters
 
-`name` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`name` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 A string default.
 
-`count` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`count` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 A numeric default.
 
-`ratio` [Double](https://docs.microsoft.com/en-us/dotnet/api/system.double)<br>
+`ratio` [Double](https://learn.microsoft.com/en-us/dotnet/api/system.double)<br>
 A double default.
 
-`flag` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+`flag` [Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 A bool default.
 
 `kind` [MyEnum](./myclasslib.myenum)<br>
 An enum default.
 
-`note` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)?<br>
+`note` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)?<br>
 A nullable-reference default of .
 
 ---

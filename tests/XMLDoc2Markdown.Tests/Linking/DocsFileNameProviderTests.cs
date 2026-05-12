@@ -1,5 +1,4 @@
 using MyClassLib;
-using XMLDoc2Markdown;
 using XMLDoc2Markdown.Linking;
 
 namespace XMLDoc2Markdown.Tests.Linking;

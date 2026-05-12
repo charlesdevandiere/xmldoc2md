@@ -13,7 +13,7 @@ Demonstrates `<inheritdoc/>` on an interface implementation and an
 public class InheritDocImpl : IInheritDocSource
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [InheritDocImpl](./myclasslib.inheritdocimpl)<br>
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [InheritDocImpl](./myclasslib.inheritdocimpl)<br>
 Implements [IInheritDocSource](./myclasslib.iinheritdocsource)
 
 ## Constructors
@@ -36,12 +36,12 @@ public string Lookup(string key)
 
 #### Parameters
 
-`key` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`key` [String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The lookup key.
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The matched item, or an empty string.
 
 ### **ReuseFromCref(Int32)**
@@ -54,17 +54,17 @@ public int ReuseFromCref(int value)
 
 #### Parameters
 
-`value` [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+`value` [Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The input value.
 
 #### Returns
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32)<br>
 The processed value.
 
 #### Exceptions
 
-[ArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
+[ArgumentException](https://learn.microsoft.com/en-us/dotnet/api/system.argumentexception)<br>
 Thrown when `value` is negative.
 
 ---
