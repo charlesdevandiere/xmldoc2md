@@ -37,8 +37,7 @@ internal sealed class TypeDocumentation
         Type type = this.context.Type;
         TypeDocumentationOptions options = this.context.Options;
 
-        CrefResolver cref = new(this.context.Assembly);
-        XmlDocToMarkdownConverter converter = new(this.context, cref);
+        XmlDocToMarkdownConverter converter = new(this.context, this.context.CrefResolver);
         ExampleInjector examples = new(options.ExamplesDirectory);
         MemberDiscovery discovery = new(type, options.MemberAccessibilityLevel);
         MethodParametersRenderer parameters = new(this.context, converter);
@@ -55,7 +54,7 @@ internal sealed class TypeDocumentation
             this.document.AppendParagraph($"Namespace: {type.Namespace}");
         }
 
-        XElement? typeDocElement = this.context.Documentation.GetMember(type);
+        XElement? typeDocElement = this.context.GetMemberDoc(type);
         if (typeDocElement != null)
         {
             Logger.Info("    (documented)");

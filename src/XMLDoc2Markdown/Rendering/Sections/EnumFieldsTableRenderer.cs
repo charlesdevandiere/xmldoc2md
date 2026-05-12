@@ -34,7 +34,7 @@ internal sealed class EnumFieldsTableRenderer
 
         foreach (FieldInfo field in fields)
         {
-            IEnumerable<XNode> nodes = this.context.Documentation.GetMember(field)?.Element("summary")?.Nodes() ?? [];
+            IEnumerable<XNode> nodes = this.context.GetMemberDoc(field)?.Element("summary")?.Nodes() ?? [];
             MarkdownParagraph summary = this.converter.ToMarkdownParagraph(nodes);
             string formatted = EscapePipes(summary.ToString());
 

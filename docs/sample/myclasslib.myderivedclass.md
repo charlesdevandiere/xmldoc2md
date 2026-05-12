@@ -19,6 +19,8 @@ Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) 
 
 ### **MyProperty**
 
+My abstract property.
+
 ```csharp
 public override int MyProperty { get; set; }
 ```
@@ -26,6 +28,7 @@ public override int MyProperty { get; set; }
 #### Property Value
 
 [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+The property value.
 
 ## Constructors
 

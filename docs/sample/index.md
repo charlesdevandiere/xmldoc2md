@@ -6,7 +6,15 @@
 
 ## MyClassLib
 
+[IInheritDocSource](./myclasslib.iinheritdocsource)
+
 [IMyInterface](./myclasslib.imyinterface)
+
+[InheritDocBase](./myclasslib.inheritdocbase)
+
+[InheritDocDerived](./myclasslib.inheritdocderived)
+
+[InheritDocImpl](./myclasslib.inheritdocimpl)
 
 [INumeric&lt;T&gt;](./myclasslib.inumeric-1)
 

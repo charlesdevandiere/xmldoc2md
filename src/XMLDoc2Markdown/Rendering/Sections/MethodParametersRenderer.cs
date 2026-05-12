@@ -65,8 +65,8 @@ internal sealed class MethodParametersRenderer
             Type linkType = param.ParameterType.IsByRef
                 ? param.ParameterType.GetElementType()!
                 : param.ParameterType;
-            DisplayMeta meta = BuildParameterMeta(param);
-            string typeDisplay = RenderTypeForProse(linkType, meta);
+            DisplayMeta meta = this.BuildParameterMeta(param);
+            string typeDisplay = this.RenderTypeForProse(linkType, meta);
 
             string? passing = ParameterListModifier.GetPassingModifier(param);
             string passingPrefix = passing == null ? string.Empty : $"`{passing}` ";
@@ -91,7 +91,7 @@ internal sealed class MethodParametersRenderer
         document.AppendHeader("Returns", 4);
 
         DisplayMeta returnMeta = DisplayMeta.ForReturn(methodInfo, this.context.Nullability);
-        string typeDisplay = RenderTypeForProse(methodInfo.ReturnType, returnMeta);
+        string typeDisplay = this.RenderTypeForProse(methodInfo.ReturnType, returnMeta);
         IEnumerable<XNode> nodes = memberDocElement?.Element("returns")?.Nodes() ?? [];
         MarkdownParagraph paragraph = this.converter.ToMarkdownParagraph(nodes);
 

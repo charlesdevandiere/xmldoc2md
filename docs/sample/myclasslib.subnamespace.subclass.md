@@ -15,6 +15,10 @@ public sealed class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)
 
+**Remarks:**
+
+A remark.
+
 ## Fields
 
 ### **myField**
@@ -151,6 +155,21 @@ Sub class from [MyClass](./myclasslib.myclass)
 ```csharp
 public SubClass()
 ```
+
+**Remarks:**
+
+See also [MyClass.MyClass(String, Int32)](./myclasslib.myclass#myclassstring-int32).
+
+```csharp
+if (true)
+{
+    var foo = new MyClass("foo", 1);
+    Console.WriteLine(foo.ToString());
+}
+```
+
+- **item 1** - The first item. `1`
+- **item 2** - The second item. `2`
 
 ## Methods
 

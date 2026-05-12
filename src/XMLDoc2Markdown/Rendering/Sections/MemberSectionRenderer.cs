@@ -52,7 +52,7 @@ internal abstract class MemberSectionRenderer<T> where T : MemberInfo
     {
         document.AppendHeader(new MarkdownStrongEmphasis(member.GetSignature().FormatChevrons()), 3);
 
-        XElement? memberDocElement = this.Context.Documentation.GetMember(member);
+        XElement? memberDocElement = this.Context.GetMemberDoc(member);
 
         ObsoleteRenderer.Write(document, member, this.ObsoleteDefaultMessage);
         this.WriteSummary(document, memberDocElement);

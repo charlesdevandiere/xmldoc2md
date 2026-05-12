@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Xml.Linq;
 using Markdown;
 using XMLDoc2Markdown.Linking;
 
@@ -11,6 +12,9 @@ namespace XMLDoc2Markdown.Rendering;
 /// </summary>
 internal sealed class RenderingContext
 {
+    private CrefResolver? crefResolver;
+    private InheritDocResolver? inheritDocResolver;
+
     internal Assembly Assembly { get; }
     internal Type Type { get; }
     internal XmlDocumentation Documentation { get; }
@@ -32,6 +36,21 @@ internal sealed class RenderingContext
     internal bool NoExtension => this.Options.GitHubPages || this.Options.GitlabWiki;
     internal bool NoPrefix => this.Options.GitlabWiki;
     internal DocumentationStructure Structure => this.Options.Structure;
+
+    internal CrefResolver CrefResolver => this.crefResolver ??= new CrefResolver(this.Assembly);
+
+    internal InheritDocResolver InheritDocResolver =>
+        this.inheritDocResolver ??= new InheritDocResolver(this.Documentation, this.CrefResolver);
+
+    /// <summary>
+    /// Returns the XML doc element for a member with <c>&lt;inheritdoc/&gt;</c>
+    /// tags expanded.
+    /// </summary>
+    internal XElement? GetMemberDoc(MemberInfo member)
+    {
+        XElement? raw = this.Documentation.GetMember(member);
+        return raw is null ? null : this.InheritDocResolver.Resolve(member, raw);
+    }
 
     internal MarkdownInlineElement DocsLink(Type type, string? text = null)
         => type.GetDocsLink(this.Assembly, this.Structure, text, this.NoExtension, this.NoPrefix);
