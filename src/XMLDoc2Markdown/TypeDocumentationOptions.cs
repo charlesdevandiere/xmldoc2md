@@ -10,4 +10,12 @@ internal class TypeDocumentationOptions
     internal bool GitHubPages { get; set; }
     internal bool GitlabWiki { get; set; }
     internal DocumentationStructure Structure { get; set; }
+    internal FrontMatterPreset FrontMatter { get; set; }
+
+    /// <summary>
+    /// Extra front matter key/value pairs merged on top of the preset on every
+    /// page. Values are emitted verbatim (the caller is responsible for valid YAML),
+    /// and a custom key overrides a preset key of the same name.
+    /// </summary>
+    internal IReadOnlyList<KeyValuePair<string, string>> FrontMatterFields { get; set; } = [];
 }

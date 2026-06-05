@@ -34,6 +34,8 @@ dotnet xmldoc2md <src> [options]
 | `--back-button` | Add a back button on each page |
 | `--member-accessibility-level <internal\|private\|protected\|public>` | Minimum accessibility level of members to be documented. [default: protected] |
 | `--structure <flat\|tree>` | Documentation structure. [default: flat] |
+| `--front-matter <none\|jekyll\|just-the-docs\|docusaurus>` | Emit YAML front matter for a documentation system. [default: none] |
+| `--front-matter-field <key=value>` | Extra front matter `key=value` pair, merged on top of the preset (repeatable). Value emitted verbatim. |
 | `--version` | Show version information |
 | `-?, -h, --help` | Show help and usage information |
 

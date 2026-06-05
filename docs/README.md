@@ -2,7 +2,7 @@
 
 Tool to generate markdown from C# XML documentation.
 
-See sample generated documentation [here](sample).
+See sample generated documentation: [flat structure](sample) and [tree structure](sample-tree).
 
 ## How to use
 
@@ -32,6 +32,8 @@ dotnet xmldoc2md <src> [options]
 | `--back-button` | Add a back button on each page |
 | `--member-accessibility-level <internal\|private\|protected\|public>` | Minimum accessibility level of members to be documented. [default: protected] |
 | `--structure <flat\|tree>` | Documentation structure. [default: flat] |
+| `--front-matter <none\|jekyll\|just-the-docs\|docusaurus>` | Emit YAML front matter for a documentation system. [default: none] |
+| `--front-matter-field <key=value>` | Extra front matter `key=value` pair, merged on top of the preset (repeatable). Value emitted verbatim. |
 | `--version` | Show version information |
 | `-?, -h, --help` | Show help and usage information |
 
@@ -98,3 +100,33 @@ Lorem ipsum...
 new MyClass();
 ```
 ~~~
+
+### Front matter
+
+Static-site generators read a block of YAML *front matter* at the top of each Markdown file. Pass `--front-matter` to emit one for your target system; the keys are computed from the type tree.
+
+| Preset | Type page | Index page |
+|---|---|---|
+| `jekyll` | `layout`, `title` | `layout`, `title` |
+| `just-the-docs` | `title`, `parent` (the namespace) | `title`, `has_children`, `nav_order` |
+| `docusaurus` | `id`, `title`, `sidebar_label` | `id`, `title` |
+
+```shell
+dotnet xmldoc2md Sample.dll --output docs --front-matter jekyll
+```
+
+```yaml
+---
+layout: default
+title: MyClass
+---
+```
+
+Add your own keys with `--front-matter-field key=value` (repeatable). They are merged on top of the preset — a custom key overrides a preset key of the same name — so regenerating the docs no longer overwrites your front matter:
+
+```shell
+dotnet xmldoc2md Sample.dll --output docs --front-matter just-the-docs \
+    --front-matter-field nav_order=3 --front-matter-field has_toc=false
+```
+
+> Custom field values are emitted verbatim, so you are responsible for valid YAML (e.g. quote a value that contains a colon).

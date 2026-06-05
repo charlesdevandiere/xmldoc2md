@@ -4,6 +4,7 @@ using Markdown;
 using XMLDoc2Markdown;
 using XMLDoc2Markdown.Linking;
 using XMLDoc2Markdown.Members;
+using XMLDoc2Markdown.Rendering;
 using XMLDoc2Markdown.Utils;
 
 Argument<string> srcArgument = new("src")
@@ -56,6 +57,18 @@ Option<string> structureOption = new("--structure")
 };
 structureOption.CompletionSources.Add("flat", "tree");
 
+Option<string> frontMatterOption = new("--front-matter")
+{
+    Description = "Emit YAML front matter for a documentation system.",
+    DefaultValueFactory = _ => "none"
+};
+frontMatterOption.CompletionSources.Add("none", "jekyll", "just-the-docs", "docusaurus");
+
+Option<string[]> frontMatterFieldOption = new("--front-matter-field")
+{
+    Description = "Extra front matter 'key=value' pair, merged on top of the preset (repeatable). Value emitted verbatim."
+};
+
 RootCommand rootCommand = new(description: "Tool to generate markdown from C# XML documentation.")
 {
     srcArgument,
@@ -66,7 +79,9 @@ RootCommand rootCommand = new(description: "Tool to generate markdown from C# XM
     gitlabWikiOption,
     backButtonOption,
     memberAccessibilityLevelOption,
-    structureOption
+    structureOption,
+    frontMatterOption,
+    frontMatterFieldOption
 };
 
 rootCommand.SetAction(parseResult =>
@@ -93,7 +108,15 @@ rootCommand.SetAction(parseResult =>
             {
                 "tree" => DocumentationStructure.Tree,
                 _ => DocumentationStructure.Flat,
-            }
+            },
+            FrontMatter = parseResult.GetValue(frontMatterOption) switch
+            {
+                "jekyll" => FrontMatterPreset.Jekyll,
+                "just-the-docs" => FrontMatterPreset.JustTheDocs,
+                "docusaurus" => FrontMatterPreset.Docusaurus,
+                _ => FrontMatterPreset.None,
+            },
+            FrontMatterFields = ParseFrontMatterFields(parseResult.GetValue(frontMatterFieldOption))
         };
         int succeeded = 0;
         int failed = 0;
@@ -160,7 +183,9 @@ rootCommand.SetAction(parseResult =>
             }
         }
 
-        File.WriteAllText(Path.Combine(@out, $"{indexPageName}.md"), indexPage.ToString());
+        File.WriteAllText(
+            Path.Combine(@out, $"{indexPageName}.md"),
+            FrontMatterRenderer.ForIndex(assemblyName, indexPageName, options) + indexPage.ToString());
 
         Logger.Info($"Generation: {succeeded} succeeded, {failed} failed");
         return 0;
@@ -174,3 +199,21 @@ rootCommand.SetAction(parseResult =>
 });
 
 return rootCommand.Parse(args).Invoke();
+
+static List<KeyValuePair<string, string>> ParseFrontMatterFields(string[]? raw)
+{
+    List<KeyValuePair<string, string>> fields = [];
+    foreach (string entry in raw ?? [])
+    {
+        int separator = entry.IndexOf('=');
+        if (separator <= 0)
+        {
+            Logger.Warning($"Ignoring malformed --front-matter-field '{entry}' (expected key=value).");
+            continue;
+        }
+
+        fields.Add(new(entry[..separator].Trim(), entry[(separator + 1)..]));
+    }
+
+    return fields;
+}

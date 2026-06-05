@@ -1,3 +1,8 @@
+---
+layout: default
+title: "GenericClass<T>"
+---
+
 [`< Back`](./)
 
 ---

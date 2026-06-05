@@ -93,7 +93,7 @@ internal sealed class TypeDocumentation
             BackButtonRenderer.Write(this.document, type, options.Structure, BackButtonRenderer.Position.Bottom);
         }
 
-        return this.document.ToString();
+        return FrontMatterRenderer.ForType(type, options) + this.document.ToString();
     }
 
     private void WriteSummary(XmlDocToMarkdownConverter converter, XElement? typeDocElement)
