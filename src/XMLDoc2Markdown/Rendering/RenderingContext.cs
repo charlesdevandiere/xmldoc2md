@@ -33,8 +33,8 @@ internal sealed class RenderingContext
         this.Options = options;
     }
 
-    internal bool NoExtension => this.Options.GitHubPages || this.Options.GitlabWiki;
-    internal bool NoPrefix => this.Options.GitlabWiki;
+    internal bool NoExtension => this.Options.NoExtension;
+    internal bool NoPrefix => this.Options.NoPrefix;
     internal DocumentationStructure Structure => this.Options.Structure;
 
     internal CrefResolver CrefResolver => this.crefResolver ??= new CrefResolver(this.Assembly);

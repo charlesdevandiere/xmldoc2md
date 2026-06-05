@@ -207,9 +207,9 @@ public class TypeDocumentationTests
     }
 
     [Fact]
-    public void GitHubPages_strips_md_extension_from_internal_links()
+    public void NoExtension_strips_md_extension_from_internal_links()
     {
-        TypeDocumentationOptions options = new() { GitHubPages = true };
+        TypeDocumentationOptions options = new() { NoExtension = true };
         string md = this.Render(typeof(MyClass), options);
 
         // Inheritance link target should not end in .md
@@ -217,9 +217,9 @@ public class TypeDocumentationTests
     }
 
     [Fact]
-    public void GitlabWiki_strips_md_extension_and_dot_slash_prefix()
+    public void NoExtension_with_NoPrefix_strips_md_extension_and_dot_slash_prefix()
     {
-        TypeDocumentationOptions options = new() { GitlabWiki = true };
+        TypeDocumentationOptions options = new() { NoExtension = true, NoPrefix = true };
         string md = this.Render(typeof(MyClass), options);
 
         Assert.DoesNotContain("./myclasslib.myclass", md);

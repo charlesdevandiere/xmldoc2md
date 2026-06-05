@@ -7,8 +7,8 @@ internal class TypeDocumentationOptions
     internal Accessibility MemberAccessibilityLevel { get; set; } = Accessibility.Public;
     internal bool BackButton { get; set; }
     internal string? ExamplesDirectory { get; set; }
-    internal bool GitHubPages { get; set; }
-    internal bool GitlabWiki { get; set; }
+    internal bool NoExtension { get; set; }
+    internal bool NoPrefix { get; set; }
     internal DocumentationStructure Structure { get; set; }
     internal FrontMatterPreset FrontMatter { get; set; }
 

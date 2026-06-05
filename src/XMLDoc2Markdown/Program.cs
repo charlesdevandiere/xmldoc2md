@@ -28,15 +28,25 @@ Option<string> examplesPathOption = new("--examples-path")
     Description = "Path to the code examples to insert in the documentation"
 };
 
-Option<bool> gitHubPagesOption = new("--github-pages")
+Option<string> platformOption = new("--platform")
 {
-    Description = "Remove '.md' extension from links for GitHub Pages"
+    Description = "Target documentation host. Presets link rewriting and front matter; "
+        + "override any of those with --link-extension / --link-prefix / --front-matter.",
+    DefaultValueFactory = _ => "plain"
 };
+platformOption.CompletionSources.Add("plain", "github-pages", "jekyll", "gitlab-wiki", "just-the-docs", "docusaurus");
 
-Option<bool> gitlabWikiOption = new("--gitlab-wiki")
+Option<string> linkExtensionOption = new("--link-extension")
 {
-    Description = "Remove '.md' extension and './' prefix from links for gitlab wikis"
+    Description = "Override the link file extension ('md' keeps '.md', 'none' strips it). Defaults to the platform preset."
 };
+linkExtensionOption.CompletionSources.Add("md", "none");
+
+Option<string> linkPrefixOption = new("--link-prefix")
+{
+    Description = "Override the link prefix ('relative' keeps './', 'none' strips it). Defaults to the platform preset."
+};
+linkPrefixOption.CompletionSources.Add("relative", "none");
 
 Option<bool> backButtonOption = new("--back-button")
 {
@@ -59,8 +69,7 @@ structureOption.CompletionSources.Add("flat", "tree");
 
 Option<string> frontMatterOption = new("--front-matter")
 {
-    Description = "Emit YAML front matter for a documentation system.",
-    DefaultValueFactory = _ => "none"
+    Description = "Override the front matter preset emitted for a documentation system. Defaults to the platform preset."
 };
 frontMatterOption.CompletionSources.Add("none", "jekyll", "just-the-docs", "docusaurus");
 
@@ -75,8 +84,9 @@ RootCommand rootCommand = new(description: "Tool to generate markdown from C# XM
     outputOption,
     indexPageNameOption,
     examplesPathOption,
-    gitHubPagesOption,
-    gitlabWikiOption,
+    platformOption,
+    linkExtensionOption,
+    linkPrefixOption,
     backButtonOption,
     memberAccessibilityLevelOption,
     structureOption,
@@ -91,11 +101,45 @@ rootCommand.SetAction(parseResult =>
         string src = parseResult.GetValue(srcArgument)!;
         string @out = parseResult.GetValue(outputOption) ?? ".";
         string indexPageName = parseResult.GetValue(indexPageNameOption)!;
+
+        // The platform preset supplies link/front-matter defaults; the explicit
+        // --link-extension / --link-prefix / --front-matter flags override them.
+        Platform platform = parseResult.GetValue(platformOption) switch
+        {
+            "github-pages" => Platform.GitHubPages,
+            "jekyll" => Platform.Jekyll,
+            "gitlab-wiki" => Platform.GitlabWiki,
+            "just-the-docs" => Platform.JustTheDocs,
+            "docusaurus" => Platform.Docusaurus,
+            _ => Platform.Plain,
+        };
+        bool? noExtension = parseResult.GetValue(linkExtensionOption) switch
+        {
+            "none" => true,
+            "md" => false,
+            _ => null,
+        };
+        bool? noPrefix = parseResult.GetValue(linkPrefixOption) switch
+        {
+            "none" => true,
+            "relative" => false,
+            _ => null,
+        };
+        FrontMatterPreset? frontMatter = parseResult.GetValue(frontMatterOption) switch
+        {
+            "none" => FrontMatterPreset.None,
+            "jekyll" => FrontMatterPreset.Jekyll,
+            "just-the-docs" => FrontMatterPreset.JustTheDocs,
+            "docusaurus" => FrontMatterPreset.Docusaurus,
+            _ => null,
+        };
+        PlatformSettings platformSettings = PlatformDefaults.Resolve(platform, noExtension, noPrefix, frontMatter);
+
         TypeDocumentationOptions options = new()
         {
             ExamplesDirectory = parseResult.GetValue(examplesPathOption),
-            GitHubPages = parseResult.GetValue(gitHubPagesOption),
-            GitlabWiki = parseResult.GetValue(gitlabWikiOption),
+            NoExtension = platformSettings.NoExtension,
+            NoPrefix = platformSettings.NoPrefix,
             BackButton = parseResult.GetValue(backButtonOption),
             MemberAccessibilityLevel = parseResult.GetValue(memberAccessibilityLevelOption) switch
             {
@@ -109,13 +153,7 @@ rootCommand.SetAction(parseResult =>
                 "tree" => DocumentationStructure.Tree,
                 _ => DocumentationStructure.Flat,
             },
-            FrontMatter = parseResult.GetValue(frontMatterOption) switch
-            {
-                "jekyll" => FrontMatterPreset.Jekyll,
-                "just-the-docs" => FrontMatterPreset.JustTheDocs,
-                "docusaurus" => FrontMatterPreset.Docusaurus,
-                _ => FrontMatterPreset.None,
-            },
+            FrontMatter = platformSettings.FrontMatter,
             FrontMatterFields = ParseFrontMatterFields(parseResult.GetValue(frontMatterFieldOption))
         };
         int succeeded = 0;
@@ -157,7 +195,7 @@ rootCommand.SetAction(parseResult =>
                 string fileName = type.GetDocsFileName(options.Structure);
                 Logger.Info($"  {fileName}.md");
 
-                indexPage.AppendParagraph(type.GetDocsLink(assembly, options.Structure, noExtension: options.GitHubPages));
+                indexPage.AppendParagraph(type.GetDocsLink(assembly, options.Structure, noExtension: options.NoExtension, noPrefix: options.NoPrefix));
 
                 try
                 {
@@ -198,7 +236,7 @@ rootCommand.SetAction(parseResult =>
     }
 });
 
-return rootCommand.Parse(args).Invoke();
+return await rootCommand.Parse(args).InvokeAsync();
 
 static List<KeyValuePair<string, string>> ParseFrontMatterFields(string[]? raw)
 {
