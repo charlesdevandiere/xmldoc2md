@@ -23,7 +23,6 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
-    <File Path="azure-pipelines.yml" />
     <File Path="GitVersion.yml" />
     <File Path="LICENSE" />
     <File Path="README.md" />
