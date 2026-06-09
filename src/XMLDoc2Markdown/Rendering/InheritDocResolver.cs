@@ -109,26 +109,20 @@ internal sealed class InheritDocResolver
         string? nameAttr = tag is "param" or "typeparam" ? candidate.Attribute("name")?.Value : null;
         string? crefAttr = tag is "exception" ? candidate.Attribute("cref")?.Value : null;
 
-        foreach (XElement existing in merged.Elements(tag))
+        return merged.Elements(tag).Any(existing => MatchesExisting(existing, nameAttr, crefAttr));
+    }
+
+    private static bool MatchesExisting(XElement existing, string? nameAttr, string? crefAttr)
+    {
+        if (nameAttr is not null)
         {
-            if (existing.Name == "inheritdoc")
-            {
-                continue;
-            }
-            if (nameAttr is not null)
-            {
-                if (existing.Attribute("name")?.Value == nameAttr) return true;
-            }
-            else if (crefAttr is not null)
-            {
-                if (existing.Attribute("cref")?.Value == crefAttr) return true;
-            }
-            else
-            {
-                return true;
-            }
+            return existing.Attribute("name")?.Value == nameAttr;
         }
-        return false;
+        if (crefAttr is not null)
+        {
+            return existing.Attribute("cref")?.Value == crefAttr;
+        }
+        return true;
     }
 
     private MemberInfo? FindInheritanceSource(MemberInfo target) => target switch

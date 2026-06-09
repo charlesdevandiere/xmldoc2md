@@ -27,20 +27,7 @@ internal static partial class XmlDocTypeNameEncoder
 
         if (type.HasElementType)
         {
-            string? element = Encode(type.GetElementType(), isMethodParameter, typeGenericMap, methodGenericMap);
-
-            if (type.IsPointer) return element + "*";
-            if (type.IsByRef) return element + "@";
-            if (type.IsArray)
-            {
-                int rank = type.GetArrayRank();
-                string dims = rank > 1
-                    ? $"[{string.Join(",", Enumerable.Repeat("0:", rank))}]"
-                    : "[]";
-                return element + dims;
-            }
-
-            throw new NotSupportedException($"{nameof(XmlDocTypeNameEncoder)}.{nameof(Encode)} encountered an unhandled element type: {type}");
+            return EncodeElementType(type, isMethodParameter, typeGenericMap, methodGenericMap);
         }
 
         string name = type.IsNested
@@ -59,5 +46,27 @@ internal static partial class XmlDocTypeNameEncoder
         }
 
         return name;
+    }
+
+    private static string EncodeElementType(
+        Type type,
+        bool isMethodParameter,
+        IReadOnlyDictionary<string, int> typeGenericMap,
+        IReadOnlyDictionary<string, int> methodGenericMap)
+    {
+        string? element = Encode(type.GetElementType(), isMethodParameter, typeGenericMap, methodGenericMap);
+
+        if (type.IsPointer) return element + "*";
+        if (type.IsByRef) return element + "@";
+        if (type.IsArray)
+        {
+            int rank = type.GetArrayRank();
+            string dims = rank > 1
+                ? $"[{string.Join(",", Enumerable.Repeat("0:", rank))}]"
+                : "[]";
+            return element + dims;
+        }
+
+        throw new NotSupportedException($"{nameof(XmlDocTypeNameEncoder)}.{nameof(Encode)} encountered an unhandled element type: {type}");
     }
 }

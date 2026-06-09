@@ -14,23 +14,7 @@ internal static class TypeKindModifier
     {
         if (type.IsClass)
         {
-            if (type.IsAbstract && type.IsSealed)
-            {
-                b.Append("static");
-            }
-            else if (type.IsAbstract)
-            {
-                b.Append("abstract");
-            }
-            else if (type.IsSealed)
-            {
-                b.Append("sealed");
-            }
-            if (RecordDetection.IsRecordClass(type))
-            {
-                b.Append("record");
-            }
-            b.Append("class");
+            AppendClassKind(b, type);
         }
         else if (type.IsInterface)
         {
@@ -42,21 +26,47 @@ internal static class TypeKindModifier
         }
         else if (type.IsValueType)
         {
-            if (type.HasAttribute(IsReadOnlyAttributeFullName))
-            {
-                b.Append("readonly");
-            }
-            if (type.IsByRefLike)
-            {
-                b.Append("ref");
-            }
-            if (RecordDetection.IsRecordStruct(type))
-            {
-                b.Append("record");
-            }
-            b.Append("struct");
+            AppendStructKind(b, type);
         }
 
         return b;
+    }
+
+    private static void AppendClassKind(SignatureBuilder b, Type type)
+    {
+        if (type.IsAbstract && type.IsSealed)
+        {
+            b.Append("static");
+        }
+        else if (type.IsAbstract)
+        {
+            b.Append("abstract");
+        }
+        else if (type.IsSealed)
+        {
+            b.Append("sealed");
+        }
+        if (RecordDetection.IsRecordClass(type))
+        {
+            b.Append("record");
+        }
+        b.Append("class");
+    }
+
+    private static void AppendStructKind(SignatureBuilder b, Type type)
+    {
+        if (type.HasAttribute(IsReadOnlyAttributeFullName))
+        {
+            b.Append("readonly");
+        }
+        if (type.IsByRefLike)
+        {
+            b.Append("ref");
+        }
+        if (RecordDetection.IsRecordStruct(type))
+        {
+            b.Append("record");
+        }
+        b.Append("struct");
     }
 }
