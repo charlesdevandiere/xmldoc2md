@@ -2,9 +2,9 @@
 
 Tool to generate markdown from C# XML documentation.
 
-[![Build Status](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_apis/build/status/charlesdevandiere.xmldoc2md?branchName=master)](https://dev.azure.com/charlesdevandiere/charlesdevandiere/_build/latest?definitionId=2&branchName=master)
+[![Build Status](https://github.com/charlesdevandiere/xmldoc2md/actions/workflows/ci.yml/badge.svg)](https://github.com/charlesdevandiere/xmldoc2md/actions/workflows/ci.yml)
 [![Nuget](https://img.shields.io/nuget/v/XMLDoc2Markdown.svg?color=blue&logo=nuget)](https://www.nuget.org/packages/XMLDoc2Markdown)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=charlesdevandiere_xmldoc2md&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=charlesdevandiere_xmldoc2md)
+[![Downloads](https://img.shields.io/nuget/dt/XMLDoc2Markdown.svg?logo=nuget)](https://www.nuget.org/packages/XMLDoc2Markdown)
 
 ## How to use
 
