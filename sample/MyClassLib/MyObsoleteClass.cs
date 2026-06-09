@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace MyClassLib;
 
 /// <summary>
@@ -21,14 +18,14 @@ public class MyObsoleteClass
     /// </summary>
     /// <value>The property value.</value>
     [Obsolete]
-    public string MyProperty { get; protected set; }
+    public string MyProperty { get; protected set; } = string.Empty;
 
 
     /// <summary>
     /// Protected property.
     /// </summary>
     /// <value>The property value.</value>
-    protected string ProtectedProperty { get; set; }
+    protected string ProtectedProperty { get; set; } = string.Empty;
 
     /// <summary>
     /// Instances.

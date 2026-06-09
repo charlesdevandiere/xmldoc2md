@@ -1,4 +1,2 @@
-mode: Mainline
-branches: {}
-ignore:
-  sha: []
+workflow: GitHubFlow/v1
+mode: ContinuousDeployment

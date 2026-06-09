@@ -1,5 +1,6 @@
-using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace MyClassLib;
 
@@ -18,7 +19,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="DoGeneric{T}(T)"/>.</value>
-    public string MyProperty { get; protected set; }
+    public string MyProperty { get; protected set; } = string.Empty;
 
     /// <summary>
     /// My nullable property
@@ -33,6 +34,23 @@ public class MyClass : IMyInterface
     public MyEnum MyEnum { get; set; }
 
     /// <summary>
+    /// An init-only property.
+    /// </summary>
+    /// <value>The initialization value.</value>
+    public string MyInitProperty { get; init; } = string.Empty;
+
+    /// <summary>
+    /// A required property.
+    /// </summary>
+    /// <value>The required value.</value>
+    public required string MyRequiredProperty { get; set; }
+
+    /// <summary>
+    /// A required field.
+    /// </summary>
+    public required int myRequiredField;
+
+    /// <summary>
     /// My delegate.
     /// </summary>
     /// <param name="str">The string param.</param>
@@ -41,7 +59,7 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    public event EventHandler<EventArgs> MyEvent;
+    public event EventHandler<EventArgs>? MyEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
@@ -66,7 +84,11 @@ public class MyClass : IMyInterface
     ///     </item>
     /// </list>
     /// </remarks>
-    public MyClass() { }
+    [SetsRequiredMembers]
+    public MyClass()
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.<br/>
@@ -74,7 +96,11 @@ public class MyClass : IMyInterface
     /// </summary>
     /// <param name="firstParam">The first param.</param>
     /// <param name="secondParam">The second param.</param>
-    public MyClass(string firstParam, int secondParam) { }
+    [SetsRequiredMembers]
+    public MyClass(string firstParam, int secondParam)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.
@@ -102,9 +128,51 @@ public class MyClass : IMyInterface
     public string Get(List<string> param) => string.Empty;
 
     /// <summary>
-    /// A static method.
+    /// A static method. Referenced by <see cref="Nested"/>.
     /// </summary>
     public static void StaticMethod() { }
+
+    /// <summary>
+    /// An asynchronous operation.
+    /// </summary>
+    /// <returns>A task that completes when the operation finishes.</returns>
+    public async Task DoAsync()
+    {
+        await Task.Yield();
+    }
+
+    /// <summary>
+    /// Counts entries.
+    /// </summary>
+    /// <param name="input">A dictionary input.</param>
+    /// <returns>The total count.</returns>
+    public int Counts(IDictionary<string, int> input) => 0;
+
+    /// <summary>
+    /// Configures EF Core. See <see cref="DbContextOptionsBuilder"/>.
+    /// </summary>
+    /// <param name="builder">The options builder.</param>
+    public void ConfigureDb(DbContextOptionsBuilder builder) { }
+
+    /// <summary>
+    /// Parses JSON. See <see cref="JObject"/>.
+    /// </summary>
+    /// <param name="json">The JSON payload.</param>
+    /// <returns>The parsed object.</returns>
+    public JObject? ParseJson(string json) => JObject.Parse(json);
+
+    /// <summary>
+    /// A nested public type. See <see cref="StaticMethod()"/>,
+    /// <see cref="Counts(IDictionary{string, int})"/>,
+    /// and <see cref="System.Collections.Generic.Dictionary{TKey, TValue}"/>.
+    /// </summary>
+    public class Nested
+    {
+        /// <summary>
+        /// The nested value.
+        /// </summary>
+        public int Value { get; set; }
+    }
 
     #region private members
 
@@ -117,7 +185,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="PrivateDoGeneric{T}(T)"/>.</value>
-    private string MyPrivateProperty { get; set; }
+    private string MyPrivateProperty { get; set; } = string.Empty;
 
     /// <summary>
     /// My enum
@@ -134,12 +202,16 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    private event EventHandler<EventArgs> MyPrivateEvent;
+    private event EventHandler<EventArgs>? MyPrivateEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
     /// </summary>
-    private MyClass(short @short) { }
+    [SetsRequiredMembers]
+    private MyClass(short @short)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.
@@ -184,7 +256,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="InternalDoGeneric{T}(T)"/>.</value>
-    internal string MyInternalProperty { get; set; }
+    internal string MyInternalProperty { get; set; } = string.Empty;
 
     /// <summary>
     /// My enum
@@ -201,12 +273,16 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    internal event EventHandler<EventArgs> MyInternalEvent;
+    internal event EventHandler<EventArgs>? MyInternalEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
     /// </summary>
-    internal MyClass(long @long) { }
+    [SetsRequiredMembers]
+    internal MyClass(long @long)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.
@@ -251,7 +327,7 @@ public class MyClass : IMyInterface
     /// My property.
     /// </summary>
     /// <value>The property value. Used by <see cref="ProtectedDoGeneric{T}(T)"/>.</value>
-    protected string MyProtectedProperty { get; set; }
+    protected string MyProtectedProperty { get; set; } = string.Empty;
 
     /// <summary>
     /// My enum
@@ -268,12 +344,16 @@ public class MyClass : IMyInterface
     /// <summary>
     /// My event.
     /// </summary>
-    protected event EventHandler<EventArgs> MyProtectedEvent;
+    protected event EventHandler<EventArgs>? MyProtectedEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MyClassLib.MyClass" /> class.
     /// </summary>
-    protected MyClass(int @int) { }
+    [SetsRequiredMembers]
+    protected MyClass(int @int)
+    {
+        this.MyRequiredProperty = string.Empty;
+    }
 
     /// <summary>
     /// Do some thing.

@@ -1,9 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace MyClassLib.SubNamespace;
 
 /// <summary>
 /// Sub class from <see cref="MyClass" />
 /// </summary>
-public sealed class SubClass : MyClass
+/// <inheritdoc/>
+[method: SetsRequiredMembers]
+public sealed class SubClass() : MyClass()
 {
     /// <summary>
     /// Convert instance to string.

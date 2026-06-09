@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>0.0.0</Version>
     <AssemblyName>xmldoc2md</AssemblyName>
     <ToolCommandName>xmldoc2md</ToolCommandName>
@@ -13,7 +12,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     
     <Authors>Charles de Vandière</Authors>
-    <Copyright>© 2024 Charles de Vandière</Copyright>
+    <Copyright>© 2026 Charles de Vandière</Copyright>
     <PackageId>XMLDoc2Markdown</PackageId>
     <Product>XMLDoc2Markdown</Product>
     <Title>XMLDoc2Markdown</Title>
@@ -42,9 +41,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkdownBuilder" Version="0.2.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <InternalsVisibleTo Include="XMLDoc2Markdown.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MarkdownBuilder" Version="1.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.203" PrivateAssets="All" />
+    <PackageReference Include="System.CommandLine" Version="2.0.7" />
   </ItemGroup>
 
 </Project>

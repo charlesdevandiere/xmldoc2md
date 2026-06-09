@@ -1,3 +1,8 @@
+---
+layout: default
+title: SubClass
+---
+
 [`< Back`](./)
 
 ---
@@ -12,8 +17,12 @@ Sub class from [MyClass](./myclasslib.myclass)
 public sealed class SubClass : MyClassLib.MyClass, MyClassLib.IMyInterface
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)<br>
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyClass](./myclasslib.myclass) → [SubClass](./myclasslib.subnamespace.subclass)<br>
 Implements [IMyInterface](./myclasslib.imyinterface)
+
+**Remarks:**
+
+A remark.
 
 ## Fields
 
@@ -23,6 +32,14 @@ My field.
 
 ```csharp
 public int myField;
+```
+
+### **myRequiredField**
+
+A required field.
+
+```csharp
+public required int myRequiredField;
 ```
 
 ### **myProtectedField**
@@ -45,7 +62,7 @@ public string MyProperty { get; protected set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 The property value. Used by [MyClass.DoGeneric&lt;T&gt;(T)](./myclasslib.myclass#dogenerictt).
 
 #### Example
@@ -61,12 +78,12 @@ foo.MyProperty = "foo";
 My nullable property
 
 ```csharp
-public Nullable<int> MyNullableProperty { get; set; }
+public int? MyNullableProperty { get; set; }
 ```
 
 #### Property Value
 
-[Nullable&lt;Int32&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
+[Int32?](https://learn.microsoft.com/en-us/dotnet/api/system.nullable-1)<br>
 The nullable property value.
 
 ### **MyEnum**
@@ -82,6 +99,32 @@ public MyEnum MyEnum { get; set; }
 [MyEnum](./myclasslib.myenum)<br>
 The enum value
 
+### **MyInitProperty**
+
+An init-only property.
+
+```csharp
+public string MyInitProperty { get; init; }
+```
+
+#### Property Value
+
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
+The initialization value.
+
+### **MyRequiredProperty**
+
+A required property.
+
+```csharp
+public required string MyRequiredProperty { get; set; }
+```
+
+#### Property Value
+
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
+The required value.
+
 ### **MyProtectedProperty**
 
 My property.
@@ -92,8 +135,8 @@ protected string MyProtectedProperty { get; set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The property value. Used by .
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
+The property value. Used by [MyClass.ProtectedDoGeneric&lt;T&gt;(T)](./myclasslib.myclass#protecteddogenerictt).
 
 ### **MyProtectedEnum**
 
@@ -112,9 +155,26 @@ The enum value
 
 ### **SubClass()**
 
+Sub class from [MyClass](./myclasslib.myclass)
+
 ```csharp
 public SubClass()
 ```
+
+**Remarks:**
+
+See also [MyClass.MyClass(String, Int32)](./myclasslib.myclass#myclassstring-int32).
+
+```csharp
+if (true)
+{
+    var foo = new MyClass("foo", 1);
+    Console.WriteLine(foo.ToString());
+}
+```
+
+- **item 1** - The first item. `1`
+- **item 2** - The second item. `2`
 
 ## Methods
 
@@ -123,12 +183,12 @@ public SubClass()
 Convert instance to string.
 
 ```csharp
-public string ToString()
+public override string ToString()
 ```
 
 #### Returns
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)<br>
 A string.
 
 ## Events
@@ -138,7 +198,7 @@ A string.
 My event.
 
 ```csharp
-public event EventHandler<EventArgs> MyEvent;
+public event EventHandler<EventArgs>? MyEvent;
 ```
 
 ### **MyProtectedEvent**
@@ -146,7 +206,7 @@ public event EventHandler<EventArgs> MyEvent;
 My event.
 
 ```csharp
-protected event EventHandler<EventArgs> MyProtectedEvent;
+protected event EventHandler<EventArgs>? MyProtectedEvent;
 ```
 
 ---

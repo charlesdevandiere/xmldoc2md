@@ -1,5 +1,3 @@
-using System;
-
 namespace MyClassLib;
 
 /// <summary>
@@ -24,7 +22,7 @@ public enum MyFlag
     Second = 2,
 
     /// <summary>
-    /// The Third.
+    /// The Third. Combines First | Second semantics.
     /// </summary>
     Third = 4
 }

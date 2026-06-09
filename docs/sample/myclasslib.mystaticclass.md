@@ -1,3 +1,8 @@
+---
+layout: default
+title: MyStaticClass
+---
+
 [`< Back`](./)
 
 ---
@@ -12,8 +17,8 @@ My static class.
 public static class MyStaticClass
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [MyStaticClass](./myclasslib.mystaticclass)<br>
-Attributes [ExtensionAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.extensionattribute)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [MyStaticClass](./myclasslib.mystaticclass)<br>
+Attributes [ExtensionAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.extensionattribute)
 
 **Remarks:**
 
@@ -23,13 +28,16 @@ A remark.
 
 ### **Do(Object)**
 
+Do something.
+
 ```csharp
 public static void Do(object obj)
 ```
 
 #### Parameters
 
-`obj` [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
+`obj` [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object)<br>
+An object.
 
 ---
 

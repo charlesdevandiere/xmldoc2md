@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      semVer: ${{ steps.gitversion.outputs.semVer }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup GitVersion
+        uses: gittools/actions/gitversion/setup@v4
+        with:
+          versionSpec: '6.x'
+
+      - name: Determine version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v4
+
+      - name: dotnet build
+        run: dotnet build -c Release
+
+      - name: dotnet test
+        run: dotnet test -c Release --no-build
+
+      - name: dotnet pack
+        run: dotnet pack ./src/XMLDoc2Markdown/XMLDoc2Markdown.csproj -c Release --no-build -o out -p:Version=${{ steps.gitversion.outputs.semVer }} --include-symbols
+
+      - name: Upload package
+        uses: actions/upload-artifact@v7
+        with:
+          name: out
+          path: out/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download package
+        uses: actions/download-artifact@v8
+        with:
+          name: out
+          path: out/
+
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push to NuGet
+        run: dotnet nuget push out/*.nupkg --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.semVer }}
+        run: |
+          FLAGS="--title v$VERSION --generate-notes"
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            FLAGS="$FLAGS --prerelease"
+          fi
+          gh release create "v$VERSION" out/*.nupkg $FLAGS

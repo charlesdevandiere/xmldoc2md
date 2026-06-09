@@ -1,0 +1,139 @@
+using System.Reflection;
+using System.Xml.Linq;
+using Markdown;
+using XMLDoc2Markdown.Signatures;
+using XMLDoc2Markdown.Utils;
+using XMLDoc2Markdown.XmlDocId;
+
+namespace XMLDoc2Markdown.Rendering.Sections;
+
+/// <summary>
+/// Shared scaffolding for emitting a "## Methods / Properties / Events / Fields"
+/// section: heading, then for each member: signature header, obsolete, summary,
+/// signature block, kind-specific body (parameters, returns, etc.), exceptions,
+/// remarks, example.
+/// </summary>
+internal abstract class MemberSectionRenderer<T> where T : MemberInfo
+{
+    protected RenderingContext Context { get; }
+    protected XmlDocToMarkdownConverter Converter { get; }
+    protected ExampleInjector Examples { get; }
+
+    protected abstract string SectionHeader { get; }
+    protected abstract string ObsoleteDefaultMessage { get; }
+
+    protected MemberSectionRenderer(
+        RenderingContext context,
+        XmlDocToMarkdownConverter converter,
+        ExampleInjector examples)
+    {
+        this.Context = context;
+        this.Converter = converter;
+        this.Examples = examples;
+    }
+
+    internal void Render(IMarkdownDocument document, IReadOnlyList<T> members)
+    {
+        if (members.Count == 0)
+        {
+            return;
+        }
+
+        document.AppendHeader(this.SectionHeader, 2);
+        Logger.Info($"    {this.SectionHeader}");
+
+        foreach (T member in members)
+        {
+            try
+            {
+                this.RenderMember(document, member);
+            }
+            catch (Exception ex) when (ex is FileNotFoundException or FileLoadException or TypeLoadException)
+            {
+                this.RenderMemberDegraded(document, member, ex);
+            }
+        }
+    }
+
+    protected virtual void RenderMemberDegraded(IMarkdownDocument document, T member, Exception ex)
+    {
+        // member.GetIdentifier() touches GetParameters()/ReturnType (XmlDocIdBuilder:56,68)
+        // and rethrows the same FileNotFoundException — fall back to a plain qualified name.
+        document.AppendHeader(new MarkdownStrongEmphasis(member.Name), 3);
+        string qualifiedName = member.DeclaringType is { } declaring
+            ? $"{declaring.FullName}.{member.Name}"
+            : member.Name;
+        Logger.Warning($"      {qualifiedName} skipped (unresolved external type): {ex.Message}");
+    }
+
+    protected virtual void RenderMember(IMarkdownDocument document, T member)
+    {
+        document.AppendHeader(new MarkdownStrongEmphasis(member.GetSignature().FormatChevrons()), 3);
+
+        XElement? memberDocElement = this.Context.GetMemberDoc(member);
+
+        ObsoleteRenderer.Write(document, member, this.ObsoleteDefaultMessage);
+        this.WriteSummary(document, memberDocElement);
+        document.AppendCode("csharp", this.GetFullSignature(member));
+
+        this.RenderBody(document, member, memberDocElement);
+
+        this.WriteExceptions(document, memberDocElement);
+        this.WriteRemarks(document, memberDocElement);
+        bool example = this.Examples.Inject(document, member);
+
+        string log = $"      {member.GetIdentifier()}";
+        if (memberDocElement is not null) log += " (documented)";
+        if (example) log += " (example)";
+        Logger.Info(log);
+    }
+
+    protected abstract void RenderBody(IMarkdownDocument document, T member, XElement? memberDocElement);
+
+    /// <summary>
+    /// Produces the full signature for the fenced code block, with nullable
+    /// reference and tuple-name annotations resolved via the rendering context's
+    /// <see cref="System.Reflection.NullabilityInfoContext"/>.
+    /// </summary>
+    protected virtual string GetFullSignature(T member)
+        => member.GetSignature(this.Context.Nullability, full: true);
+
+    protected void WriteSummary(IMarkdownDocument document, XElement? memberDocElement)
+    {
+        IEnumerable<XNode>? nodes = memberDocElement?.Element("summary")?.Nodes();
+        if (nodes is not null)
+        {
+            document.Append(this.Converter.ToMarkdownParagraph(nodes));
+        }
+    }
+
+    protected void WriteRemarks(IMarkdownDocument document, XElement? memberDocElement)
+    {
+        IEnumerable<XNode>? nodes = memberDocElement?.Element("remarks")?.Nodes();
+        if (nodes is not null)
+        {
+            document.AppendParagraph(new MarkdownStrongEmphasis("Remarks:"));
+            document.Append(this.Converter.ToMarkdownParagraph(nodes));
+        }
+    }
+
+    private void WriteExceptions(IMarkdownDocument document, XElement? memberDocElement)
+    {
+        XElement[] exceptionDocs = memberDocElement?.Elements("exception").ToArray() ?? [];
+        if (exceptionDocs.Length == 0)
+        {
+            return;
+        }
+
+        document.AppendHeader("Exceptions", 4);
+
+        foreach (XElement exceptionDoc in exceptionDocs)
+        {
+            string? cref = exceptionDoc.Attribute("cref")?.Value;
+            MarkdownInlineElement? exceptionLink = this.Converter.LinkFromCref(cref);
+            MarkdownParagraph summary = this.Converter.ToMarkdownParagraph(exceptionDoc.Nodes());
+
+            document.AppendParagraph(string.Join($"<br>{Environment.NewLine}", exceptionLink, summary));
+        }
+    }
+}

@@ -1,3 +1,8 @@
+---
+layout: default
+title: "GenericClass<T>"
+---
+
 [`< Back`](./)
 
 ---
@@ -9,7 +14,7 @@ Namespace: MyClassLib.SubNamespace
 Generic class.
 
 ```csharp
-public class GenericClass<T>
+public class GenericClass<T> where T : new()
 ```
 
 #### Type Parameters
@@ -17,7 +22,8 @@ public class GenericClass<T>
 `T`<br>
 The type param.
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1)
+Inheritance [Object](https://learn.microsoft.com/en-us/dotnet/api/system.object) → [GenericClass&lt;T&gt;](./myclasslib.subnamespace.genericclass-1)<br>
+Attributes [NullableContextAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullablecontextattribute), [NullableAttribute](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.nullableattribute)
 
 ## Constructors
 
@@ -49,7 +55,7 @@ The generic parameter.
 Gets a new instance of generic param.
 
 ```csharp
-public TSource GetGenericInstance<TSource>()
+public TSource GetGenericInstance<TSource>() where TSource : new()
 ```
 
 #### Type Parameters
@@ -67,7 +73,7 @@ The new instance.
 Gets a new instance of generic param.
 
 ```csharp
-public TSource GetGenericInstance<TSource>(TSource source)
+public TSource GetGenericInstance<TSource>(TSource source) where TSource : new()
 ```
 
 #### Type Parameters
@@ -90,7 +96,7 @@ The new instance.
 Map object.
 
 ```csharp
-public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
+public TTarget Map<TSource, TTarget>(TSource source, TTarget target) where TTarget : new()
 ```
 
 #### Type Parameters
@@ -113,6 +119,48 @@ The target
 
 TTarget<br>
 The mapped object.
+
+### **StoreOrdered&lt;TKey, TValue&gt;(TKey, TValue)**
+
+Stores a value indexed by a comparable, non-null key.
+
+```csharp
+public void StoreOrdered<TKey, TValue>(TKey key, TValue value) where TKey : IComparable<TKey> where TValue : class, IDisposable
+```
+
+#### Type Parameters
+
+`TKey`<br>
+A non-nullable comparable key.
+
+`TValue`<br>
+A reference type implementing [IDisposable](https://learn.microsoft.com/en-us/dotnet/api/system.idisposable).
+
+#### Parameters
+
+`key` TKey<br>
+The key.
+
+`value` TValue<br>
+The value.
+
+### **WriteRaw&lt;TBlittable&gt;(TBlittable)**
+
+Writes an unmanaged value to a sink.
+
+```csharp
+public void WriteRaw<TBlittable>(TBlittable value) where TBlittable : unmanaged
+```
+
+#### Type Parameters
+
+`TBlittable`<br>
+An unmanaged value type.
+
+#### Parameters
+
+`value` TBlittable<br>
+The unmanaged value.
 
 ---
 
